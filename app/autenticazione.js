@@ -11,7 +11,7 @@ router.post('', async function(req, res) {
 	
 	// find the user
 	let user = await Utente.findOne({
-		Mail: req.body.email
+		Username: req.body.username
 	}, { /*_id: 1, Username: 1, Password: 1, Mail: 1*/ Salt: 0, AstePreferite: 0 }).exec();
     
 	// user not found or wrong password
