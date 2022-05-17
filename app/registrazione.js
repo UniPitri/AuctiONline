@@ -38,7 +38,7 @@ router.post('', async function(req, res) {
 	var options = {
 		expiresIn: 86400 // expires in 24 hours
 	}
-	var token = jwt.sign(payload, 'your-secret-key', options);
+	var token = jwt.sign(payload, process.env.SUPER_SECRET, options);
 
 	res.json({
 		success: true,

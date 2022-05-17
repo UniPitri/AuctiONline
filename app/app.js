@@ -25,7 +25,7 @@ app.use('/api/v1/registrazione', registrazione);
 }); */
 
 //Configurazione mongoose e avvio server
-app.locals.db = mongoose.connect("mongodb+srv://Pitri:wf1PhiJyzLsqulb6@cluster0.00kap.mongodb.net/auctionline?retryWrites=true&w=majority",
+app.locals.db = mongoose.connect(process.env.DB_URL,
     {useNewUrlParser: true, useUnifiedTopology: true})
 .then( () => {
     console.log("Connected to Database");
