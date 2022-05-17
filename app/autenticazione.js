@@ -16,7 +16,8 @@ router.post('', async function(req, res) {
     
 	// user not found or wrong password
 	if (!user || user.Password != req.body.password)
-		res.json({ success: false, message: 'Autenticazione fallita. Utente o password errati' });
+		return res.status(401).json({ success: false, message: 'Autenticazione fallita. Utente o password errati' });
+	
 	
 	// if user is found and password is right create a token
 	var payload = {
@@ -29,7 +30,7 @@ router.post('', async function(req, res) {
 	}
 	var token = jwt.sign(payload, process.env.SUPER_SECRET, options);
 
-	res.json({
+	return res.status(201).json({
 		success: true,
 		message: 'Enjoy your token!',
 		token: token,
