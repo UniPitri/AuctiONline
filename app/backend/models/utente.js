@@ -8,4 +8,4 @@ module.exports = mongoose.model('Utenti', new Schema({
     Salt: String,
     Mail: String,
     AstePreferite: [Schema.Types.ObjectId]
-}));
+}, {collection: 'Utenti'}));

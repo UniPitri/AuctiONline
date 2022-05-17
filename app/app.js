@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 const mongoose = require('mongoose');
 
+const autenticazione = require('./backend/autenticazione.js');
+
 //Configurazione parsing middleware
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -15,13 +17,15 @@ app.use((req,res,next) => {
     next()
 })
 
+app.use('/api/v1/autenticazione', autenticazione);
+
 //Get nel caso '/'
 /* app.get('/', function(req, res){
     res.sendFile(__dirname+'/frontend/prova.html')
 }); */
 
 //Configurazione mongoose e avvio server
-/* app.locals.db = mongoose.connect("mongodb+srv://Pitri:wf1PhiJyzLsqulb6@cluster0.00kap.mongodb.net/auctionline?retryWrites=true&w=majority",
+app.locals.db = mongoose.connect(process.env.DB_URL,
     {useNewUrlParser: true, useUnifiedTopology: true})
 .then( () => {
     console.log("Connected to Database");
@@ -29,8 +33,8 @@ app.use((req,res,next) => {
     app.listen(3000, function() {
     console.log('Server running on port ', 3000);
     });
-}); */
+});
 
-app.listen(3000, function() {
+/*app.listen(3000, function() {
     console.log('Server running on port ', 3000);
-    });
+    });*/
