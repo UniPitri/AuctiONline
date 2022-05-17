@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
 const mongoose = require('mongoose');
-
-const autenticazione = require('./backend/autenticazione.js');
+const registrazione = require('./backend/registrazione.js');
+//const autenticazione = require('./backend/autenticazione.js');
 
 //Configurazione parsing middleware
 app.use(express.json())
@@ -16,7 +16,8 @@ app.use((req,res,next) => {
     next()
 })
 
-app.use('/api/v1/autenticazione', autenticazione);
+//app.use('/api/v1/autenticazione', autenticazione);
+app.use('/api/v1/registrazione', registrazione);
 
 //Get nel caso '/'
 /* app.get('/', function(req, res){
@@ -24,7 +25,7 @@ app.use('/api/v1/autenticazione', autenticazione);
 }); */
 
 //Configurazione mongoose e avvio server
-app.locals.db = mongoose.connect(process.env.DB_URL,
+app.locals.db = mongoose.connect("mongodb+srv://Pitri:wf1PhiJyzLsqulb6@cluster0.00kap.mongodb.net/auctionline?retryWrites=true&w=majority",
     {useNewUrlParser: true, useUnifiedTopology: true})
 .then( () => {
     console.log("Connected to Database");
