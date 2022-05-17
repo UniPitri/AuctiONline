@@ -1,80 +1,61 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://auctionline-is2.herokuapp.com/
 
-# is2
+# API AuctiONline
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Documentazione API AuctiONline. Le API permettono di gestire la compravendita di beni attraverso le aste.
 
-## Questions Collection [/questions]
 
-### List All Questions [GET]
+## /api/v1/autenticazione
 
-+ Response 200 (application/json)
+### Autentica utente [POST]
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+Verifica che le credenziali inserite dall'utente e in caso positiva crea un token di autenticazione per l'utente.
 
 + Request (application/json)
 
+    + Attributes
+        + username (required, string) - Username dell'utente
+        + password (required, string) -Password dell'utente
+      
++ Response 201 (application/json)
+
+    Autenticazione avvenuta con successo. Invio token e redirect alla pagina del catalogo
+
+    + Body
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "success": true,
+            "message": "Enjoy your token!",
+            "token": token,
+            "email": user.email,
+            "id": user._id,
+            "self": "api/v1/" + user._id
         }
+
++ Response 401 (application/json)
+
+    Autenticazione fallita. Invio messaggio di errore
+
+    + Body
+        {
+            "success": false, 
+            "message": "Autenticazione fallita. Utente o password errati"
+        }
+
+
+
+
+## /api/v1/registrazione
+
+### Registra utente [POST]
+
+Verifica che l'utente non sia già registrato e che l'username sia inutilizzato da altri utenti. In caso affermativo crea il nuovo profilo e crea un token di autenticazione per l'utente appena registrato.
+
++ Request (application/json)
+
+    + Attributes
+        
 
 + Response 201 (application/json)
 
-    + Headers
-
-            Location: /questions/2
-
     + Body
-
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
