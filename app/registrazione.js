@@ -13,7 +13,7 @@ router.post('', async function(req, res) {
 	}, {Salt: 0, AstePreferite: 0 }).exec();
     
 	if (presente != null){
-		res.json({ success: false, message: 'Email gia in utilizzo' });
+		return res.json({ success: false, message: 'Email gia in utilizzo' });
 	}
 
     // find another user using username
@@ -22,12 +22,11 @@ router.post('', async function(req, res) {
     }, {Salt: 0, AstePreferite: 0 }).exec();
     
     if (presente2 != null){
-		console.log("Entra");
-        res.json({ success: false, message: 'Username gia in utilizzo' });
+        return res.json({ success: false, message: 'Username gia in utilizzo' });
 	}
 
-	console.log("Esce");
     const newUser = new Utente({Mail: req.body.email, Username: req.body.username, Password: req.body.password});
+	console.log(newUser);
     newUser.save();
 
     var payload = {
@@ -40,7 +39,7 @@ router.post('', async function(req, res) {
 	}
 	var token = jwt.sign(payload, process.env.SUPER_SECRET, options);
 
-	res.json({
+	return res.json({
 		success: true,
 		message: 'Nuovo Utente registrato con successo',
 		token: token,
@@ -52,7 +51,5 @@ router.post('', async function(req, res) {
     //res.location("/api/v1/autenticazione.js/" + newUser.email).status(201).send();
 	
 });
-
-
 
 module.exports = router;

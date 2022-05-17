@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 const mongoose = require('mongoose');
-const registrazione = require('./backend/registrazione.js');
+const registrazione = require('./registrazione.js');
 //const autenticazione = require('./backend/autenticazione.js');
 
 //Configurazione parsing middleware
