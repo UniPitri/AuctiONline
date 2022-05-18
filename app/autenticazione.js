@@ -8,11 +8,11 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 // route to authenticate and get a new token
 // ---------------------------------------------------------
 router.post('', async function(req, res) {
-	
+	console.log(req.body);
 	// find the user
 	let user = await Utente.findOne({
-		Username: req.body.uname
-	}, { /*_id: 1, Username: 1, Password: 1, Mail: 1*/ Salt: 0, AstePreferite: 0 }).exec();
+		Username: req.body.username
+	}, { Salt: 0, AstePreferite: 0 }).exec();
     
 	// user not found or wrong password
 	if (!user || user.Password != req.body.psw)
@@ -40,7 +40,5 @@ router.post('', async function(req, res) {
 	});
 
 });
-
-
 
 module.exports = router;
