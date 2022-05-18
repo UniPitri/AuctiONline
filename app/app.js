@@ -3,6 +3,7 @@ var app = express();
 const mongoose = require('mongoose');
 
 const autenticazione = require('./autenticazione.js');
+const tokenChecker = require('./tokenChecker.js');
 
 const aste = require('./aste.js')
 
@@ -28,6 +29,8 @@ app.use((req,res,next) => {
 
 
 app.use('/api/v1/autenticazione', autenticazione);
+
+//app.use('/api/v1/aste',tokenChecker);
 
 app.use('/api/v1/aste', aste);
 
