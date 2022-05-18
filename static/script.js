@@ -49,13 +49,26 @@ function caricaAste() {
     .then(function(data) { // Here you get the data to modify as you please        
         return data.map(function(asta) { // Map through the results and for each run the code below
             let div = document.createElement('div');
-            div.className = "card bg-success";
+            div.className = "card rounded";
+            div.style = "background-color: #38d996; margin: 1% 5%";
             let div2 = document.createElement('div');
             div2.className = "card-body";
             let h5 = document.createElement('h5');
             h5.className = "card-title";
             h5.innerHTML = asta.dettagliProdotto.Nome;
+            let p = document.createElement('p');
+            p.className = "card-text";
+            p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo;
+            let p2 = document.createElement('p');
+            p2.className = "card-text";
+            p2.innerHTML = "Tempo rimanente: " + asta.dettagliAsta.Fine;
+            let p3 = document.createElement('p');
+            p3.className = "card-text";
+            p3.innerHTML = "Tipo asta: " + (asta.dettagliAsta.Tipo ? "Asta \"inglese\"" : "Busta chiusa");
             div2.appendChild(h5);
+            div2.appendChild(p);
+            div2.appendChild(p2);
+            div2.appendChild(p3);
             div.appendChild(div2);
             cardDeck.appendChild(div);
 /*
