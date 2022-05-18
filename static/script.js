@@ -41,18 +41,24 @@ function login()
  * This function refresh the list of books
 */
 function caricaAste() {
-    const ul = document.getElementById('aste'); // Get the list where we will place our authors
-    ul.textContent = '';
+    const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/aste', {
         method: 'GET',
     })
     .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please
-        
-        console.log(data);
-        
+    .then(function(data) { // Here you get the data to modify as you please        
         return data.map(function(asta) { // Map through the results and for each run the code below
-            
+            let div = document.createElement('div');
+            div.className = "card bg-success";
+            let div2 = document.createElement('div');
+            div2.className = "card-body";
+            let h5 = document.createElement('h5');
+            h5.className = "card-title";
+            h5.innerHTML = asta.dettagliProdotto.Nome;
+            div2.appendChild(h5);
+            div.appendChild(div2);
+            cardDeck.appendChild(div);
+/*
             // let bookId = book.self.substring(book.self.lastIndexOf('/') + 1);
             
             let li = document.createElement('li');
@@ -60,18 +66,45 @@ function caricaAste() {
             // span.innerHTML = `<a href="${book.self}">${book.title}</a>`;
             let a = document.createElement('a');
             a.href = asta.self
-            a.textContent = asta.dettagliProdotto.Nome;
             // span.innerHTML += `<button type="button" onclick="takeBook('${book.self}')">Take the book</button>`
             let button = document.createElement('button');
             button.type = 'button'
             //button.onclick = ()=>takeBook(asta.self)
             button.textContent = 'Take the book';
             
+
+  <div class="card">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+</div>
+
+
             // Append all our elements
             span.appendChild(a);
             span.appendChild(button);
             li.appendChild(span);
-            ul.appendChild(li);
+            ul.appendChild(li);*/
         })
     })
     .catch( error => console.error(error) );// If there is any error you will catch them here
