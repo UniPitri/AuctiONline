@@ -6,6 +6,7 @@ a, .iconLink {
 }
 
 body {
+    background-color: gray;
     display: flex;
     font-family: "Poppins", sans-serif;
     height: 100vh;
