@@ -11,11 +11,11 @@ router.post('', async function(req, res) {
 	
 	// find the user
 	let user = await Utente.findOne({
-		Username: req.body.username
+		Username: req.body.uname
 	}, { /*_id: 1, Username: 1, Password: 1, Mail: 1*/ Salt: 0, AstePreferite: 0 }).exec();
     
 	// user not found or wrong password
-	if (!user || user.Password != req.body.password)
+	if (!user || user.Password != req.body.psw)
 		return res.status(401).json({ success: false, message: 'Autenticazione fallita. Utente o password errati' });
 	
 	
