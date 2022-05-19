@@ -10,26 +10,21 @@
 
         <!-- Our CSS -->
         <link rel="stylesheet" href="style.css">
+        <style>
+            li {
+                display: inline;
+                padding: 10px;
+            }
+        </style>
     </head>
     <body>
-        <div class="formContent">
-            <i class="bi bi-person-fill" style="font-size: 30px"></i>
-            <form action="api/v1/autenticazione" id="form" method="post">
-                <input autocomplete="username" required type="text" id="login" name="uname" placeholder="Username">
-                <br>
-                <input autocomplete="password" maxlength="16" required type="password" id="password" name="psw" placeholder="Password">
-                <div id="registerForm" style="display: none">
-                    <input autocomplete="name" id="firstName" maxlength="20" name="firstName" type="text" placeholder="first name">
-                    <input autocomplete="last name" id="lastName" maxlength="20" name="lastName" type="text" placeholder="last name">
-                    <input autocomplete="email" id="formEmail" maxlength="40" name="email" type="email" placeholder="email">
-                </div>
-                <input id="actionButton" style="padding: 15px 0; width: 90%;" type="submit" value="Log In">
-            </form>
-            <div id="formFooter">
-                <a class="underlineHover" id="action" onclick="register();">Don't have an account? Register here!</a>
-                <br>
-                <a class="underlineHover" onclick="$('#insert').modal('show');">Forgot Password?</a>
-            </div>
+        <div style="background-color: #38d996; text-align:right">
+            <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
+                <li><a href="#home" style="color:white">Home</a></li>|
+                <li><a href="#news" style="color:white">Assistenza</a></li>|
+                <li><a href="#contact" style="color:white">FAQ</a></li>|
+                <li><a href="login.html" style="color:white">Login</a></li>|
+            </ul>
         </div>
         <script src="script.js"></script>
         
