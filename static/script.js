@@ -67,15 +67,18 @@ function caricaAste() {
             h5.innerHTML = asta.dettagliProdotto.Nome;
             let p = document.createElement('p');
             p.className = "card-text";
-            p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
             let p2 = document.createElement('p');
             p2.className = "card-text";
             var now = new Date().getTime();
 
             if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
+                if(asta.dettagliAsta.PrezzoMinimo != null)
+                    p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+                    
                 p2.innerHTML = "L'asta inizierà tra: ";
                 countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
             } else {
+                p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
                 p2.innerHTML = "Tempo rimanente: ";
                 countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
             }
