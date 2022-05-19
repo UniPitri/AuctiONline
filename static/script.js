@@ -22,13 +22,17 @@ function login() {
     })
     .then((resp) => resp.json()) // Transform the data into json
     .then(function(data) { // Here you get the data to modify as you please
-        if(data.success)
+        if(data.success) {
+            loggedUser.token = data.token;
+            loggedUser.email = data.email;
+            loggedUser.id = data.id;
+            loggedUser.self = data.self;
             window.location.href = "index.html";
-
-        loggedUser.token = data.token;
-        loggedUser.email = data.email;
-        loggedUser.id = data.id;
-        loggedUser.self = data.self;
+        } else {
+            document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
+        
         // loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);
         document.getElementById("loggedUser").textContent = loggedUser.email;
         loadLendings();
