@@ -32,18 +32,10 @@ function login() {
             document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
         }
-        
-        // loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);
-        document.getElementById("loggedUser").textContent = loggedUser.email;
-        loadLendings();
-        return;
     })
     .catch( error => console.error(error) ); // If there is any error you will catch them here
 };
 
-/**
- * This function refresh the list of books
-*/
 function caricaAste() {
     const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/aste', {
