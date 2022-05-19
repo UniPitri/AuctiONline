@@ -6,8 +6,8 @@ a, .iconLink {
 }
 
 body {
+    background-color: gray;
     font-family: "Poppins", sans-serif;
-    text-align: center;
     vertical-align: center;
 }
 

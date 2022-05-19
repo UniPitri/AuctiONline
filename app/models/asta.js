@@ -5,7 +5,7 @@ var Schema = mongoose.Schema
 module.exports = mongoose.model('Aste', new Schema({ 
 	DettagliProdotto: {
         Nome: String,
-        Categorie: [Number],
+        Categorie: [String],
         Descrizione: String,
         Foto: [String]
     },
