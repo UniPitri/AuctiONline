@@ -1,21 +1,39 @@
 var express = require('express');
 var app = express();
 const mongoose = require('mongoose');
+const autenticazione = require('./autenticazione.js');
+const tokenChecker = require('./tokenChecker.js');
 
+const aste = require('./aste.js')
 //Configurazione parsing middleware
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 //Definisco visibilità esterna
-app.use(express.static(__dirname+'/frontend'))
+app.use(express.static('../static'))
 
-//Get nel caso '/'
-app.get('/', function(req, res){
-    res.sendFile(__dirname+'/frontend/prova.html')
-});
+/**
+ * Serve front-end static files
+ */
+ app.use('/', express.static(process.env.FRONTEND || 'static'));
+ // If process.env.FRONTEND folder does not contain index.html then use the one from static
+ app.use('/', express.static('static')); // expose also this folder
+
+
+app.use((req,res,next) => {
+    console.log(req.method + ' ' + req.url);
+    next();
+})
+
+
+app.use('/api/v1/autenticazione', autenticazione);
+
+//app.use('/api/v1/aste',tokenChecker);
+
+app.use('/api/v1/aste', aste);
 
 //Configurazione mongoose e avvio server
-app.locals.db = mongoose.connect("mongodb+srv://Pitri:wf1PhiJyzLsqulb6@cluster0.00kap.mongodb.net/auctionline?retryWrites=true&w=majority",
+app.locals.db = mongoose.connect(process.env.DB_URL,
     {useNewUrlParser: true, useUnifiedTopology: true})
 .then( () => {
     console.log("Connected to Database");
