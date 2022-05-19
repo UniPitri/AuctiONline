@@ -52,9 +52,14 @@ function caricaAste() {
     .then((resp) => resp.json()) // Transform the data into json
     .then(function(data) { // Here you get the data to modify as you please        
         return data.map(function(asta) { // Map through the results and for each run the code below
+            let container = document.createElement('div');
+            container.className = "container";
+            container.style = "margin: 0";
+            let row = document.createElement('div');
+            row.className = "row";
             let div = document.createElement('div');
             div.className = "card rounded";
-            div.style = "background-color: #38d996; margin: 1% 5%";
+            div.style = "background-color: #38d996; margin: 1% 0%";
             let div2 = document.createElement('div');
             div2.className = "card-body";
             let h5 = document.createElement('h5');
@@ -65,30 +70,24 @@ function caricaAste() {
             p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
             let p2 = document.createElement('p');
             p2.className = "card-text";
-            p2.innerHTML = "Tempo rimanente: ";
+            var now = new Date().getTime();
 
-            // Set the date we're counting down to
-            var countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
+            if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
+                p2.innerHTML = "L'asta inizierà tra: ";
+                countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
+            } else {
+                p2.innerHTML = "Tempo rimanente: ";
+                countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
+            }
 
-            // Update the count down every 1 second
             var x = setInterval(function() {
-
-                // Get today's date and time
-                var now = new Date().getTime();
-
-                // Find the distance between now and the count down date
                 var distance = countDownDate - now;
-
-                // Time calculations for days, hours, minutes and seconds
                 var days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                p2.innerHTML = ((new Date(asta.dettagliAsta.Inizio).getTime() > now) ? "L'asta inizierà tra: " : "Tempo rimanente: ") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
-                // Display the result in the element with id="demo"
-                p2.innerHTML = "Tempo rimanente: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-                // If the count down is finished, write some text
                 if(distance < 0) {
                     clearInterval(x);
                     p2.innerHTML = "EXPIRED";
@@ -103,7 +102,9 @@ function caricaAste() {
             div2.appendChild(p2);
             div2.appendChild(p3);
             div.appendChild(div2);
-            cardDeck.appendChild(div);
+            row.appendChild(div);
+            container.appendChild(row);
+            cardDeck.appendChild(container);
 /*
             // let bookId = book.self.substring(book.self.lastIndexOf('/') + 1);
             
