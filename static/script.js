@@ -22,7 +22,9 @@ function login() {
     })
     .then((resp) => resp.json()) // Transform the data into json
     .then(function(data) { // Here you get the data to modify as you please
-        //console.log(data);
+        if(data.success)
+            window.location.href = "index.html";
+
         loggedUser.token = data.token;
         loggedUser.email = data.email;
         loggedUser.id = data.id;

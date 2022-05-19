@@ -8,16 +8,15 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 // route to authenticate and get a new token
 // ---------------------------------------------------------
 router.post('', async function(req, res) {
-	console.log(req.body);
 	// find the user
 	let user = await Utente.findOne({
 		Username: req.body.username
-	}, { /*_id: 1, Username: 1, Password: 1, Mail: 1*/ Salt: 0, AstePreferite: 0 }).exec();
-    
+	}, { Salt: 0, AstePreferite: 0 }).exec();
+	
 	// user not found or wrong password
-	if (!user || user.Password != req.body.password)
-		return res.status(401).json({ success: false, message: 'Autenticazione fallita. Utente o password errati' });
-	else {
+	if (!user || user.Password != req.body.password) {
+		return res.status(401).json({ success: 0, message: 'Autenticazione fallita. Utente o password errati' });
+	} else {
 		// if user is found and password is right create a token
 		var payload = {
 			email: user.Mail,
@@ -30,7 +29,7 @@ router.post('', async function(req, res) {
 		var token = jwt.sign(payload, process.env.SUPER_SECRET, options);
 
 		return res.status(201).json({
-			success: true,
+			success: 1,
 			message: 'Enjoy your token!',
 			token: token,
 			email: user.Mail,
