@@ -67,23 +67,26 @@ function caricaAste() {
             h5.innerHTML = asta.dettagliProdotto.Nome;
             let p = document.createElement('p');
             p.className = "card-text";
+            p.innerHTML = "Loading...";
             let p2 = document.createElement('p');
             p2.className = "card-text";
-            var now = new Date().getTime();
-
-            if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
-                if(asta.dettagliAsta.PrezzoMinimo != null)
-                    p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
-                    
-                p2.innerHTML = "L'asta inizierà tra: ";
-                countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
-            } else {
-                p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
-                p2.innerHTML = "Tempo rimanente: ";
-                countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
-            }
+            p2.innerHTML = "Loading...";
 
             var x = setInterval(function() {
+                var now = new Date().getTime();
+
+                if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
+                    if(asta.dettagliAsta.PrezzoMinimo != null)
+                        p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+
+                    p2.innerHTML = "L'asta inizierà tra: ";
+                    countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
+                } else {
+                    p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
+                    p2.innerHTML = "Tempo rimanente: ";
+                    countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
+                }
+
                 var distance = countDownDate - now;
                 var days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -95,6 +98,8 @@ function caricaAste() {
                     clearInterval(x);
                     p2.innerHTML = "EXPIRED";
                 }
+
+                console.log(distance);
             }, 1000);
 
             let p3 = document.createElement('p');
