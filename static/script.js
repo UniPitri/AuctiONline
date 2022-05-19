@@ -61,6 +61,7 @@ function caricaAste() {
             p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
             let p2 = document.createElement('p');
             p2.className = "card-text";
+            p2.innerHTML = "Tempo rimanente: ";
 
             // Set the date we're counting down to
             var countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
