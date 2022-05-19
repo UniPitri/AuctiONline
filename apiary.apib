@@ -1,80 +1,148 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://auctionline-is2.herokuapp.com/
 
-# is2
+# API AuctiONline
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Documentazione API AuctiONline. Le API permettono di gestire la compravendita di beni attraverso le aste.
 
-## Questions Collection [/questions]
 
-### List All Questions [GET]
+## /api/v1/autenticazione
 
-+ Response 200 (application/json)
+### Autentica utente [POST]
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+Verifica le credenziali inserite dall'utente e in caso positivo crea un token di autenticazione per l'utente.
 
 + Request (application/json)
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
+    + Attributes
+        + username (required, string) - Username dell'utente
+        + password (required, string) - Password dell'utente
+      
 + Response 201 (application/json)
 
-    + Headers
-
-            Location: /questions/2
+    Autenticazione avvenuta con successo. Invio token e redirect alla pagina del catalogo.
 
     + Body
+        {
+            "success": true,
+            "message": "Enjoy your token!",
+            "token": token,
+            "email": user.email,
+            "id": user._id,
+            "self": "api/v1/" + user._id
+        }
 
++ Response 401 (application/json)
+
+    Autenticazione fallita. Invio messaggio di errore.
+    
+    + Body
+        {
+            "success": false, 
+            "message": "Autenticazione fallita. Utente o password errati"
+        }
+
+## /api/v1/registrazione
+
+### Registra utente [POST]
+
+Ritorna la lista tutte le aste presenti sul catalogo che devono ancora iniziare.
+
++ Request (application/json)
+
+    + Attributes
+        + email (required, string) - Mail dell'account da creare
+        + username (required, string) - Username dell'account da creare
+        + password (required, string) - Password dell'account da creare
+        
++ Response 201 (application/json)
+
+    Creazione account avvenuta con successo. Invio token e redirect alla pagina del catalogo.
+
+    + Body
+        {
+            "success": true,
+            "message": "Nuovo Utente registrato con successo!",
+            "token": token,
+            "email": newUser.email,
+            "id": newUser._id,
+            "self": "api/v1/" + newUser._id
+        }         
+
++ Response 409 (application/json)
+
+    Creazione account fallita. Esiste già un account con la mail inserita.
+
+    + Body
+        {
+            "success": false, 
+            "message": "Email gia in utilizzo"
+        }
+        
++ Response 409 (application/json)
+
+    Creazione account fallita. Esiste già un account con l'username inserito.
+
+    + Body
+        {
+            "success": false, 
+            "message": "Username gia in utilizzo"
+        }   
+
+## /api/v1/aste
+
+### Visualizza catalogo aste [GET]
+
+Recupera la lista delle aste disponibili.
+
++ Request (application/json)
+      
++ Response 200 (application/json)
+
+    Catalogo delle aste disponibili è pronta.
+
+    + Body
+        [
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
+                "self": "/api/v1/aste/628212e70458719b70eb38e3",
+                "dettagliProdotto": {
+                    "Categorie": [],
+                    "Nome": "Vinile Nevermind dei Nirvana",
+                    "Categoria": [
+                        "Collezionismo",
+                        "Vinile"
+                    ],
+                    "Descrizione": "Vinile in edizione limitata dell'album Nevermind dei Nirvana",
+                    "Foto": [
+                        "Link???"
+                    ]
+                },
+                "dettagliAsta": {
+                    "Inizio": "2022-05-17T22:00:00.000Z",
+                    "Fine": "2022-05-17T22:00:00.000Z",
+                    "Tipo": 1,
+                    "PrezzoMinimo": 100
+                }
+            },
+            {
+                "self": "/api/v1/aste/62849e8b405961286fa9deab",
+                "dettagliProdotto": {
+                    "Categorie": [],
+                    "Nome": "Vinile Nevermindox dei Nirvana",
+                    "Categoria": [
+                        "Collezionismo",
+                        "Vinile"
+                    ],
+                    "Descrizione": "Vinile in edizione limitata dell'album Nevermind dei Nirvana",
+                    "Foto": [
+                        "Link?"
+                    ]
+                },
+                "dettagliAsta": {
+                    "Inizio": "2022-05-17T22:00:00.000Z",
+                    "Fine": "2022-05-17T22:00:00.000Z",
+                    "Tipo": 1,
+                    "PrezzoMinimo": 100.25
+                }
             }
+        ]
