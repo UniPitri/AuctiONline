@@ -30,7 +30,7 @@ app.use((req,res,next) => {
 
 app.use('/api/v1/autenticazione', autenticazione);
 
-//app.use('/api/v1/aste',tokenChecker);
+app.post('/api/v1/aste', tokenChecker)
 
 app.use('/api/v1/aste', aste);
 

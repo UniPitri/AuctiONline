@@ -78,11 +78,19 @@ function caricaAste() {
                 if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
                     if(asta.dettagliAsta.PrezzoMinimo != null)
                         p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+                    else{
+                        p.innerHTML = "Prezzo minimo: X";
+                    }
 
                     p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
+                    if(asta.dettagliAsta.PrezzoAttuale != null){
+                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
+                    }
+                    else{
+                        p.innerHTML = "Prezzo attuale: X";
+                    }
                     p2.innerHTML = "Tempo rimanente: ";
                     countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
                 }

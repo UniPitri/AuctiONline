@@ -14,4 +14,29 @@ router.get('', async function(req, res){
     res.status(200).json(aste);
 });
 
+router.post('', async function(req, res) {
+	let now = new Date();
+
+    let inizio = new Date(req.body.inizio).getTime();
+    let fine = new Date(req.body.fine).getTime();
+
+	if (inizio < now || fine < inizio){
+		return res.status(400).json({success: false, message:"Attributo Inizio o Fine non valido"});
+	}
+
+    const newAsta = new Asta({
+		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categorie,Descrizione:req.body.descrizione,Foto:req.body.foto},
+		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != null) ? req.body.prezzoMinimo : null,PrezzoAttuale:null,VincitoreAttuale:null},
+		Preferenze: []
+	});
+
+    newAsta.save();
+
+	return res.status(201).json({
+		success: true,
+		message: 'Nuova asta aggiunta correttamente',
+		self: "api/v1/" + newAsta._id
+	});
+});
+
 module.exports = router;
