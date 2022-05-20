@@ -27,7 +27,6 @@ app.use((req,res,next) => {
     next();
 })
 
-
 app.use('/api/v1/autenticazione', autenticazione);
 
 app.post('/api/v1/aste', tokenChecker)
