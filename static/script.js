@@ -119,6 +119,13 @@ function annullaCreazioneAsta(){
 }
 
 function shiftCardCreazioneAsta(){
-    paginaCreazione = paginaCreazione ? 0 : 1;
-    window.alert(paginaCreazione);
+    if (paginaCreazione == 0){
+        paginaCreazione = 1;
+        document.getElementById("cardProdotto").hidden = true;
+        document.getElementById("cardAsta").hidden = false;
+    }else{
+        paginaCreazione = 0;
+        document.getElementById("cardAsta").hidden = true;
+        document.getElementById("cardProdotto").hidden = false;
+    }
 }

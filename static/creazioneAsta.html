@@ -26,11 +26,11 @@
             </ul>
         </div>
 
-        <div class="container" style="margin: 40 auto;">
+        <div id="cardProdotto" class="container" style="margin: 40 auto;">
             <div style="background-color: #0ba062; height:400px; height: 650px; border-radius: 50px;">
                 <div class="card-body">
                     <div style="text-align: center;">
-                        <a style="color: white; font-size: larger;"><b>Crea la tua asta !</b></a>
+                        <a style="color: white; font-size: larger;"><b>Crea la tua asta! </b></a>
                     </div>
                     <a style="color: white; font-size: large; margin-left: 2%;"><b>Informazioni prodotto</b></a>
                     <hr style="background-color: #38d996; height:2px">
@@ -58,6 +58,46 @@
                         <div class="containerBottoni">
                             <input id="bottoneAnnulla" style="margin-top: 8%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
                             <input id="bottoneAvanti" style="margin-top: 8%; margin-left: 49%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Avanti" onclick="shiftCardCreazioneAsta()">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="cardAsta" class="container" style="margin: 40 auto;" hidden>
+            <div style="background-color: #0ba062; height:400px; height: 650px; border-radius: 50px;">
+                <div class="card-body">
+                    <div style="text-align: center;">
+                        <a style="color: white; font-size: larger;"><b>Crea la tua asta!</b></a>
+                    </div>
+                    <a style="color: white; font-size: large; margin-left: 2%;"><b>Impostazioni asta</b></a>
+                    <hr style="background-color: #38d996; height:2px">
+                    <form id="form">
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Inizio asta: </b></a>
+                        <input required style="background-color: #001a0f; color: white; width: 19%; height: 5%;border-radius: 5px; border-color: #001a0f;" type="datetime-local" id="inizioAsta" name="inizioAsta">
+                        <br>
+                        <br>
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Fine asta: </b></a>
+                        <input required style="background-color: #001a0f; color: white; width: 19%; height: 5%;border-radius: 5px; border-color: #001a0f;" type="datetime-local" id="fineAsta" name="fineAsta">
+                        <br>
+                        <br>
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Tipo asta: </b></a>
+                        <input required type="radio" name="tipoAsta" id="astaInglese" value="1" style="accent-color: #001a0f;" checked>
+                        <label for="astaInglese" style="color: white;"><b>Asta all'inglese</b></label><br>
+                        <input required type="radio" name="tipoAsta" id="astaBustaChiusa" value="0" style="margin-left: 12.3%; accent-color: #001a0f;">
+                        <label for="astaBustaChiusa" style="color: white;"><b>Asta a busta chiusa</b></label>
+                        <br>
+                        <br>
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Impostazioni asta opzionali</b></a>
+                        <hr style="background-color: #38d996; height:2px">
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Prezzo minimo: </b></a>
+                        <input required style="background-color: #001a0f; color: white; width: 10%; height: 5%; text-align: center; border-radius: 5px; border-color: #001a0f;" type="number" id="prezzoMinimo" name="prezzoMinimo" min="0.01">
+                        <a style="color: white; font-size: large;"><b> €</b></a>
+                        <br>
+                        <br>
+                        <div class="containerBottoni">
+                            <input id="bottoneAnnulla" style="margin-top: 11.2%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
+                            <input id="bottoneAvanti" style="margin-top: 11.2%; margin-left: 47%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Conferma" onclick="shiftCardCreazioneAsta()">
                         </div>
                     </form>
                 </div>
