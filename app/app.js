@@ -32,10 +32,7 @@ app.use('/api/v1/autenticazione', autenticazione);
 
 app.use('/api/v1/aste', aste);
 app.use('/api/v1/registrazione', registrazione);
-//Get nel caso '/'
-/* app.get('/', function(req, res){
-    res.sendFile(__dirname+'/frontend/prova.html')
-}); */
+
 
 //Configurazione mongoose e avvio server
 app.locals.db = mongoose.connect(process.env.DB_URL,
@@ -47,15 +44,3 @@ app.locals.db = mongoose.connect(process.env.DB_URL,
     console.log('Server running on port ', 3000);
     });
 });
-
-
-/*app.listen(3000, function() {
-    console.log('Server running on port ', 3000);
-    });*/
-
-/**
- * Serve front-end static files
- */
-app.use('/', express.static(process.env.FRONTEND || 'static'));
-// If process.env.FRONTEND folder does not contain index.html then use the one from static
-app.use('/', express.static('static')); // expose also this folder

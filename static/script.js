@@ -1,90 +1,84 @@
-/**
- * This variable stores the logged in user
- */
+
  var loggedUser = {};
 
- /**
-  * This function is called when login button is pressed.
-  * Note that this does not perform an actual authentication of the user.
-  * A student is loaded given the specified email,
-  * if it exists, the studentId is used in future calls.
-  */
  function login() {
-     //get the form object
-     var username = document.getElementById("username").value;
-     var password = document.getElementById("password").value;
-     // console.log(email);
- 
-     fetch('../api/v1/autenticazione', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify( { username: username, password: password } ),
-     })
-     .then((resp) => resp.json()) // Transform the data into json
-     .then(function(data) { // Here you get the data to modify as you please
-         if(data.success) {
-             loggedUser.token = data.token;
-             loggedUser.email = data.email;
-             loggedUser.id = data.id;
-             loggedUser.self = data.self;
-             window.location.href = "index.html";
-         } else {
-             document.getElementById('message').innerHTML = data.message;
-             $('#alert').modal('show');
-         }
-         
-         // loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);
-         document.getElementById("loggedUser").textContent = loggedUser.email;
-         loadLendings();
-         return;
-     })
-     .catch( error => console.error(error) ); // If there is any error you will catch them here
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    if(username == ""){
+        window.alert("E' richiesto l'username!");
+    }
+    else if(password == ""){
+        window.alert("E' richiesta la password!");
+    }
+    else{
+        fetch('../api/v1/autenticazione', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify( { username: username, password: password } ),
+        })
+        .then((resp) => resp.json())
+        .then(function(data) { 
+            if(data.success) {
+                loggedUser.token = data.token;
+                loggedUser.email = data.email;
+                loggedUser.id = data.id;
+                loggedUser.self = data.self;
+                window.location.href = "index.html";
+            } else {
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+            }
+        })
+        .catch( error => console.error(error) );
+    }
  };
 
  function register() {
-    //get the form object
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     var email = document.getElementById("email").value;
-    // console.log(email);
 
-    fetch('../api/v1/registrazione', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( { username: username, password: password, email:email } ),
-    })
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please
-        if(data.success) {
-            loggedUser.token = data.token;
-            loggedUser.email = data.email;
-            loggedUser.id = data.id;
-            loggedUser.self = data.self;
-            window.location.href = "index.html";
-        } else {
-            document.getElementById('message').innerHTML = data.message;
-            $('#alert').modal('show');
-        }
-        
-        // loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);
-        document.getElementById("loggedUser").textContent = loggedUser.email;
-        loadLendings();
-        return;
-    })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
+    if (username == ""){
+        window.alert("E' richiesto l'username!");
+    }
+    else if(password == ""){
+        window.alert("E' richiesta la password!");
+    }
+    else if(email == ""){
+        window.alert("E' richiesta la mail!");
+    }
+    else{
+        fetch('../api/v1/registrazione', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify( { username: username, password: password, email:email } ),
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+            if(data.success) {
+                loggedUser.token = data.token;
+                loggedUser.email = data.email;
+                loggedUser.id = data.id;
+                loggedUser.self = data.self;
+                window.location.href = "index.html";
+            } else {
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+            }
+        })
+        .catch( error => console.error(error) );
+    }
 };
 
-/**
- * This function refresh the list of books
-*/
 function caricaAste() {
     const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/aste', {
         method: 'GET',
     })
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please        
-        return data.map(function(asta) { // Map through the results and for each run the code below
+    .then((resp) => resp.json())
+    .then(function(data) {   
+        return data.map(function(asta) {
             let container = document.createElement('div');
             container.className = "container";
             container.style = "margin: 0";
@@ -148,15 +142,10 @@ function caricaAste() {
             cardDeck.appendChild(container);
         })
     })
-    .catch( error => console.error(error) );// If there is any error you will catch them here
+    .catch( error => console.error(error) );
 }
 caricaAste();
 
-/**
- * This function is called by the Take button beside each book.
- * It create a new booklendings resource,
- * given the book and the logged in student
- */
 function takeBook(bookUrl)
 {
     fetch('../api/v1/booklendings', {
@@ -172,7 +161,7 @@ function takeBook(bookUrl)
         loadLendings();
         return;
     })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
+    .catch( error => console.error(error) );
 
 };
 

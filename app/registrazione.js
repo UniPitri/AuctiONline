@@ -13,7 +13,7 @@ router.post('', async function(req, res) {
 	}, {Salt: 0, AstePreferite: 0 }).exec();
     
 	if (presente != null){
-		return res.status(409).json({ success: false, message: 'Email gia in utilizzo' });
+		return res.status(409).json({ success: false, message: 'Email già in utilizzo' });
 	}
 
     // find another user using username
@@ -22,7 +22,7 @@ router.post('', async function(req, res) {
     }, {Salt: 0, AstePreferite: 0 }).exec();
     
     if (presente2 != null){
-        return res.status(409).json({ success: false, message: 'Username gia in utilizzo' });
+        return res.status(409).json({ success: false, message: 'Username già in utilizzo' });
 	}
 
     const newUser = new Utente({Mail: req.body.email, Username: req.body.username, Password: req.body.password});
