@@ -40,7 +40,7 @@
                         <br>
                         <br>
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Categorie prodotto: </b></a>
-                        <select name="categoria" id="categoria" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;">
+                        <select name="categoriaProdotto" id="categoriaProdotto" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;">
                             <option value="Collezionismo">Collezionismo</option>
                             <option value="Vinile">Vinile</opion>
                             <option value="Arte">Arte</option>
@@ -53,11 +53,11 @@
                         <br>
                         <br>
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Upload foto prodotto: </b></a>
-                        <input type="file" name="image" id="image" accept="image/*" style="color: white; border-radius: 5px; border-color: #001a0f;">
+                        <input type="file" name="immagineProdotto" id="immagineProdotto" accept="image/*" style="color: white; border-radius: 5px; border-color: #001a0f;">
                         <br>
                         <div class="containerBottoni">
                             <input id="bottoneAnnulla" style="margin-top: 8%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
-                            <input id="bottoneAvanti" style="margin-top: 8%; margin-left: 49%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Avanti" onclick="shiftCardCreazioneAsta()">
+                            <input id="bottoneAvanti" style="margin-top: 8%; margin-left: 49%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Avanti" onclick="cardAstaOn()">
                         </div>
                     </form>
                 </div>
@@ -96,8 +96,8 @@
                         <br>
                         <br>
                         <div class="containerBottoni">
-                            <input id="bottoneAnnulla" style="margin-top: 11.2%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
-                            <input id="bottoneAvanti" style="margin-top: 11.2%; margin-left: 47%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Conferma" onclick="shiftCardCreazioneAsta()">
+                            <input id="bottoneAnnulla" style="margin-top: 11.2%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Indietro" onclick="cardProdottoOn()">
+                            <input id="bottoneAvanti" style="margin-top: 11.2%; margin-left: 46%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Conferma" onclick="creaAsta()">
                         </div>
                     </form>
                 </div>

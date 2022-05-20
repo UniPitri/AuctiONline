@@ -1,7 +1,5 @@
 var loggedUser = {};
 
-var paginaCreazione = 0;
-
 function login() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
@@ -118,14 +116,23 @@ function annullaCreazioneAsta(){
     window.location.href = "index.html";
 }
 
-function shiftCardCreazioneAsta(){
-    if (paginaCreazione == 0){
-        paginaCreazione = 1;
-        document.getElementById("cardProdotto").hidden = true;
-        document.getElementById("cardAsta").hidden = false;
-    }else{
-        paginaCreazione = 0;
-        document.getElementById("cardAsta").hidden = true;
-        document.getElementById("cardProdotto").hidden = false;
-    }
+function cardAstaOn(){
+    document.getElementById("cardProdotto").hidden = true;
+    document.getElementById("cardAsta").hidden = false;
+}
+
+function cardProdottoOn(){
+    document.getElementById("cardAsta").hidden = true;
+    document.getElementById("cardProdotto").hidden = false;
+}
+
+function creaAsta(){
+    var nomeProdotto = document.getElementById("nomeProdotto").value;
+    var categorieProdotto = document.getElementById("categoriaProdotto").value;
+    var descrizioneProdotto = document.getElementById("descrizioneProdotto").value;
+    immaginiProdotto = document.getElementById("immagineProdotto").value;
+    var inizioAsta = document.getElementById("inizioAsta").value;
+    var fineAsta = document.getElementById("fineAsta").value;
+    var tipoAsta = document.querySelector('input[name="tipoAsta"]:checked').value;
+    var prezzoMinimo = document.getElementById("prezzoMinimo").value;
 }
