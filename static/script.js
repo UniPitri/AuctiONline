@@ -1,27 +1,18 @@
-/**
- * This variable stores the logged in user
- */
 var loggedUser = {};
 
-/**
- * This function is called when login button is pressed.
- * Note that this does not perform an actual authentication of the user.
- * A student is loaded given the specified email,
- * if it exists, the studentId is used in future calls.
- */
+var paginaCreazione = 0;
+
 function login() {
-    //get the form object
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
-    // console.log(email);
 
     fetch('../api/v1/autenticazione', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify( { username: username, password: password } ),
     })
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please
+    .then((resp) => resp.json())
+    .then(function(data) {
         if(data.success) {
             loggedUser.token = data.token;
             loggedUser.email = data.email;
@@ -33,7 +24,7 @@ function login() {
             $('#alert').modal('show');
         }
     })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
+    .catch( error => console.error(error) );
 };
 
 function caricaAste() {
@@ -41,9 +32,9 @@ function caricaAste() {
     fetch('../api/v1/aste', {
         method: 'GET',
     })
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please        
-        return data.map(function(asta) { // Map through the results and for each run the code below
+    .then((resp) => resp.json())
+    .then(function(data) {    
+        return data.map(function(asta) {
             let container = document.createElement('div');
             container.className = "container";
             container.style = "margin: 0";
@@ -115,9 +106,19 @@ function caricaAste() {
             cardDeck.appendChild(container);
         })
     })
-    .catch( error => console.error(error) );// If there is any error you will catch them here
+    .catch( error => console.error(error) );
 }
 
 function nuovaAsta(){
+    paginaCreazione = 0;
     window.location.href = "creazioneAsta.html";
+}
+
+function annullaCreazioneAsta(){
+    window.location.href = "index.html";
+}
+
+function shiftCardCreazioneAsta(){
+    paginaCreazione = paginaCreazione ? 0 : 1;
+    window.alert(paginaCreazione);
 }

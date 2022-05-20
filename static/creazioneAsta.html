@@ -26,6 +26,44 @@
             </ul>
         </div>
 
+        <div class="container" style="margin: 40 auto;">
+            <div style="background-color: #0ba062; height:400px; height: 650px; border-radius: 50px;">
+                <div class="card-body">
+                    <div style="text-align: center;">
+                        <a style="color: white; font-size: larger;"><b>Crea la tua asta !</b></a>
+                    </div>
+                    <a style="color: white; font-size: large; margin-left: 2%;"><b>Informazioni prodotto</b></a>
+                    <hr style="background-color: #38d996; height:2px">
+                    <form id="form">
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Nome prodotto: </b></a>
+                        <input required style="background-color: #001a0f; color: white; width: 25%; height: 5%; text-align: left; border-bottom:none" type="text" id="nomeProdotto" name="nomeProdotto">
+                        <br>
+                        <br>
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Categorie prodotto: </b></a>
+                        <select name="categoria" id="categoria" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;">
+                            <option value="Collezionismo">Collezionismo</option>
+                            <option value="Vinile">Vinile</opion>
+                            <option value="Arte">Arte</option>
+                        </select>
+                        <input required style="background-color: #001a0f; color: white; width: 5%; height: 5%; text-align: center; border-bottom:none;" type="text" id="extraCategoria" name="extraCategoria" value="+" readonly>
+                        <br>
+                        <br>
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Descrzione prodotto: </b></a>
+                        <textarea required style="background-color: #001a0f; color: white; width: 40%; height: 30%; vertical-align: top; resize: none; border-radius: 5px; border-color: #001a0f;" id="descrizioneProdotto" name="descrizioneProdotto"></textarea>
+                        <br>
+                        <br>
+                        <a style="color: white; font-size: large; margin-left: 2%;"><b>Upload foto prodotto: </b></a>
+                        <input type="file" name="image" id="image" accept="image/*" style="color: white; border-radius: 5px; border-color: #001a0f;">
+                        <br>
+                        <div class="containerBottoni">
+                            <input id="bottoneAnnulla" style="margin-top: 8%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
+                            <input id="bottoneAvanti" style="margin-top: 8%; margin-left: 49%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Avanti" onclick="shiftCardCreazioneAsta()">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <script src="script.js"></script>
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
