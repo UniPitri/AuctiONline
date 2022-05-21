@@ -1,5 +1,3 @@
-var loggedUser = {};
-
 function login() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
@@ -12,17 +10,17 @@ function login() {
     .then((resp) => resp.json())
     .then(function(data) {
         if(data.success) {
-            loggedUser.token = data.token;
-            loggedUser.email = data.email;
-            loggedUser.id = data.id;
-            loggedUser.self = data.self;
+            sessionStorage.setItem("token",data.token);
+            sessionStorage.setItem("email",data.email);
+            sessionStorage.setItem("id",data.it);
+            sessionStorage.setItem("self",data.self);
             window.location.href = "index.html";
         } else {
             document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
         }
     })
-    .catch( error => console.error(error) );
+    .catch(error => console.error(error));
 };
 
 function caricaAste() {
@@ -130,9 +128,38 @@ function creaAsta(){
     var nomeProdotto = document.getElementById("nomeProdotto").value;
     var categorieProdotto = document.getElementById("categoriaProdotto").value;
     var descrizioneProdotto = document.getElementById("descrizioneProdotto").value;
-    immaginiProdotto = document.getElementById("immagineProdotto").value;
+    var immaginiProdotto = document.getElementById("immagineProdotto").value;
     var inizioAsta = document.getElementById("inizioAsta").value;
     var fineAsta = document.getElementById("fineAsta").value;
     var tipoAsta = document.querySelector('input[name="tipoAsta"]:checked').value;
-    var prezzoMinimo = document.getElementById("prezzoMinimo").value;
+    var prezzoMinimoProdotto = document.getElementById("prezzoMinimo").value;
+
+    if (nomeProdotto == "" || descrizioneProdotto == "" || !immaginiProdotto || !inizioAsta || fineAsta.value){
+        window.alert("Devi compilare tutti i campi obbligatori!");
+    }
+    else{
+        fetch('../api/v1/aste', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': sessionStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                nome: nomeProdotto,
+                categorie: [categorieProdotto],
+                descrizione: descrizioneProdotto,
+                foto: [immaginiProdotto],
+                inizio: inizioAsta,
+                fine: fineAsta,
+                tipo: tipoAsta,
+                prezzoMinimo: (prezzoMinimoProdotto != null ) ? prezzoMinimoProdotto : null
+            })
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+            window.alert(data.message);
+            window.location.href = "index.html";
+        })
+        .catch(error => console.error(error));
+    }
 }
