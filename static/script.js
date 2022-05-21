@@ -128,32 +128,32 @@ function creaAsta(){
     var nomeProdotto = document.getElementById("nomeProdotto").value;
     var categorieProdotto = document.getElementById("categoriaProdotto").value;
     var descrizioneProdotto = document.getElementById("descrizioneProdotto").value;
-    var immaginiProdotto = document.getElementById("immagineProdotto").value;
+    var immaginiProdotto = document.getElementById("immagineProdotto").files[0];
     var inizioAsta = document.getElementById("inizioAsta").value;
     var fineAsta = document.getElementById("fineAsta").value;
     var tipoAsta = document.querySelector('input[name="tipoAsta"]:checked').value;
     var prezzoMinimoProdotto = document.getElementById("prezzoMinimo").value;
 
-    if (nomeProdotto == "" || descrizioneProdotto == "" || !immaginiProdotto || !inizioAsta || fineAsta.value){
+    if (nomeProdotto == "" || descrizioneProdotto == "" || !immaginiProdotto || !inizioAsta || !fineAsta){
         window.alert("Devi compilare tutti i campi obbligatori!");
     }
     else{
+        var fd = new FormData();
+        fd.append("nome", nomeProdotto);
+        fd.append("categorie", categorieProdotto);
+        fd.append("descrizione", descrizioneProdotto);
+        fd.append("foto", immaginiProdotto);
+        fd.append("inizio", inizioAsta);
+        fd.append("fine", fineAsta);
+        fd.append("tipo",tipoAsta);
+        fd.append("prezzoMinimo", (prezzoMinimoProdotto != null) ? prezzoMinimoProdotto : null);
+
         fetch('../api/v1/aste', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'x-access-token': sessionStorage.getItem("token")
             },
-            body: JSON.stringify({
-                nome: nomeProdotto,
-                categorie: [categorieProdotto],
-                descrizione: descrizioneProdotto,
-                foto: [immaginiProdotto],
-                inizio: inizioAsta,
-                fine: fineAsta,
-                tipo: tipoAsta,
-                prezzoMinimo: (prezzoMinimoProdotto != null ) ? prezzoMinimoProdotto : null
-            })
+            body: fd
         })
         .then((resp) => resp.json())
         .then(function(data) {

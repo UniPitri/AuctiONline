@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Asta = require('./models/asta');
+var fs = require('fs');
 
 router.get('', async function(req, res){
     let aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()}},{Preferite: 0}).exec();
@@ -24,8 +25,19 @@ router.post('', async function(req, res) {
 		return res.status(400).json({success: false, message:"Attributo Inizio o Fine non valido"});
 	}
 
+    let nomeFoto = [];
+    //Salvo le immagini inserite dall'utente
+    for(let i = 0; i < req.files.length; i++){
+        nomeFoto[i] = now.getTime() + "_" + i + ".jpeg";
+        fs.writeFile("./static/fotoProdotti/"+nomeFoto[i],Buffer.from(req.files[i].buffer), function(err){
+            if(err){
+                return console.log(err)
+            }
+        })
+    }
+
     const newAsta = new Asta({
-		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categorie,Descrizione:req.body.descrizione,Foto:req.body.foto},
+		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categorie,Descrizione:req.body.descrizione,Foto:nomeFoto},
 		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != null) ? req.body.prezzoMinimo : null,PrezzoAttuale:null,VincitoreAttuale:null},
 		Preferenze: []
 	});

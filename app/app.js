@@ -1,15 +1,17 @@
 var express = require('express');
 var app = express();
+var multer = require('multer');
+var upload = multer()
 const mongoose = require('mongoose');
 
 const autenticazione = require('./autenticazione.js');
 const tokenChecker = require('./tokenChecker.js');
 
-const aste = require('./aste.js')
+const aste = require('./aste.js');
 
 //Configurazione parsing middleware
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 //Definisco visibilità esterna
 app.use(express.static('../static'))
@@ -31,7 +33,11 @@ app.use('/api/v1/autenticazione', autenticazione);
 
 app.post('/api/v1/aste', tokenChecker)
 
-app.use('/api/v1/aste', aste);
+app.use('/api/v1/aste', upload.array('foto',5),aste);
+
+/* app.use((error,req,res, next) =>{
+    console.log(error.field);
+}) */
 
 //Configurazione mongoose e avvio server
 app.locals.db = mongoose.connect(process.env.DB_URL,
