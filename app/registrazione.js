@@ -1,12 +1,9 @@
 
 const express = require('express');
 const router = express.Router();
-const Utente = require('./models/utente'); // get our mongoose model
-const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-
+const Utente = require('./models/utente');
+const jwt = require('jsonwebtoken');
 router.post('', async function(req, res) {
-	
-    // find another user using email
 
 	let presente = await Utente.findOne({
 		Mail: req.body.email
@@ -16,7 +13,6 @@ router.post('', async function(req, res) {
 		return res.status(409).json({ success: false, message: 'Email già in utilizzo' });
 	}
 
-    // find another user using username
     let presente2 = await Utente.findOne({
         Username: req.body.username
     }, {Salt: 0, AstePreferite: 0 }).exec();
@@ -35,7 +31,7 @@ router.post('', async function(req, res) {
         username: newUser.Username	
 	}
 	var options = {
-		expiresIn: 86400 // expires in 24 hours
+		expiresIn: 86400
 	}
 	var token = jwt.sign(payload, process.env.SUPER_SECRET, options);
 
@@ -46,10 +42,7 @@ router.post('', async function(req, res) {
 		email: newUser.Mail,
 		id: newUser._id,
 		self: "api/v1/" + newUser._id
-	});
-
-    //res.location("/api/v1/autenticazione.js/" + newUser.email).status(201).send();
-	
+	});	
 });
 
 module.exports = router;

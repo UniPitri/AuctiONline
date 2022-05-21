@@ -48,10 +48,10 @@ function register() {
         .then((resp) => resp.json())
         .then(function(data) {
             if(data.success) {
-                loggedUser.token = data.token;
-                loggedUser.email = data.email;
-                loggedUser.id = data.id;
-                loggedUser.self = data.self;
+                sessionStorage.setItem("token",data.token);
+                sessionStorage.setItem("email",data.email);
+                sessionStorage.setItem("id",data.it);
+                sessionStorage.setItem("self",data.self);
                 window.location.href = "index.html";
             } else {
                 document.getElementById('message').innerHTML = data.message;
