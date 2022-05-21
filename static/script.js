@@ -25,6 +25,14 @@ function login() {
     .catch(error => console.error(error));
 };
 
+function logout(){
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("id");
+    sessionStorage.removeItem("self");
+    window.location.href = "index.html";
+}
+
 function register() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
@@ -63,6 +71,13 @@ function register() {
 }
 
 function caricaAste() {
+    if (sessionStorage.getItem("token")){
+        document.getElementById("headerLoggati").hidden = false;
+    }
+    else{
+        document.getElementById("headerSloggati").hidden = false;
+    }
+
     const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/aste', {
         method: 'GET',
@@ -186,7 +201,7 @@ function creaAsta(){
         fd.append("inizio", inizioAsta);
         fd.append("fine", fineAsta);
         fd.append("tipo",tipoAsta);
-        fd.append("prezzoMinimo", (prezzoMinimoProdotto != null) ? prezzoMinimoProdotto : null);
+        fd.append("prezzoMinimo", (!prezzoMinimoProdotto) ? prezzoMinimoProdotto : null);
 
         fetch('../api/v1/aste', {
             method: 'POST',
