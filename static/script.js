@@ -1,3 +1,5 @@
+var categoriaClick = 0;
+
 function login() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
@@ -106,7 +108,6 @@ function caricaAste() {
 }
 
 function nuovaAsta(){
-    paginaCreazione = 0;
     window.location.href = "creazioneAsta.html";
 }
 
@@ -126,7 +127,6 @@ function cardProdottoOn(){
 
 function creaAsta(){
     var nomeProdotto = document.getElementById("nomeProdotto").value;
-    var categorieProdotto = document.getElementById("categoriaProdotto").value;
     var descrizioneProdotto = document.getElementById("descrizioneProdotto").value;
     var immaginiProdotto = document.getElementById("immagineProdotto").files[0];
     var inizioAsta = document.getElementById("inizioAsta").value;
@@ -140,7 +140,11 @@ function creaAsta(){
     else{
         var fd = new FormData();
         fd.append("nome", nomeProdotto);
-        fd.append("categorie", categorieProdotto);
+
+        for(let i = 0; i <= categoriaClick && i < 4; i++){
+            fd.append("categoria", document.getElementById("categoriaProdotto"+i).value);
+        }
+
         fd.append("descrizione", descrizioneProdotto);
         fd.append("foto", immaginiProdotto);
         fd.append("inizio", inizioAsta);
@@ -161,5 +165,27 @@ function creaAsta(){
             window.location.href = "index.html";
         })
         .catch(error => console.error(error));
+    }
+}
+
+function extraCategoriaClick(){
+    if (categoriaClick < 3){
+        document.getElementById("menoCategoria").hidden = false;
+        categoriaClick++;
+        document.getElementById("categoriaProdotto"+categoriaClick).hidden = false;
+        if (categoriaClick == 3){
+            document.getElementById("extraCategoria").hidden = true;
+        }
+    }
+}
+
+function menoCategoriaClick(){
+    if (categoriaClick > 0){
+        document.getElementById("extraCategoria").hidden = false;
+        document.getElementById("categoriaProdotto"+categoriaClick).hidden = true;
+        categoriaClick--;
+        if (categoriaClick == 0){
+            document.getElementById("menoCategoria").hidden = true;
+        }
     }
 }

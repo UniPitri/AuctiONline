@@ -37,7 +37,7 @@ router.post('', async function(req, res) {
     }
 
     const newAsta = new Asta({
-		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categorie,Descrizione:req.body.descrizione,Foto:nomeFoto},
+		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categoria,Descrizione:req.body.descrizione,Foto:nomeFoto},
 		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != null) ? req.body.prezzoMinimo : null,PrezzoAttuale:null,VincitoreAttuale:null},
 		Preferenze: []
 	});

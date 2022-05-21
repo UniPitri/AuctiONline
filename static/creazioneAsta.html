@@ -39,21 +39,42 @@
                         <input required style="background-color: #001a0f; color: white; width: 25%; height: 5%; text-align: left; border-bottom:none" type="text" id="nomeProdotto" name="nomeProdotto">
                         <br>
                         <br>
+                        <div id="divCategorie">
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Categorie prodotto: </b></a>
-                        <select name="categoriaProdotto" id="categoriaProdotto" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;">
+                        <select name="categoriaProdotto0" id="categoriaProdotto0" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;">
                             <option value="Collezionismo">Collezionismo</option>
                             <option value="Vinile">Vinile</opion>
                             <option value="Arte">Arte</option>
+                            <option value="Antico">Antico</option>
                         </select>
-                        <input required style="background-color: #001a0f; color: white; width: 5%; height: 5%; text-align: center; border-bottom:none;" type="text" id="extraCategoria" name="extraCategoria" value="+" readonly>
-                        <br>
+                        <select name="categoriaProdotto1" id="categoriaProdotto1" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;" hidden>
+                            <option value="Collezionismo">Collezionismo</option>
+                            <option value="Vinile">Vinile</opion>
+                            <option value="Arte">Arte</option>
+                            <option value="Antico">Antico</option>
+                        </select>
+                        <select name="categoriaProdotto2" id="categoriaProdotto2" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;" hidden>
+                            <option value="Collezionismo">Collezionismo</option>
+                            <option value="Vinile">Vinile</opion>
+                            <option value="Arte">Arte</option>
+                            <option value="Antico">Antico</option>
+                        </select>
+                        <select name="categoriaProdotto3" id="categoriaProdotto3" style="background-color: #001a0f; color: white; width: 15%; height: 5%; border-radius: 5px; border-color: #001a0f;" hidden>
+                            <option value="Collezionismo">Collezionismo</option>
+                            <option value="Vinile">Vinile</opion>
+                            <option value="Arte">Arte</option>
+                            <option value="Antico">Antico</option>
+                        </select>
+                        <input required style="background-color: #001a0f; color: white; width: 5%; height: 5%; text-align: center; border-bottom:none;" type="text" id="extraCategoria" name="extraCategoria" value="+" readonly onclick="extraCategoriaClick()">
+                        <input required style="background-color: #001a0f; color: white; width: 5%; height: 5%; text-align: center; border-bottom:none;" type="text" id="menoCategoria" name="menoCategoria" value="-" readonly onclick="menoCategoriaClick()" hidden>
+                        </div>
                         <br>
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Descrzione prodotto: </b></a>
                         <textarea required style="background-color: #001a0f; color: white; width: 40%; height: 30%; vertical-align: top; resize: none; border-radius: 5px; border-color: #001a0f;" id="descrizioneProdotto" name="descrizioneProdotto"></textarea>
                         <br>
                         <br>
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Upload foto prodotto: </b></a>
-                        <input type="file" name="immagineProdotto" id="immagineProdotto" accept="image/*" style="color: white; border-radius: 5px; border-color: #001a0f;">
+                        <input type="file" name="immagineProdotto" id="immagineProdotto" accept="image/*" style="color: white; border-radius: 5px; border-color: #001a0f;" multiple="multiple">
                         <br>
                         <div class="containerBottoni">
                             <input id="bottoneAnnulla" style="margin-top: 8%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
