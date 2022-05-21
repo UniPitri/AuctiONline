@@ -117,15 +117,16 @@ Recupera la lista delle aste disponibili.
 
 ### Aggiungi asta al catalogo [POST]
 
-Aggiunge una nuova asta al catalogo, dopo aver verificato la correttazza dei dati inseriti dall'utente.
+Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dati inseriti dall'utente.
 
-+ Request (application/json)
++ Request
 
     + Attributes
+        + token (required, string) - Token di autenticazione dell'utente che vuole creare l'asta
         + nome (required, string) - Nome del prodotto che verrà messo all'asta
         + categorie (required, [string]) - Categorie associate al prodotto che verrà messo all'asta (necessaria una)
         + descrizione (required, string) - Descrizione del prodotto che verrà messo all'asta
-        + foto (required, [string]) - Riferimenti alle foto del prodotto che verrà messo all'asta (necessaria uno)
+        + foto (required, [stringt]) - Riferimenti alle foto del prodotto che verrà messo all'asta (necessaria uno)
         + inizio (required, string) - Data e ora inizio dell'asta
         + fine (required, string) - Data e ora fine dell'asta
         + tipo (required, number) - Tipo dell'asta (0 a Busta chiusa, 1 all'inglese)
