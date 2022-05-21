@@ -1,40 +1,31 @@
+var categoriaClick = 0;
 
- var loggedUser = {};
-
- function login() {
+function login() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
 
-    if(username == ""){
-        window.alert("E' richiesto l'username!");
-    }
-    else if(password == ""){
-        window.alert("E' richiesta la password!");
-    }
-    else{
-        fetch('../api/v1/autenticazione', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify( { username: username, password: password } ),
-        })
-        .then((resp) => resp.json())
-        .then(function(data) { 
-            if(data.success) {
-                loggedUser.token = data.token;
-                loggedUser.email = data.email;
-                loggedUser.id = data.id;
-                loggedUser.self = data.self;
-                window.location.href = "index.html";
-            } else {
-                document.getElementById('message').innerHTML = data.message;
-                $('#alert').modal('show');
-            }
-        })
-        .catch( error => console.error(error) );
-    }
- };
+    fetch('../api/v1/autenticazione', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify( { username: username, password: password } ),
+    })
+    .then((resp) => resp.json())
+    .then(function(data) {
+        if(data.success) {
+            sessionStorage.setItem("token",data.token);
+            sessionStorage.setItem("email",data.email);
+            sessionStorage.setItem("id",data.it);
+            sessionStorage.setItem("self",data.self);
+            window.location.href = "index.html";
+        } else {
+            document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
+    })
+    .catch(error => console.error(error));
+};
 
- function register() {
+function register() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     var email = document.getElementById("email").value;
@@ -69,7 +60,7 @@
         })
         .catch( error => console.error(error) );
     }
-};
+}
 
 function caricaAste() {
     const cardDeck = document.getElementById('cardDeck');
@@ -77,7 +68,7 @@ function caricaAste() {
         method: 'GET',
     })
     .then((resp) => resp.json())
-    .then(function(data) {   
+    .then(function(data) {    
         return data.map(function(asta) {
             let container = document.createElement('div');
             container.className = "container";
@@ -105,11 +96,19 @@ function caricaAste() {
                 if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
                     if(asta.dettagliAsta.PrezzoMinimo != null)
                         p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+                    else{
+                        p.innerHTML = "Prezzo minimo: X";
+                    }
 
                     p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
+                    if(asta.dettagliAsta.PrezzoAttuale != null){
+                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
+                    }
+                    else{
+                        p.innerHTML = "Prezzo attuale: X";
+                    }
                     p2.innerHTML = "Tempo rimanente: ";
                     countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
                 }
@@ -144,88 +143,85 @@ function caricaAste() {
     })
     .catch( error => console.error(error) );
 }
-caricaAste();
-
-function takeBook(bookUrl)
-{
-    fetch('../api/v1/booklendings', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': loggedUser.token
-        },
-        body: JSON.stringify( { student: loggedUser.self, book: bookUrl } ),
-    })
-    .then((resp) => {
-        console.log(resp);
-        loadLendings();
-        return;
-    })
-    .catch( error => console.error(error) );
-
-};
-
-/**
- * This function refresh the list of bookLendings.
- * It only load bookLendings given the logged in student.
- * It is called every time a book is taken of when the user login.
- */
-function loadLendings() {
-
-    const ul = document.getElementById('bookLendings'); // Get the list where we will place our lendings
-
-    ul.innerHTML = '';
-
-    fetch('../api/v1/booklendings?studentId=' + loggedUser.id + '&token=' + loggedUser.token)
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please
-        
-        console.log(data);
-        
-        return data.map( (entry) => { // Map through the results and for each run the code below
-            
-            // let bookId = book.self.substring(book.self.lastIndexOf('/') + 1);
-            
-            let li = document.createElement('li');
-            let span = document.createElement('span');
-            // span.innerHTML = `<a href="${entry.self}">${entry.book}</a>`;
-            let a = document.createElement('a');
-            a.href = entry.self
-            a.textContent = entry.book;
-            
-            // Append all our elements
-            span.appendChild(a);
-            li.appendChild(span);
-            ul.appendChild(li);
-        })
-    })
-    .catch( error => console.error(error) );// If there is any error you will catch them here
-    
+function nuovaAsta(){
+    window.location.href = "creazioneAsta.html";
 }
 
+function annullaCreazioneAsta(){
+    window.location.href = "index.html";
+}
 
-/**
- * This function is called by clicking on the "insert book" button.
- * It creates a new book given the specified title,
- * and force the refresh of the whole list of books.
- */
-function insertBook()
-{
-    //get the book title
-    var bookTitle = document.getElementById("bookTitle").value;
+function cardAstaOn(){
+    document.getElementById("cardProdotto").hidden = true;
+    document.getElementById("cardAsta").hidden = false;
+}
 
-    console.log(bookTitle);
+function cardProdottoOn(){
+    document.getElementById("cardAsta").hidden = true;
+    document.getElementById("cardProdotto").hidden = false;
+}
 
-    fetch('../api/v1/books', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( { title: bookTitle } ),
-    })
-    .then((resp) => {
-        console.log(resp);
-        loadBooks();
-        return;
-    })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
+function creaAsta(){
+    var nomeProdotto = document.getElementById("nomeProdotto").value;
+    var descrizioneProdotto = document.getElementById("descrizioneProdotto").value;
+    var immaginiProdotto = document.getElementById("immagineProdotto").files[0];
+    var inizioAsta = document.getElementById("inizioAsta").value;
+    var fineAsta = document.getElementById("fineAsta").value;
+    var tipoAsta = document.querySelector('input[name="tipoAsta"]:checked').value;
+    var prezzoMinimoProdotto = document.getElementById("prezzoMinimo").value;
 
-};
+    if (nomeProdotto == "" || descrizioneProdotto == "" || !immaginiProdotto || !inizioAsta || !fineAsta){
+        window.alert("Devi compilare tutti i campi obbligatori!");
+    }
+    else{
+        var fd = new FormData();
+        fd.append("nome", nomeProdotto);
+
+        for(let i = 0; i <= categoriaClick && i < 4; i++){
+            fd.append("categoria", document.getElementById("categoriaProdotto"+i).value);
+        }
+
+        fd.append("descrizione", descrizioneProdotto);
+        fd.append("foto", immaginiProdotto);
+        fd.append("inizio", inizioAsta);
+        fd.append("fine", fineAsta);
+        fd.append("tipo",tipoAsta);
+        fd.append("prezzoMinimo", (prezzoMinimoProdotto != null) ? prezzoMinimoProdotto : null);
+
+        fetch('../api/v1/aste', {
+            method: 'POST',
+            headers: {
+                'x-access-token': sessionStorage.getItem("token")
+            },
+            body: fd
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+            window.alert(data.message);
+            window.location.href = "index.html";
+        })
+        .catch(error => console.error(error));
+    }
+}
+
+function extraCategoriaClick(){
+    if (categoriaClick < 3){
+        document.getElementById("menoCategoria").hidden = false;
+        categoriaClick++;
+        document.getElementById("categoriaProdotto"+categoriaClick).hidden = false;
+        if (categoriaClick == 3){
+            document.getElementById("extraCategoria").hidden = true;
+        }
+    }
+}
+
+function menoCategoriaClick(){
+    if (categoriaClick > 0){
+        document.getElementById("extraCategoria").hidden = false;
+        document.getElementById("categoriaProdotto"+categoriaClick).hidden = true;
+        categoriaClick--;
+        if (categoriaClick == 0){
+            document.getElementById("menoCategoria").hidden = true;
+        }
+    }
+}

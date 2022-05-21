@@ -1,16 +1,19 @@
 var express = require('express');
 var app = express();
+var multer = require('multer');
+var upload = multer()
 const mongoose = require('mongoose');
 
 const autenticazione = require('./autenticazione.js');
-const tokenChecker = require('./tokenChecker.js');
-const aste = require('./aste.js')
-
 const registrazione = require('./registrazione.js');
 
+const tokenChecker = require('./tokenChecker.js');
+
+const aste = require('./aste.js');
+
 //Configurazione parsing middleware
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 /**
  * Serve front-end static files
@@ -25,13 +28,12 @@ app.use((req,res,next) => {
     next();
 })
 
-
 app.use('/api/v1/autenticazione', autenticazione);
-
-//app.use('/api/v1/aste',tokenChecker);
-
-app.use('/api/v1/aste', aste);
 app.use('/api/v1/registrazione', registrazione);
+
+app.post('/api/v1/aste', tokenChecker)
+
+app.use('/api/v1/aste', upload.array('foto',5),aste);
 
 
 //Configurazione mongoose e avvio server
