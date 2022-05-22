@@ -117,16 +117,20 @@ function caricaAste() {
                 if (sessionStorage.getItem("token")) {
                     var img = document.createElement('img');
                     div.appendChild(img);
-                    //img.src = 'https://uxwing.com/wp-content/themes/uxwing/download/36-arts-graphic-shapes/star-empty.png';
-                    img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png';
-                    
+                    if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
+                        img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png';
+                    }
+                    else{
+                        img.onclick = function () {aggiungiPreferita(asta.idAsta) };
+                        img.src = 'https://uxwing.com/wp-content/themes/uxwing/download/36-arts-graphic-shapes/star-empty.png';
+                    }  
+                    img.id = "star"+asta.idAsta;                  
                     img.style.height = '20px';
                     img.style.width = '20px';
                     img.style.width = '20px';
                     img.style.position= 'absolute';
                     img.style.top= '5px';
                     img.style.right= '5px';
-                    img.onclick = function () { alert(sessionStorage.getItem("email"));aggiungiPreferita(asta.idAsta) };
                 }
                 row.appendChild(div);
                 container.appendChild(row);
@@ -138,21 +142,22 @@ function caricaAste() {
 caricaAste();
 
 function aggiungiPreferita(idAsta){
-     //alert(sessionStorage.getItem("id"));
-     fetch('../api/v1/astePreferite', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ userID: sessionStorage.getItem("id"), idAsta: idAsta }),
-     })
-         .then((resp) => resp.json()) // Transform the data into json
-         .then(function (data) { // Here you get the data to modify as you please
-             if (data.success) {
-             } else {
-                 document.getElementById('message').innerHTML = data.message;
-                 $('#alert').modal('show');
-             }
-         })
-         .catch(error => console.error(error)); // If there is any error you will catch them here
+    document.getElementById("star"+idAsta).src = "https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png";
+    document.getElementById("star"+idAsta).onclick = null;
+    fetch('../api/v1/astePreferite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("token")},
+        body: JSON.stringify({ userID: sessionStorage.getItem("id"), idAsta: idAsta }),
+    })
+    .then((resp) => resp.json())
+    .then(function (data) {
+        if (data.success) {
+        } else {
+            document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
+    })
+    .catch(error => console.error(error)); // If there is any error you will catch them here
 }
 
 function caricaAstePreferite() {
@@ -228,90 +233,3 @@ function caricaAstePreferite() {
         })
         .catch(error => console.error(error));// If there is any error you will catch them here
 }
-
-/**
- * This function is called by the Take button beside each book.
- * It create a new booklendings resource,
- * given the book and the logged in student
- */
-function takeBook(bookUrl) {
-    fetch('../api/v1/booklendings', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': loggedUser.token
-        },
-        body: JSON.stringify({ student: loggedUser.self, book: bookUrl }),
-    })
-        .then((resp) => {
-            console.log(resp);
-            loadLendings();
-            return;
-        })
-        .catch(error => console.error(error)); // If there is any error you will catch them here
-
-};
-
-/**
- * This function refresh the list of bookLendings.
- * It only load bookLendings given the logged in student.
- * It is called every time a book is taken of when the user login.
- */
-function loadLendings() {
-
-    const ul = document.getElementById('bookLendings'); // Get the list where we will place our lendings
-
-    ul.innerHTML = '';
-
-    fetch('../api/v1/booklendings?studentId=' + loggedUser.id + '&token=' + loggedUser.token)
-        .then((resp) => resp.json()) // Transform the data into json
-        .then(function (data) { // Here you get the data to modify as you please
-
-            console.log(data);
-
-            return data.map((entry) => { // Map through the results and for each run the code below
-
-                // let bookId = book.self.substring(book.self.lastIndexOf('/') + 1);
-
-                let li = document.createElement('li');
-                let span = document.createElement('span');
-                // span.innerHTML = `<a href="${entry.self}">${entry.book}</a>`;
-                let a = document.createElement('a');
-                a.href = entry.self
-                a.textContent = entry.book;
-
-                // Append all our elements
-                span.appendChild(a);
-                li.appendChild(span);
-                ul.appendChild(li);
-            })
-        })
-        .catch(error => console.error(error));// If there is any error you will catch them here
-
-}
-
-
-/**
- * This function is called by clicking on the "insert book" button.
- * It creates a new book given the specified title,
- * and force the refresh of the whole list of books.
- */
-function insertBook() {
-    //get the book title
-    var bookTitle = document.getElementById("bookTitle").value;
-
-    console.log(bookTitle);
-
-    fetch('../api/v1/books', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: bookTitle }),
-    })
-        .then((resp) => {
-            console.log(resp);
-            loadBooks();
-            return;
-        })
-        .catch(error => console.error(error)); // If there is any error you will catch them here
-
-};

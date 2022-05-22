@@ -3,8 +3,8 @@ var app = express();
 const mongoose = require('mongoose');
 
 const autenticazione = require('./autenticazione.js');
-const checkAstaPreferita = require('./checkAstaPreferita.js');
-const aggiungiAstaPreferite = require('./aggiungiAstaPreferite.js');
+//const checkAstaPreferita = require('./checkAstaPreferita.js');
+const astePreferite = require('./astePreferite.js');
 const tokenChecker = require('./tokenChecker.js');
 
 const aste = require('./aste.js')
@@ -31,8 +31,11 @@ app.use((req,res,next) => {
 
 
 app.use('/api/v1/autenticazione', autenticazione);
-app.use('/api/v1/astePreferite', aggiungiAstaPreferite);
-app.use('/api/v1/checkAstaPreferita', checkAstaPreferita);
+
+app.use('/api/v1/astePreferite', tokenChecker);
+
+app.use('/api/v1/astePreferite', astePreferite);
+//app.use('/api/v1/checkAstaPreferita', checkAstaPreferita);
 //app.use('/api/v1/aste',tokenChecker);
 
 app.use('/api/v1/aste', aste);
