@@ -17,7 +17,7 @@ router.get('', async function(req, res){
 
 router.post('', async function(req, res) {
 	let now = new Date();
-
+    
     let inizio = new Date(req.body.inizio).getTime();
     let fine = new Date(req.body.fine).getTime();
 
@@ -29,7 +29,7 @@ router.post('', async function(req, res) {
     }
 
     for(let i = 0; i < req.files.length; i++){
-        if(req.files[i].mimetype != "image/jpeg" || req.files[i].mimetype != "image/png"){
+        if(req.files[i].mimetype != "image/jpeg" && req.files[i].mimetype != "image/png"){
             return res.status(400).json({success: false, message:"Estensione immagine inserita non valida"});
         }
     }
