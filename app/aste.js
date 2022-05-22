@@ -51,7 +51,7 @@ router.post('', async function(req, res) {
 		Preferenze: []
 	});
 
-    //newAsta.save();
+    newAsta.save();
 
 	return res.status(201).json({
 		success: true,
