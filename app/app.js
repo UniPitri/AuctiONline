@@ -8,6 +8,7 @@ const autenticazione = require('./autenticazione.js');
 const registrazione = require('./registrazione.js');
 
 const tokenChecker = require('./tokenChecker.js');
+const tokenCheckerPagine = require('./tokenCheckerPagine.js')
 
 const aste = require('./aste.js');
 
@@ -15,18 +16,13 @@ const aste = require('./aste.js');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-/**
- * Serve front-end static files
- */
- app.use('/', express.static(process.env.FRONTEND || 'static'));
- // If process.env.FRONTEND folder does not contain index.html then use the one from static
- app.use('/', express.static('static')); // expose also this folder
-
-
 app.use((req,res,next) => {
     console.log(req.method + ' ' + req.url);
     next();
 })
+
+app.use('/tueAste.html', tokenCheckerPagine);
+app.use('/creazioneAsta.html', tokenCheckerPagine);
 
 app.use('/api/v1/autenticazione', autenticazione);
 app.use('/api/v1/registrazione', registrazione);
@@ -34,6 +30,13 @@ app.use('/api/v1/registrazione', registrazione);
 app.post('/api/v1/aste', tokenChecker);
 
 app.use('/api/v1/aste', upload.array('foto',5),aste);
+
+/**
+ * Serve front-end static files
+ */
+ app.use('/', express.static(process.env.FRONTEND || 'static'));
+ // If process.env.FRONTEND folder does not contain index.html then use the one from static
+ app.use('/', express.static('static')); // expose also this folder
 
 
 //Configurazione mongoose e avvio server

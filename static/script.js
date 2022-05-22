@@ -159,7 +159,7 @@ function caricaAste() {
     .catch( error => console.error(error) );
 }
 function nuovaAsta(){
-    window.location.href = "creazioneAsta.html";
+    window.location.href = "creazioneAsta.html?token="+sessionStorage.getItem("token");;
 }
 
 function annullaCreazioneAsta(){
@@ -201,7 +201,7 @@ function creaAsta(){
         fd.append("inizio", inizioAsta);
         fd.append("fine", fineAsta);
         fd.append("tipo",tipoAsta);
-        fd.append("prezzoMinimo", (!prezzoMinimoProdotto) ? prezzoMinimoProdotto : null);
+        fd.append("prezzoMinimo", (prezzoMinimoProdotto) ? prezzoMinimoProdotto : null);
 
         fetch('../api/v1/aste', {
             method: 'POST',
@@ -213,7 +213,9 @@ function creaAsta(){
         .then((resp) => resp.json())
         .then(function(data) {
             window.alert(data.message);
-            window.location.href = "index.html";
+            if(data.success){
+                window.location.href = "index.html";
+            }
         })
         .catch(error => console.error(error));
     }
@@ -239,4 +241,8 @@ function menoCategoriaClick(){
             document.getElementById("menoCategoria").hidden = true;
         }
     }
+}
+
+function redirectSicuro(file){
+    window.location.href = file+"?token="+sessionStorage.getItem("token");
 }

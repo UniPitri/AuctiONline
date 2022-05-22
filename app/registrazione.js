@@ -22,7 +22,7 @@ router.post('', async function(req, res) {
 	}
 
     const newUser = new Utente({Mail: req.body.email, Username: req.body.username, Password: req.body.password});
-	console.log(newUser);
+
     newUser.save();
 
     var payload = {
