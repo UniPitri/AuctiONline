@@ -60,6 +60,15 @@ function caricaAste() {
             let div = document.createElement('div');
             div.className = "card rounded";
             div.style = "background-color: #38d996; margin: 1% 0%";
+            let row2 = document.createElement('div');
+            row2.className = "row no-gutters";
+            let col1 = document.createElement('div');
+            col1.className = "col-md-4";
+            let img = document.createElement('img');
+            img.src = "img/" + asta.dettagliProdotto.Foto[0];
+            img.style = "max-width: 100%";
+            let col2 = document.createElement('div');
+            col2.className = "col-md-8";
             let div2 = document.createElement('div');
             div2.className = "card-body";
             let h5 = document.createElement('h5');
@@ -78,6 +87,8 @@ function caricaAste() {
                 if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
                     if(asta.dettagliAsta.PrezzoMinimo != null)
                         p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+                    else
+                        p.innerHTML = "Prezzo minimo: 0€";
 
                     p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
@@ -109,7 +120,11 @@ function caricaAste() {
             div2.appendChild(p);
             div2.appendChild(p2);
             div2.appendChild(p3);
-            div.appendChild(div2);
+            col2.appendChild(div2);            
+            col1.appendChild(img);
+            row2.appendChild(col1);
+            row2.appendChild(col2);
+            div.appendChild(row2);
             row.appendChild(div);
             container.appendChild(row);
             cardDeck.appendChild(container);
