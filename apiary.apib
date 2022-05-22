@@ -126,7 +126,7 @@ Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dat
         + nome (required, string) - Nome del prodotto che verrà messo all'asta
         + categorie (required, [string]) - Categorie associate al prodotto che verrà messo all'asta (necessaria una)
         + descrizione (required, string) - Descrizione del prodotto che verrà messo all'asta
-        + foto (required, [stringt]) - Riferimenti alle foto del prodotto che verrà messo all'asta (necessaria uno)
+        + foto (required, [strint]) - Riferimenti alle foto del prodotto che verrà messo all'asta (necessaria uno)
         + inizio (required, string) - Data e ora inizio dell'asta
         + fine (required, string) - Data e ora fine dell'asta
         + tipo (required, number) - Tipo dell'asta (0 a Busta chiusa, 1 all'inglese)
@@ -151,4 +151,24 @@ Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dat
         {
             "success": false,
             "message": "Attributo Inizio o Fine non valido"
+        }
+
++ Response 400 (application/json)
+    
+    Creazione asta fallita. Il prezzo minimo inserito dall'utente non è un numero.
+    
+    + Body
+        {
+            "success": false,
+            "message": "Attributo prezzo minimo non valido"
+        }
+
++ Response 400 (application/json)
+    
+    Creazione asta fallita. Uno o più file inseriti dall'utente non sono immagini .jpeg o .png.
+    
+    + Body
+        {
+            "success": false,
+            "message": "Estensione immagine inserita non valida"
         }
