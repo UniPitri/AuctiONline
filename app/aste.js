@@ -17,7 +17,7 @@ router.get('', async function(req, res){
 
 router.post('', async function(req, res) {
 	let now = new Date();
-    
+
     let inizio = new Date(req.body.inizio).getTime();
     let fine = new Date(req.body.fine).getTime();
 
@@ -25,7 +25,7 @@ router.post('', async function(req, res) {
 		return res.status(400).json({success: false, message:"Attributo Inizio o Fine non valido"});
 	}
     else if (req.body.prezzoMinimo != "null" && isNaN(req.body.prezzoMinimo)){
-        return res.status(400).json({success: false, message:"Attributo prezzoMinimo non valido"});
+        return res.status(400).json({success: false, message:"Attributo prezzo minimo non valido"});
     }
 
     for(let i = 0; i < req.files.length; i++){

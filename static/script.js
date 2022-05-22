@@ -4,25 +4,33 @@ function login() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
 
-    fetch('../api/v1/autenticazione', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( { username: username, password: password } ),
-    })
-    .then((resp) => resp.json())
-    .then(function(data) {
-        if(data.success) {
-            sessionStorage.setItem("token",data.token);
-            sessionStorage.setItem("email",data.email);
-            sessionStorage.setItem("id",data.it);
-            sessionStorage.setItem("self",data.self);
-            window.location.href = "index.html";
-        } else {
-            document.getElementById('message').innerHTML = data.message;
-            $('#alert').modal('show');
-        }
-    })
-    .catch(error => console.error(error));
+    if(username == ""){
+        window.alert("Devi inserire un username");
+    }
+    else if(password == ""){
+        window.alert("Devi inserire una password");
+    }
+    else{
+        fetch('../api/v1/autenticazione', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify( { username: username, password: password } ),
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+            if(data.success) {
+                sessionStorage.setItem("token",data.token);
+                sessionStorage.setItem("email",data.email);
+                sessionStorage.setItem("id",data.it);
+                sessionStorage.setItem("self",data.self);
+                window.location.href = "index.html";
+            } else {
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+            }
+        })
+        .catch(error => console.error(error));
+    }
 };
 
 function logout(){
