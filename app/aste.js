@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Asta = require('./models/asta');
 var fs = require('fs');
+const Utente = require('./models/utente');
 
 router.get('', async function(req, res){
     let aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()}},{Preferite: 0}).exec();
@@ -48,10 +49,17 @@ router.post('', async function(req, res) {
     const newAsta = new Asta({
 		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categoria,Descrizione:req.body.descrizione,Foto:nomeFoto},
 		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != "null") ? req.body.prezzoMinimo : null,PrezzoAttuale:null,VincitoreAttuale:null},
-		Preferenze: []
+		Preferenze: [req.headers["id-account"]]
 	});
 
-    newAsta.save();
+    id = await newAsta.save();
+
+    await Utente.updateOne({
+        _id: req.headers["id-account"]
+    },
+    {
+        $push:{AstePreferite: id._id}
+    });
 
 	return res.status(201).json({
 		success: true,

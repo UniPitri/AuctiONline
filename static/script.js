@@ -21,7 +21,7 @@ function login() {
             if(data.success) {
                 sessionStorage.setItem("token",data.token);
                 sessionStorage.setItem("email",data.email);
-                sessionStorage.setItem("id",data.it);
+                sessionStorage.setItem("id",data.id);
                 sessionStorage.setItem("self",data.self);
                 window.location.href = "index.html";
             } else {
@@ -66,7 +66,7 @@ function register() {
             if(data.success) {
                 sessionStorage.setItem("token",data.token);
                 sessionStorage.setItem("email",data.email);
-                sessionStorage.setItem("id",data.it);
+                sessionStorage.setItem("id",data.id);
                 sessionStorage.setItem("self",data.self);
                 window.location.href = "index.html";
             } else {
@@ -214,7 +214,8 @@ function creaAsta(){
         fetch('../api/v1/aste', {
             method: 'POST',
             headers: {
-                'x-access-token': sessionStorage.getItem("token")
+                'x-access-token': sessionStorage.getItem("token"),
+                'id-account': sessionStorage.getItem("id")
             },
             body: fd
         })
