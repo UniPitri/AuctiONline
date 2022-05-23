@@ -172,3 +172,37 @@ Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dat
             "success": false,
             "message": "Estensione immagine inserita non valida"
         }
+
+## /api/v1/astePreferite
+
+### Aggiungi nuova asta preferita [POST]
+
+Aggiunge nuova asta alla lista delle aste preferite dell'utente.
+
++ Request (application/json)
+
+    + Attributes
+        + token (required, string) - Token di autenticazione dell'utente che vuole aggiungere l'asta ai preferiti
+        + userID(required, string) - ID dell'utente che vuole aggiungere l'asta ai preferiti
+        + idAsta (required, string) - ID dell'asta da inserire come preferita
+
++ Response 201 (application/json)
+
+    L'asta è stata aggiunta tra i preferiti con successo.
+    
+    + Body
+        {
+            "success": true,
+            "message": "Asta aggiunta ai preferiti"
+            "self": '/api/v1/aste/' + req.body.idAsta
+        }
+
++ Response 409 (application/json)
+
+    Aggiunta asta ai preferiti fallita. L'asta scelta è già tra i preferiti.
+    
+    + Body
+        {
+            "success": false,
+            "message": "Asta già presente tra i preferiti"
+        }
