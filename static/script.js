@@ -79,23 +79,37 @@ function register() {
 }
 
 function offerta(asta, prezzo) {
-    fetch(asta, {
-        method: 'PUT',
-        headers: {
-            'x-access-token': sessionStorage.getItem("token"),
-            'id-account': sessionStorage.getItem("id"),
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify( { prezzo: prezzo.value } ),
-    })
-    .then((resp) => resp.json())
-    .then(function(data) {
-        if(data.success) {
+    if(sessionStorage.getItem('id') == null)
+        window.location.href = 'login.html';
+    else if(prezzo.value.split('.')[1].length > 2) {
+        document.getElementById('modalContent').className = 'modal-content bg-danger';
+        document.getElementById('modalTitle').innerHTML = 'Errore';
+        document.getElementById('message').innerHTML = 'Massimo due decimali';
+        $('#alert').modal('show');
+    } else
+        fetch(asta, {
+            method: 'PUT',
+            headers: {
+                'x-access-token': sessionStorage.getItem("token"),
+                'id-account': sessionStorage.getItem("id"),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify( { prezzo: prezzo.value } ),
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+            if(data.success) {
+                document.getElementById('modalContent').className = 'modal-content bg-success';
+                document.getElementById('modalTitle').innerHTML = 'Successo';
+            } else {
+                document.getElementById('modalContent').className = 'modal-content bg-danger';
+                document.getElementById('modalTitle').innerHTML = 'Errore';
+            }
+            
             document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
-        }
-    })
-    .catch( error => console.error(error) );
+        })
+        .catch( error => console.error(error) );
 }
 
 function redirect2(e, n) {
@@ -114,7 +128,6 @@ function caricaAste() {
     fetch('../api/v1/aste', {
         method: 'GET',
     })
-
     .then((resp) => resp.json()) // Transform the data into json
     .then(function (data) { // Here you get the data to modify as you please        
         return data.map(function (asta) { // Map through the results and for each run the code below
