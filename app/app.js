@@ -26,6 +26,7 @@ app.use('/api/v1/autenticazione', autenticazione);
 app.use('/api/v1/registrazione', registrazione);
 
 app.post('/api/v1/aste', tokenChecker);
+app.put('/api/v1/aste', tokenChecker);
 app.use('/api/v1/astePreferite', tokenChecker);
 
 app.use('/api/v1/aste', upload.array('foto',5),aste);
