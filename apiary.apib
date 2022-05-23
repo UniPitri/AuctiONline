@@ -104,45 +104,105 @@ Recupera la lista delle aste disponibili.
     + Body
         [
             {
-                "self": "/api/v1/aste/628212e70458719b70eb38e3",
-                "dettagliProdotto": {
-                    "Categorie": [],
-                    "Nome": "Vinile Nevermind dei Nirvana",
-                    "Categoria": [
-                        "Collezionismo",
-                        "Vinile"
-                    ],
-                    "Descrizione": "Vinile in edizione limitata dell'album Nevermind dei Nirvana",
-                    "Foto": [
-                        "Link???"
-                    ]
-                },
-                "dettagliAsta": {
-                    "Inizio": "2022-05-17T22:00:00.000Z",
-                    "Fine": "2022-05-17T22:00:00.000Z",
-                    "Tipo": 1,
-                    "PrezzoMinimo": 100
-                }
+                "self": "/api/v1/aste/" + asta1._id,
+                "dettagliProdotto": asta1.DeattgliProdotto,
+                "dettagliAsta": asta1.DettagliAsta
             },
             {
-                "self": "/api/v1/aste/62849e8b405961286fa9deab",
-                "dettagliProdotto": {
-                    "Categorie": [],
-                    "Nome": "Vinile Nevermindox dei Nirvana",
-                    "Categoria": [
-                        "Collezionismo",
-                        "Vinile"
-                    ],
-                    "Descrizione": "Vinile in edizione limitata dell'album Nevermind dei Nirvana",
-                    "Foto": [
-                        "Link?"
-                    ]
-                },
-                "dettagliAsta": {
-                    "Inizio": "2022-05-17T22:00:00.000Z",
-                    "Fine": "2022-05-17T22:00:00.000Z",
-                    "Tipo": 1,
-                    "PrezzoMinimo": 100.25
-                }
+                "self": "/api/v1/aste/" + asta2._id,
+                "dettagliProdotto": asta2.DeattgliProdotto,
+                "dettagliAsta": ast2.DettagliAsta
             }
         ]
+
+### Aggiungi asta al catalogo [POST]
+
+Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dati inseriti dall'utente.
+
++ Request
+
+    + Attributes
+        + token (required, string) - Token di autenticazione dell'utente che vuole creare l'asta
+        + nome (required, string) - Nome del prodotto che verrà messo all'asta
+        + categorie (required, [string]) - Categorie associate al prodotto che verrà messo all'asta (necessaria una)
+        + descrizione (required, string) - Descrizione del prodotto che verrà messo all'asta
+        + foto (required, [strint]) - Riferimenti alle foto del prodotto che verrà messo all'asta (necessaria uno)
+        + inizio (required, string) - Data e ora inizio dell'asta
+        + fine (required, string) - Data e ora fine dell'asta
+        + tipo (required, number) - Tipo dell'asta (0 a Busta chiusa, 1 all'inglese)
+        + prezzoMinimo (optional, number) - Prezzo minimo richiesto per vendere il prodotto
+      
++ Response 201 (application/json)
+
+    Creazione asta avvenuta con successo. Redirect alla pagina del catalogo.
+    
+    + Body
+        {
+            "success": true,
+            "message": "Nuova asta aggiunta correttamente",
+            "self": "api/v1/" + newAsta._id
+        }
+
++ Response 400 (application/json)
+    
+    Creazione asta fallita. La data e/o l'ora specificata in inizio/fine non è valida.
+    
+    + Body
+        {
+            "success": false,
+            "message": "Attributo Inizio o Fine non valido"
+        }
+
++ Response 400 (application/json)
+    
+    Creazione asta fallita. Il prezzo minimo inserito dall'utente non è un numero.
+    
+    + Body
+        {
+            "success": false,
+            "message": "Attributo prezzo minimo non valido"
+        }
+
++ Response 400 (application/json)
+    
+    Creazione asta fallita. Uno o più file inseriti dall'utente non sono immagini .jpeg o .png.
+    
+    + Body
+        {
+            "success": false,
+            "message": "Estensione immagine inserita non valida"
+        }
+
+## /api/v1/astePreferite
+
+### Aggiungi nuova asta preferita [POST]
+
+Aggiunge nuova asta alla lista delle aste preferite dell'utente.
+
++ Request (application/json)
+
+    + Attributes
+        + token (required, string) - Token di autenticazione dell'utente che vuole aggiungere l'asta ai preferiti
+        + userID(required, string) - ID dell'utente che vuole aggiungere l'asta ai preferiti
+        + idAsta (required, string) - ID dell'asta da inserire come preferita
+
++ Response 201 (application/json)
+
+    L'asta è stata aggiunta tra i preferiti con successo.
+    
+    + Body
+        {
+            "success": true,
+            "message": "Asta aggiunta ai preferiti"
+            "self": '/api/v1/aste/' + req.body.idAsta
+        }
+
++ Response 409 (application/json)
+
+    Aggiunta asta ai preferiti fallita. L'asta scelta è già tra i preferiti.
+    
+    + Body
+        {
+            "success": false,
+            "message": "Asta già presente tra i preferiti"
+        }

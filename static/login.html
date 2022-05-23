@@ -12,6 +12,27 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body style="display: flex">
+        <script>
+            function showRegister(){
+                document.getElementById("registerForm").style="display:block";
+                document.getElementById("actionButton").style="display:none";
+                document.getElementById("formFooter").style="display:none";
+            }
+
+            function annullami(){
+                document.getElementById("registerForm").style="display:none";
+                document.getElementById("formFooter").style="display:block";
+                document.getElementById("actionButton").style="padding: 15px 0; width: 90%;display:block";
+            }
+
+            function checkPassword(){
+                if(document.getElementById("password").value==document.getElementById("confermaPassword").value){
+                    register();
+                }else{
+                    alert("Password differenti!");
+                }
+            }   
+        </script>
         <div class="modal fade" id="alert">
             <div class="modal-dialog">
                 <div class="modal-content bg-danger">
@@ -25,19 +46,22 @@
         </div>
         <div class="formContent">
             <i class="bi bi-person-fill" style="font-size: 30px"></i>
-            <form action="api/v1/autenticazione" id="form" method="post">
-                <input autocomplete="username" required type="text" id="username" name="uname" placeholder="Username">
+            <form id="form">
+                <input autocomplete="username" required type="text" id="username" name="username" placeholder="Username">
                 <br>
-                <input autocomplete="password" maxlength="16" required type="password" id="password" name="psw" placeholder="Password">
+                <input autocomplete="password" maxlength="16" required type="password" id="password" name="password" placeholder="Password">
                 <div id="registerForm" style="display: none">
-                    <input autocomplete="name" id="firstName" maxlength="20" name="firstName" type="text" placeholder="first name">
-                    <input autocomplete="last name" id="lastName" maxlength="20" name="lastName" type="text" placeholder="last name">
-                    <input autocomplete="email" id="formEmail" maxlength="40" name="email" type="email" placeholder="email">
+                    <input autocomplete="email" id="email" maxlength="40" name="email" type="email" placeholder="Email">
+                    <input autocomplete="password" maxlength="16" required type="password" id="confermaPassword" name="confermapsw" placeholder="Conferma password"><br>
+                    <div>
+                        <input id="annulla" style="padding: 15px 0; width: 90%;" type="button" value="Annulla" onclick="annullami();">
+                        <input id="registrati" style="padding: 15px 0; width: 90%;" type="button" value="Registrati" onclick="checkPassword()">
+                    </div>
                 </div>
                 <input id="actionButton" onclick="login()" style="padding: 15px 0; width: 90%;" type="button" value="Log In">
             </form>
             <div id="formFooter">
-                <a class="underlineHover" id="action" onclick="register();">Don't have an account? Register here!</a>
+                <a class="underlineHover" id="action" onclick="showRegister();">Don't have an account? Register here!</a>
                 <br>
                 <a class="underlineHover" onclick="$('#insert').modal('show');">Forgot Password?</a>
             </div>

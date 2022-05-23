@@ -1,57 +1,98 @@
-/**
- * This variable stores the logged in user
- */
-var loggedUser = {};
+var categoriaClick = 0;
 
-/**
- * This function is called when login button is pressed.
- * Note that this does not perform an actual authentication of the user.
- * A student is loaded given the specified email,
- * if it exists, the studentId is used in future calls.
- */
 function login() {
-    //get the form object
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
-    // console.log(email);
 
-    fetch('../api/v1/autenticazione', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( { username: username, password: password } ),
-    })
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please
-        if(data.success) {
-            loggedUser.token = data.token;
-            loggedUser.email = data.email;
-            loggedUser.id = data.id;
-            loggedUser.self = data.self;
-            window.location.href = "index.html";
-        } else {
-            document.getElementById('message').innerHTML = data.message;
-            $('#alert').modal('show');
-        }
-        
-        // loggedUser.id = loggedUser.self.substring(loggedUser.self.lastIndexOf('/') + 1);
-        document.getElementById("loggedUser").textContent = loggedUser.email;
-        loadLendings();
-        return;
-    })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
+    if(username == ""){
+        window.alert("Devi inserire un username");
+    }
+    else if(password == ""){
+        window.alert("Devi inserire una password");
+    }
+    else{
+        fetch('../api/v1/autenticazione', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify( { username: username, password: password } ),
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+            if(data.success) {
+                sessionStorage.setItem("token",data.token);
+                sessionStorage.setItem("email",data.email);
+                sessionStorage.setItem("id",data.id);
+                sessionStorage.setItem("self",data.self);
+                window.location.href = "index.html";
+            } else {
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+            }
+        })
+        .catch(error => console.error(error));
+    }
 };
 
-/**
- * This function refresh the list of books
-*/
+function logout(){
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("id");
+    sessionStorage.removeItem("self");
+    window.location.href = "index.html";
+}
+
+function register() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    var email = document.getElementById("email").value;
+
+    if (username == ""){
+        window.alert("E' richiesto l'username!");
+    }
+    else if(password == ""){
+        window.alert("E' richiesta la password!");
+    }
+    else if(email == ""){
+        window.alert("E' richiesta la mail!");
+    }
+    else{
+        fetch('../api/v1/registrazione', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify( { username: username, password: password, email:email } ),
+        })
+        .then((resp) => resp.json())
+        .then(function(data) {
+            if(data.success) {
+                sessionStorage.setItem("token",data.token);
+                sessionStorage.setItem("email",data.email);
+                sessionStorage.setItem("id",data.id);
+                sessionStorage.setItem("self",data.self);
+                window.location.href = "index.html";
+            } else {
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+            }
+        })
+        .catch( error => console.error(error) );
+    }
+}
+
 function caricaAste() {
+    if (sessionStorage.getItem("token")){
+        document.getElementById("headerLoggati").hidden = false;
+    }
+    else{
+        document.getElementById("headerSloggati").hidden = false;
+    }
     const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/aste', {
         method: 'GET',
     })
+
     .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please        
-        return data.map(function(asta) { // Map through the results and for each run the code below
+    .then(function (data) { // Here you get the data to modify as you please        
+        return data.map(function (asta) { // Map through the results and for each run the code below
             let container = document.createElement('div');
             container.className = "container";
             container.style = "margin: 0";
@@ -60,6 +101,15 @@ function caricaAste() {
             let div = document.createElement('div');
             div.className = "card rounded";
             div.style = "background-color: #38d996; margin: 1% 0%";
+            let row2 = document.createElement('div');
+            row2.className = "row no-gutters";
+            let col1 = document.createElement('div');
+            col1.className = "col-md-4";
+            let imgProdotto = document.createElement('img');
+            imgProdotto.src = "fotoProdotti/" + asta.dettagliProdotto.Foto[0];
+            imgProdotto.style = "max-width: 100%";
+            let col2 = document.createElement('div');
+            col2.className = "col-md-8";
             let div2 = document.createElement('div');
             div2.className = "card-body";
             let h5 = document.createElement('h5');
@@ -72,17 +122,28 @@ function caricaAste() {
             p2.className = "card-text";
             p2.innerHTML = "Loading...";
 
-            var x = setInterval(function() {
+            
+
+            var x = setInterval(function () {
                 var now = new Date().getTime();
 
-                if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
-                    if(asta.dettagliAsta.PrezzoMinimo != null)
+                if (new Date(asta.dettagliAsta.Inizio).getTime() > now) {
+                    if (asta.dettagliAsta.PrezzoMinimo != null){
                         p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+                    }
+                    else{
+                        p.innerHTML = "Prezzo minimo: X";
+                    }
 
                     p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
+                    if (asta.dettagliAsta.PrezzoAttuale != null){
+                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
+                    }
+                    else{
+                        p.innerHTML = "Prezzo attuale: X";
+                    }
                     p2.innerHTML = "Tempo rimanente: ";
                     countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
                 }
@@ -94,12 +155,12 @@ function caricaAste() {
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 p2.innerHTML = ((new Date(asta.dettagliAsta.Inizio).getTime() > now) ? "L'asta inizierà tra: " : "Tempo rimanente: ") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
-                if(distance < 0) {
+                if (distance < 0) {
                     clearInterval(x);
                     p2.innerHTML = "EXPIRED";
                 }
 
-                console.log(distance);
+                //console.log(distance);
             }, 1000);
 
             let p3 = document.createElement('p');
@@ -109,101 +170,143 @@ function caricaAste() {
             div2.appendChild(p);
             div2.appendChild(p2);
             div2.appendChild(p3);
-            div.appendChild(div2);
+            col2.appendChild(div2);            
+            col1.appendChild(imgProdotto);
+            row2.appendChild(col1);
+            row2.appendChild(col2);
+            div.appendChild(row2);
+
+            if (sessionStorage.getItem("token")) {
+                var img = document.createElement('img');
+                div.appendChild(img);
+                if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
+                    img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png';
+                }
+                else{
+                    img.onclick = function () {aggiungiPreferita(asta.idAsta) };
+                    img.src = 'https://uxwing.com/wp-content/themes/uxwing/download/36-arts-graphic-shapes/star-empty.png';
+                }  
+                img.id = "star"+asta.idAsta;                  
+                img.style.height = '20px';
+                img.style.width = '20px';
+                img.style.width = '20px';
+                img.style.position= 'absolute';
+                img.style.top= '5px';
+                img.style.right= '5px';
+            }
             row.appendChild(div);
             container.appendChild(row);
             cardDeck.appendChild(container);
         })
     })
-    .catch( error => console.error(error) );// If there is any error you will catch them here
+    .catch( error => console.error(error) );
 }
-caricaAste();
 
-/**
- * This function is called by the Take button beside each book.
- * It create a new booklendings resource,
- * given the book and the logged in student
- */
-function takeBook(bookUrl)
-{
-    fetch('../api/v1/booklendings', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': loggedUser.token
-        },
-        body: JSON.stringify( { student: loggedUser.self, book: bookUrl } ),
-    })
-    .then((resp) => {
-        console.log(resp);
-        loadLendings();
-        return;
-    })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
+function nuovaAsta(){
+    window.location.href = "creazioneAsta.html?token="+sessionStorage.getItem("token");;
+}
 
-};
+function annullaCreazioneAsta(){
+    window.location.href = "index.html";
+}
 
-/**
- * This function refresh the list of bookLendings.
- * It only load bookLendings given the logged in student.
- * It is called every time a book is taken of when the user login.
- */
-function loadLendings() {
+function cardAstaOn(){
+    document.getElementById("cardProdotto").hidden = true;
+    document.getElementById("cardAsta").hidden = false;
+}
 
-    const ul = document.getElementById('bookLendings'); // Get the list where we will place our lendings
+function cardProdottoOn(){
+    document.getElementById("cardAsta").hidden = true;
+    document.getElementById("cardProdotto").hidden = false;
+}
 
-    ul.innerHTML = '';
+function creaAsta(){
+    var nomeProdotto = document.getElementById("nomeProdotto").value;
+    var descrizioneProdotto = document.getElementById("descrizioneProdotto").value;
+    var immaginiProdotto = document.getElementById("immagineProdotto").files[0];
+    var inizioAsta = document.getElementById("inizioAsta").value;
+    var fineAsta = document.getElementById("fineAsta").value;
+    var tipoAsta = document.querySelector('input[name="tipoAsta"]:checked').value;
+    var prezzoMinimoProdotto = document.getElementById("prezzoMinimo").value;
 
-    fetch('../api/v1/booklendings?studentId=' + loggedUser.id + '&token=' + loggedUser.token)
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) { // Here you get the data to modify as you please
-        
-        console.log(data);
-        
-        return data.map( (entry) => { // Map through the results and for each run the code below
-            
-            // let bookId = book.self.substring(book.self.lastIndexOf('/') + 1);
-            
-            let li = document.createElement('li');
-            let span = document.createElement('span');
-            // span.innerHTML = `<a href="${entry.self}">${entry.book}</a>`;
-            let a = document.createElement('a');
-            a.href = entry.self
-            a.textContent = entry.book;
-            
-            // Append all our elements
-            span.appendChild(a);
-            li.appendChild(span);
-            ul.appendChild(li);
+    if (nomeProdotto == "" || descrizioneProdotto == "" || !immaginiProdotto || !inizioAsta || !fineAsta){
+        window.alert("Devi compilare tutti i campi obbligatori!");
+    }
+    else{
+        var fd = new FormData();
+        fd.append("nome", nomeProdotto);
+
+        for(let i = 0; i <= categoriaClick && i < 4; i++){
+            fd.append("categoria", document.getElementById("categoriaProdotto"+i).value);
+        }
+
+        fd.append("descrizione", descrizioneProdotto);
+        fd.append("foto", immaginiProdotto);
+        fd.append("inizio", inizioAsta);
+        fd.append("fine", fineAsta);
+        fd.append("tipo",tipoAsta);
+        fd.append("prezzoMinimo", (prezzoMinimoProdotto) ? prezzoMinimoProdotto : null);
+
+        fetch('../api/v1/aste', {
+            method: 'POST',
+            headers: {
+                'x-access-token': sessionStorage.getItem("token"),
+                'id-account': sessionStorage.getItem("id")
+            },
+            body: fd
         })
-    })
-    .catch( error => console.error(error) );// If there is any error you will catch them here
-    
+        .then((resp) => resp.json())
+        .then(function(data) {
+            window.alert(data.message);
+            if(data.success){
+                window.location.href = "index.html";
+            }
+        })
+        .catch(error => console.error(error));
+    }
 }
 
+function extraCategoriaClick(){
+    if (categoriaClick < 3){
+        document.getElementById("menoCategoria").hidden = false;
+        categoriaClick++;
+        document.getElementById("categoriaProdotto"+categoriaClick).hidden = false;
+        if (categoriaClick == 3){
+            document.getElementById("extraCategoria").hidden = true;
+        }
+    }
+}
 
-/**
- * This function is called by clicking on the "insert book" button.
- * It creates a new book given the specified title,
- * and force the refresh of the whole list of books.
- */
-function insertBook()
-{
-    //get the book title
-    var bookTitle = document.getElementById("bookTitle").value;
+function menoCategoriaClick(){
+    if (categoriaClick > 0){
+        document.getElementById("extraCategoria").hidden = false;
+        document.getElementById("categoriaProdotto"+categoriaClick).hidden = true;
+        categoriaClick--;
+        if (categoriaClick == 0){
+            document.getElementById("menoCategoria").hidden = true;
+        }
+    }
+}
 
-    console.log(bookTitle);
+function redirectSicuro(file){
+    window.location.href = file+"?token="+sessionStorage.getItem("token");
+}
 
-    fetch('../api/v1/books', {
+function aggiungiPreferita(idAsta){
+    document.getElementById("star"+idAsta).src = "https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png";
+    document.getElementById("star"+idAsta).onclick = null;
+    fetch('../api/v1/astePreferite', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( { title: bookTitle } ),
+        headers: { 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("token")},
+        body: JSON.stringify({ userID: sessionStorage.getItem("id"), idAsta: idAsta }),
     })
-    .then((resp) => {
-        console.log(resp);
-        loadBooks();
-        return;
+    .then((resp) => resp.json())
+    .then(function (data) {
+        if (data.success) {
+        } else {
+            document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
     })
-    .catch( error => console.error(error) ); // If there is any error you will catch them here
-
-};
+    .catch(error => console.error(error)); // If there is any error you will catch them here
+}
