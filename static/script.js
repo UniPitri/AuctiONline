@@ -78,6 +78,31 @@ function register() {
     }
 }
 
+function offerta(asta, prezzo) {
+    fetch(asta, {
+        method: 'PUT',
+        headers: {
+            'x-access-token': sessionStorage.getItem("token"),
+            'id-account': sessionStorage.getItem("id"),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify( { prezzo: prezzo.value } ),
+    })
+    .then((resp) => resp.json())
+    .then(function(data) {
+        if(data.success) {
+            document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
+    })
+    .catch( error => console.error(error) );
+}
+
+function redirect2(e, n) {
+    if (e.target.id != "input")
+        alert(n);
+}
+
 function caricaAste() {
     if (sessionStorage.getItem("token")){
         document.getElementById("headerLoggati").hidden = false;
@@ -100,7 +125,8 @@ function caricaAste() {
             row.className = "row";
             let div = document.createElement('div');
             div.className = "card rounded";
-            div.style = "background-color: #38d996; margin: 1% 0%";
+            //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
+            div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0%";
             let row2 = document.createElement('div');
             row2.className = "row no-gutters";
             let col1 = document.createElement('div');
@@ -121,31 +147,32 @@ function caricaAste() {
             let p2 = document.createElement('p');
             p2.className = "card-text";
             p2.innerHTML = "Loading...";
-
-            
+            let offer = document.createElement('input');
+            let form = document.createElement('div');
+            form.style = "display: none";
+            offer.value = asta.dettagliAsta.PrezzoAttuale + 0.01;
 
             var x = setInterval(function () {
                 var now = new Date().getTime();
 
                 if (new Date(asta.dettagliAsta.Inizio).getTime() > now) {
-                    if (asta.dettagliAsta.PrezzoMinimo != null){
+                    if (asta.dettagliAsta.PrezzoMinimo != null)
                         p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
-                    }
-                    else{
+                    else
                         p.innerHTML = "Prezzo minimo: X";
-                    }
 
                     p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    if (asta.dettagliAsta.PrezzoAttuale != null){
+                    if (asta.dettagliAsta.PrezzoAttuale != null)
                         p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
-                    }
-                    else{
+                    else
                         p.innerHTML = "Prezzo attuale: X";
-                    }
+                    
+                    offer.min = asta.dettagliAsta.PrezzoAttuale + 0.01;
                     p2.innerHTML = "Tempo rimanente: ";
                     countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
+                    form.style = "display: show";
                 }
 
                 var distance = countDownDate - now;
@@ -159,17 +186,26 @@ function caricaAste() {
                     clearInterval(x);
                     p2.innerHTML = "EXPIRED";
                 }
-
-                //console.log(distance);
             }, 1000);
 
             let p3 = document.createElement('p');
             p3.className = "card-text";
             p3.innerHTML = "Tipo asta: " + (asta.dettagliAsta.Tipo ? "Asta \"inglese\"" : "Busta chiusa");
+            offer.id = "input";
+            offer.step = ".01";
+            offer.type = "number";
+            let button = document.createElement('input');
+            button.onclick = function() {
+                offerta(asta.self, offer);
+            }
+            button.type = "submit";
             div2.appendChild(h5);
             div2.appendChild(p);
             div2.appendChild(p2);
             div2.appendChild(p3);
+            form.appendChild(offer);
+            form.appendChild(button);
+            div2.appendChild(form);
             col2.appendChild(div2);            
             col1.appendChild(imgProdotto);
             row2.appendChild(col1);

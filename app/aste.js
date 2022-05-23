@@ -70,4 +70,25 @@ router.post('', async function(req, res) {
 	});
 });
 
+router.put('/:id', async function(req, res) {
+    let asta = await Asta.findById(req.params.id);
+
+    if(!asta) {
+        res.status(404).send();
+        console.log('asta non trovata');
+        return;
+    }
+
+    if(req.body.prezzo > asta.PrezzoAttuale) {
+        res.status(410).send();
+        console.log('prezzo non valido');
+        return;
+    }
+    
+    asta.DettagliAsta.PrezzoAttuale = req.body.prezzo;
+    await asta.save();
+    console.log('Asta modificata');
+    return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });
+});
+
 module.exports = router;
