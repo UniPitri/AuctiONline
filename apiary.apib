@@ -20,27 +20,27 @@ Verifica le credenziali inserite dall'utente e in caso positivo crea un token di
       
 + Response 201 (application/json)
 
-    Autenticazione avvenuta con successo. Invio token e redirect alla pagina del catalogo.
+        Autenticazione avvenuta con successo. Invio token e redirect alla pagina del catalogo.
 
-    + Body
-        {
-            "success": true,
-            "message": "Enjoy your token!",
-            "token": token,
-            "email": user.email,
-            "id": user._id,
-            "self": "api/v1/" + user._id
-        }
+            + Body
+            {
+                "success": true,
+                "message": "Enjoy your token!",
+                "token": token,
+                "email": user.email,
+                "id": user._id,
+                "self": "api/v1/" + user._id
+            }
 
 + Response 401 (application/json)
 
-    Autenticazione fallita. Invio messaggio di errore.
+        Autenticazione fallita. Invio messaggio di errore.
     
-    + Body
-        {
-            "success": false, 
-            "message": "Autenticazione fallita. Utente o password errati"
-        }
+            + Body
+            {
+                "success": false, 
+                "message": "Autenticazione fallita. Utente o password errati"
+            }
 
 ## /api/v1/registrazione
 
@@ -57,37 +57,37 @@ Ritorna la lista tutte le aste presenti sul catalogo che devono ancora iniziare.
         
 + Response 201 (application/json)
 
-    Creazione account avvenuta con successo. Invio token e redirect alla pagina del catalogo.
+        Creazione account avvenuta con successo. Invio token e redirect alla pagina del catalogo.
 
-    + Body
-        {
-            "success": true,
-            "message": "Nuovo Utente registrato con successo!",
-            "token": token,
-            "email": newUser.email,
-            "id": newUser._id,
-            "self": "api/v1/" + newUser._id
-        }         
+            + Body
+            {
+                "success": true,
+                "message": "Nuovo Utente registrato con successo!",
+                "token": token,
+                "email": newUser.email,
+                "id": newUser._id,
+                "self": "api/v1/" + newUser._id
+            }         
 
 + Response 409 (application/json)
 
-    Creazione account fallita. Esiste già un account con la mail inserita.
+        Creazione account fallita. Esiste già un account con la mail inserita.
 
-    + Body
-        {
-            "success": false, 
-            "message": "Email gia in utilizzo"
-        }
+            + Body
+            {
+                "success": false, 
+                "message": "Email gia in utilizzo"
+            }
         
 + Response 409 (application/json)
 
-    Creazione account fallita. Esiste già un account con l'username inserito.
+        Creazione account fallita. Esiste già un account con l'username inserito.
 
-    + Body
-        {
-            "success": false, 
-            "message": "Username gia in utilizzo"
-        }   
+            + Body
+            {
+                "success": false, 
+                "message": "Username gia in utilizzo"
+            }   
 
 ## /api/v1/aste
 
@@ -99,23 +99,23 @@ Recupera la lista delle aste disponibili.
       
 + Response 200 (application/json)
 
-    Catalogo delle aste disponibili è pronta.
+        Catalogo delle aste disponibili è pronta.
 
-    + Body
-        [
-            {
-                "self": "/api/v1/aste/" + asta1._id,
-                "dettagliProdotto": asta1.DeattgliProdotto,
-                "dettagliAsta": asta1.DettagliAsta
-                "preferenze": asta1.Preferenze
-            },
-            {
-                "self": "/api/v1/aste/" + asta2._id,
-                "dettagliProdotto": asta2.DeattgliProdotto,
-                "dettagliAsta": ast2.DettagliAsta
-                "preferenze": asta2.Preferenze
-            }
-        ]
+            + Body
+            [
+                {
+                    "self": "/api/v1/aste/" + asta1._id,
+                    "dettagliProdotto": asta1.DeattgliProdotto,
+                    "dettagliAsta": asta1.DettagliAsta
+                    "preferenze": asta1.Preferenze
+                },
+                {
+                    "self": "/api/v1/aste/" + asta2._id,
+                    "dettagliProdotto": asta2.DeattgliProdotto,
+                    "dettagliAsta": ast2.DettagliAsta
+                    "preferenze": asta2.Preferenze
+                }
+            ]
 
 ### Aggiungi asta al catalogo [POST]
 
@@ -136,44 +136,62 @@ Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dat
       
 + Response 201 (application/json)
 
-    Creazione asta avvenuta con successo. Redirect alla pagina del catalogo.
+        Creazione asta avvenuta con successo. Redirect alla pagina del catalogo.
     
-    + Body
-        {
-            "success": true,
-            "message": "Nuova asta aggiunta correttamente",
-            "self": "api/v1/" + newAsta._id
-        }
+            + Body
+            {
+                "success": true,
+                "message": "Nuova asta aggiunta correttamente",
+                "self": "api/v1/" + newAsta._id
+            }
 
 + Response 400 (application/json)
     
-    Creazione asta fallita. La data e/o l'ora specificata in inizio/fine non è valida.
+        Creazione asta fallita. La data e/o l'ora specificata in inizio/fine non è valida.
     
-    + Body
-        {
-            "success": false,
-            "message": "Attributo Inizio o Fine non valido"
-        }
+            + Body
+            {
+                "success": false,
+                "message": "Attributo Inizio o Fine non valido"
+            }
 
 + Response 400 (application/json)
     
-    Creazione asta fallita. Il prezzo minimo inserito dall'utente non è un numero.
+        Creazione asta fallita. Il prezzo minimo inserito dall'utente non è un numero.
     
-    + Body
-        {
-            "success": false,
-            "message": "Attributo prezzo minimo non valido"
-        }
+            + Body
+            {
+                "success": false,
+                "message": "Attributo prezzo minimo non valido"
+            }
 
 + Response 400 (application/json)
     
-    Creazione asta fallita. Uno o più file inseriti dall'utente non sono immagini .jpeg o .png.
+        Creazione asta fallita. Uno o più file inseriti dall'utente non sono immagini .jpeg o .png.
     
-    + Body
-        {
-            "success": false,
-            "message": "Estensione immagine inserita non valida"
-        }
+            + Body
+            {
+                "success": false,
+                "message": "Estensione immagine inserita non valida"
+            }
+
+## /api/v1/aste/:id
+
+### Formula nuova offerta [POST]
+
+Formula una nuova offerta per il prodotto identificato da id.
+
++ Request (application/json)
+
+    + Attributes
+        +TODO
+
++ Response 201 (application/json)
+
+            + Body
+            {
+                TODO
+            }
 
 ## /api/v1/astePreferite
 
@@ -190,21 +208,21 @@ Aggiunge nuova asta alla lista delle aste preferite dell'utente.
 
 + Response 201 (application/json)
 
-    L'asta è stata aggiunta tra i preferiti con successo.
+        L'asta è stata aggiunta tra i preferiti con successo.
     
-    + Body
-        {
-            "success": true,
-            "message": "Asta aggiunta ai preferiti"
-            "self": '/api/v1/aste/' + req.body.idAsta
-        }
+            + Body
+            {
+                "success": true,
+                "message": "Asta aggiunta ai preferiti"
+                "self": '/api/v1/aste/' + req.body.idAsta
+            }
 
 + Response 409 (application/json)
 
-    Aggiunta asta ai preferiti fallita. L'asta scelta è già tra i preferiti.
+        Aggiunta asta ai preferiti fallita. L'asta scelta è già tra i preferiti.
     
-    + Body
-        {
-            "success": false,
-            "message": "Asta già presente tra i preferiti"
-        }
+            + Body
+            {
+                "success": false,
+                "message": "Asta già presente tra i preferiti"
+            }
