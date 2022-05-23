@@ -18,6 +18,17 @@
         </style>
     </head>
     <body onload="caricaAste()">
+        <div class="modal fade" id="alert">
+            <div class="modal-dialog">
+                <div class="modal-content bg-success">
+                    <h5 class="modal-title">Successo</h5>
+                    <div class="modal-body">
+                        <p id="message"></p>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="headerSloggati" style="background-color: #38d996; text-align:right" hidden>
             <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
                 <li><a href="#home" style="color:white">Home</a></li>|
