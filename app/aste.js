@@ -74,11 +74,15 @@ router.put('/:id', async function(req, res) {
     let asta = await Asta.findById(req.params.id);
 
     if(!asta) 
-        return res.status(404).json({ message: 'Asta non trovata', success: false });
+        return res.status(404).json({ success: false, message: 'Asta non trovata'});
 
     if(req.body.prezzo < asta.DettagliAsta.PrezzoAttuale)
-        return res.status(400).json({ message: 'Prezzo troppo basso', success: false });
-    
+        return res.status(400).json({ success: false, message: 'Prezzo troppo basso'});
+
+    if(isNaN(req.body.prezzo) || req.body.prezzo==null){
+        return res.status(400).json({ success: false, message: 'Prezzo non valido'});
+    }
+
     asta.DettagliAsta.PrezzoAttuale = req.body.prezzo;
     await asta.save();
     console.log('Asta modificata');

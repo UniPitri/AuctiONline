@@ -209,12 +209,22 @@ Formula una nuova offerta per il prodotto identificato da id.
 
 + Response 400 (application/json)
 
-    Offerta fallita. L'asta non esiste.
+    Offerta fallita. L'offerta inserita è più bassa del prezzo attuale.
 
     + Body
     {
         "success": false,
         "message": "Prezzo troppo basso"
+    }
+
++ Response 400 (application/json)
+
+    Offerta fallita. L'offerta inserita è composta da caratteri alfanumerici.
+
+    + Body
+    {
+        "success": false,
+        "message": "Prezzo non valido"
     }
 
 ## /api/v1/astePreferite
