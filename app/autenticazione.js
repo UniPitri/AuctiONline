@@ -10,7 +10,7 @@ router.post('', async function(req, res) {
 	}, { Salt: 0, AstePreferite: 0 }).exec();
 	
 	if (!user || user.Password != req.body.password) {
-		return res.status(401).json({ success: 0, message: 'Autenticazione fallita. Utente o password errati' });
+		return res.status(401).json({ success: false, message: 'Autenticazione fallita. Utente o password errati' });
 	} else {
 		var payload = {
 			email: user.Mail,
@@ -23,7 +23,7 @@ router.post('', async function(req, res) {
 		var token = jwt.sign(payload, process.env.SUPER_SECRET, options);
 
 		return res.status(201).json({
-			success: 1,
+			success: true,
 			message: 'Enjoy your token!',
 			token: token,
 			email: user.Mail,

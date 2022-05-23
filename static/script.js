@@ -180,11 +180,11 @@ function caricaAste() {
                 var img = document.createElement('img');
                 div.appendChild(img);
                 if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
-                    img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png';
+                    img.src = '/icone/Plain_Yellow_Star.png';
                 }
                 else{
                     img.onclick = function () {aggiungiPreferita(asta.idAsta) };
-                    img.src = 'https://uxwing.com/wp-content/themes/uxwing/download/36-arts-graphic-shapes/star-empty.png';
+                    img.src = '/icone/star-empty.webp';
                 }  
                 img.id = "star"+asta.idAsta;                  
                 img.style.height = '20px';
@@ -203,7 +203,7 @@ function caricaAste() {
 }
 
 function nuovaAsta(){
-    window.location.href = "creazioneAsta.html?token="+sessionStorage.getItem("token");;
+    window.location.href = "creazioneAsta.html?token="+sessionStorage.getItem("token");
 }
 
 function annullaCreazioneAsta(){
@@ -293,7 +293,7 @@ function redirectSicuro(file){
 }
 
 function aggiungiPreferita(idAsta){
-    document.getElementById("star"+idAsta).src = "https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png";
+    document.getElementById("star"+idAsta).src = '/icone/Plain_Yellow_Star.png';
     document.getElementById("star"+idAsta).onclick = null;
     fetch('../api/v1/astePreferite', {
         method: 'POST',
