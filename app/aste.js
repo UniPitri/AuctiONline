@@ -63,7 +63,7 @@ router.post('', async function(req, res) {
         $push:{AstePreferite: id._id}
     });
 
-	return res.status(201).json({
+	return res.status(200).json({
 		success: true,
 		message: 'Nuova asta aggiunta correttamente',
 		self: "api/v1/" + newAsta._id
@@ -73,17 +73,11 @@ router.post('', async function(req, res) {
 router.put('/:id', async function(req, res) {
     let asta = await Asta.findById(req.params.id);
 
-    if(!asta) {
-        res.status(404).send();
-        console.log('asta non trovata');
-        return;
-    }
+    if(!asta) 
+        return res.status(404).json({ message: 'Asta non trovata', success: false });
 
-    if(req.body.prezzo > asta.PrezzoAttuale) {
-        res.status(410).send();
-        console.log('prezzo non valido');
-        return;
-    }
+    if(req.body.prezzo < asta.DettagliAsta.PrezzoAttuale)
+        return res.status(400).json({ message: 'Prezzo troppo basso', success: false });
     
     asta.DettagliAsta.PrezzoAttuale = req.body.prezzo;
     await asta.save();
