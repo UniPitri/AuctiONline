@@ -85,14 +85,14 @@ function caricaAste() {
     else{
         document.getElementById("headerSloggati").hidden = false;
     }
-
     const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/aste', {
         method: 'GET',
     })
-    .then((resp) => resp.json())
-    .then(function(data) {    
-        return data.map(function(asta) {
+
+    .then((resp) => resp.json()) // Transform the data into json
+    .then(function (data) { // Here you get the data to modify as you please        
+        return data.map(function (asta) { // Map through the results and for each run the code below
             let container = document.createElement('div');
             container.className = "container";
             container.style = "margin: 0";
@@ -101,6 +101,15 @@ function caricaAste() {
             let div = document.createElement('div');
             div.className = "card rounded";
             div.style = "background-color: #38d996; margin: 1% 0%";
+            let row2 = document.createElement('div');
+            row2.className = "row no-gutters";
+            let col1 = document.createElement('div');
+            col1.className = "col-md-4";
+            let imgProdotto = document.createElement('img');
+            imgProdotto.src = "fotoProdotti/" + asta.dettagliProdotto.Foto[0];
+            imgProdotto.style = "max-width: 100%";
+            let col2 = document.createElement('div');
+            col2.className = "col-md-8";
             let div2 = document.createElement('div');
             div2.className = "card-body";
             let h5 = document.createElement('h5');
@@ -113,12 +122,15 @@ function caricaAste() {
             p2.className = "card-text";
             p2.innerHTML = "Loading...";
 
-            var x = setInterval(function() {
+            
+
+            var x = setInterval(function () {
                 var now = new Date().getTime();
 
-                if(new Date(asta.dettagliAsta.Inizio).getTime() > now) {
-                    if(asta.dettagliAsta.PrezzoMinimo != null)
+                if (new Date(asta.dettagliAsta.Inizio).getTime() > now) {
+                    if (asta.dettagliAsta.PrezzoMinimo != null){
                         p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+                    }
                     else{
                         p.innerHTML = "Prezzo minimo: X";
                     }
@@ -126,7 +138,7 @@ function caricaAste() {
                     p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    if(asta.dettagliAsta.PrezzoAttuale != null){
+                    if (asta.dettagliAsta.PrezzoAttuale != null){
                         p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
                     }
                     else{
@@ -143,12 +155,12 @@ function caricaAste() {
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 p2.innerHTML = ((new Date(asta.dettagliAsta.Inizio).getTime() > now) ? "L'asta inizierà tra: " : "Tempo rimanente: ") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
-                if(distance < 0) {
+                if (distance < 0) {
                     clearInterval(x);
                     p2.innerHTML = "EXPIRED";
                 }
 
-                console.log(distance);
+                //console.log(distance);
             }, 1000);
 
             let p3 = document.createElement('p');
@@ -158,7 +170,30 @@ function caricaAste() {
             div2.appendChild(p);
             div2.appendChild(p2);
             div2.appendChild(p3);
-            div.appendChild(div2);
+            col2.appendChild(div2);            
+            col1.appendChild(imgProdotto);
+            row2.appendChild(col1);
+            row2.appendChild(col2);
+            div.appendChild(row2);
+
+            if (sessionStorage.getItem("token")) {
+                var img = document.createElement('img');
+                div.appendChild(img);
+                if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
+                    img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png';
+                }
+                else{
+                    img.onclick = function () {aggiungiPreferita(asta.idAsta) };
+                    img.src = 'https://uxwing.com/wp-content/themes/uxwing/download/36-arts-graphic-shapes/star-empty.png';
+                }  
+                img.id = "star"+asta.idAsta;                  
+                img.style.height = '20px';
+                img.style.width = '20px';
+                img.style.width = '20px';
+                img.style.position= 'absolute';
+                img.style.top= '5px';
+                img.style.right= '5px';
+            }
             row.appendChild(div);
             container.appendChild(row);
             cardDeck.appendChild(container);
@@ -166,6 +201,7 @@ function caricaAste() {
     })
     .catch( error => console.error(error) );
 }
+
 function nuovaAsta(){
     window.location.href = "creazioneAsta.html?token="+sessionStorage.getItem("token");;
 }
@@ -254,4 +290,23 @@ function menoCategoriaClick(){
 
 function redirectSicuro(file){
     window.location.href = file+"?token="+sessionStorage.getItem("token");
+}
+
+function aggiungiPreferita(idAsta){
+    document.getElementById("star"+idAsta).src = "https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png";
+    document.getElementById("star"+idAsta).onclick = null;
+    fetch('../api/v1/astePreferite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("token")},
+        body: JSON.stringify({ userID: sessionStorage.getItem("id"), idAsta: idAsta }),
+    })
+    .then((resp) => resp.json())
+    .then(function (data) {
+        if (data.success) {
+        } else {
+            document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
+    })
+    .catch(error => console.error(error)); // If there is any error you will catch them here
 }
