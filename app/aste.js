@@ -50,7 +50,7 @@ router.post('', async function(req, res) {
 
     const newAsta = new Asta({
 		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categoria,Descrizione:req.body.descrizione,Foto:nomeFoto},
-		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != "null") ? req.body.prezzoMinimo : null,PrezzoAttuale:null,VincitoreAttuale:null},
+		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != "null") ? req.body.prezzoMinimo : null,Offerte:[],Offerenti:[]},
 		Preferenze: [req.headers["id-account"]]
 	});
 
@@ -76,14 +76,24 @@ router.put('/:id', async function(req, res) {
     if(!asta) 
         return res.status(404).json({ success: false, message: 'Asta non trovata'});
 
-    if(req.body.prezzo < asta.DettagliAsta.PrezzoAttuale)
+    let dateTimeAttuale = new Date().getTime();
+    if(asta.DettagliAsta.Inizio > dateTimeAttuale || asta.DettagliAsta.Fine < dateTimeAttuale){
+        return res.status(400).json({ success: false, message: 'Non puoi offrire per questa asta'});
+    }
+
+    if((asta.DettagliAsta.Offerte.length != 0 && req.body.prezzo <= asta.DettagliAsta.Offerte[asta.DettagliAsta.Offerte.length-1]) || (asta.DettagliAsta.PrezzoMinimo && req.body.prezzo < asta.DettagliAsta.PrezzoMinimo))
         return res.status(400).json({ success: false, message: 'Prezzo troppo basso'});
 
     if(isNaN(req.body.prezzo) || req.body.prezzo==null){
         return res.status(400).json({ success: false, message: 'Prezzo non valido'});
     }
 
-    asta.DettagliAsta.PrezzoAttuale = req.body.prezzo;
+    if(asta.DettagliAsta.Tipo == 0 && asta.DettagliAsta.Offerenti.indexOf(req.headers["id-account"]) > -1){
+        return res.status(400).json({ success: false, message: "L'asta è a busta chiusa ed è presente già una tua offerta"});
+    }
+
+    asta.DettagliAsta.Offerte[asta.DettagliAsta.Offerte.length] = req.body.prezzo;
+    asta.DettagliAsta.Offerenti[asta.DettagliAsta.Offerenti.length] = req.headers["id-account"];
     await asta.save();
 
     return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });

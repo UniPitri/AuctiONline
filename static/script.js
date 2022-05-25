@@ -81,7 +81,7 @@ function register() {
 function offerta(asta, prezzo) {
     if(sessionStorage.getItem('id') == null)
         window.location.href = 'login.html';
-    else if(prezzo.value.split('.')[1].length > 2) {
+    else if(prezzo.value %1 != 0 && prezzo.value.split('.')[1].length > 2) {
         document.getElementById('modalContent').className = 'modal-content bg-danger';
         document.getElementById('modalTitle').innerHTML = 'Errore';
         document.getElementById('message').innerHTML = 'Massimo due decimali';
@@ -163,7 +163,20 @@ function caricaAste() {
             let offer = document.createElement('input');
             let form = document.createElement('div');
             form.style = "display: none";
-            offer.value = asta.dettagliAsta.PrezzoAttuale + 0.01;
+            if(asta.dettagliAsta.Offerte.length != 0){
+                offer.value = asta.dettagliAsta.Offerte[asta.dettagliAsta.Offerte.length-1] + 0.01;
+                offer.min = asta.dettagliAsta.Offerte[asta.dettagliAsta.Offerte.length-1] + 0.01;
+            }
+            else{
+                if(asta.dettagliAsta.PrezzoMinimo != null){
+                    offer.value = asta.dettagliAsta.PrezzoMinimo + 0.01;
+                    offer.min = asta.dettagliAsta.PrezzoMinimo + 0.01;
+                }
+                else{
+                    offer.value = 0.01;
+                    offer.min = 0.01;
+                }
+            }
 
             var x = setInterval(function () {
                 var now = new Date().getTime();
@@ -177,12 +190,12 @@ function caricaAste() {
                     p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    if (asta.dettagliAsta.PrezzoAttuale != null)
-                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.PrezzoAttuale + "€";
-                    else
+                    if (asta.dettagliAsta.Offerte.length != 0){
+                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.Offerte[asta.dettagliAsta.Offerte.length-1] + "€";
+                    }
+                    else{
                         p.innerHTML = "Prezzo attuale: X";
-                    
-                    offer.min = asta.dettagliAsta.PrezzoAttuale + 0.01;
+                    }
                     p2.innerHTML = "Tempo rimanente: ";
                     countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
                     form.style = "display: show";
@@ -212,6 +225,7 @@ function caricaAste() {
                 offerta(asta.self, offer);
             }
             button.type = "submit";
+            button.value = "Offri";
             div2.appendChild(h5);
             div2.appendChild(p);
             div2.appendChild(p2);

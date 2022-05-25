@@ -14,8 +14,8 @@ module.exports = mongoose.model('Aste', new Schema({
         Fine: Date,
         Tipo: Number,
         PrezzoMinimo: Number,
-        PrezzoAttuale: Number,
-        VincitoreAttuale: Schema.Types.ObjectId
+        Offerte: [Number],
+        Offerenti: [Schema.Types.ObjectId]
     },
     Preferenze: [Schema.Types.ObjectId]
 }, {collection: 'Aste'}));
