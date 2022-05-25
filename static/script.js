@@ -243,6 +243,7 @@ function caricaAste() {
                 var img = document.createElement('img');
                 div.appendChild(img);
                 if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
+                    img.onclick = function () {rimuoviPreferita(asta.idAsta) };
                     img.src = '/icone/Plain_Yellow_Star.png';
                 }
                 else{
@@ -264,6 +265,7 @@ function caricaAste() {
     })
     .catch( error => console.error(error) );
 }
+
 
 function nuovaAsta(){
     window.location.href = "creazioneAsta.html?token="+sessionStorage.getItem("token");
@@ -357,9 +359,29 @@ function redirectSicuro(file){
 
 function aggiungiPreferita(idAsta){
     document.getElementById("star"+idAsta).src = '/icone/Plain_Yellow_Star.png';
-    document.getElementById("star"+idAsta).onclick = null;
+    document.getElementById("star"+idAsta).onclick = function () {rimuoviPreferita(idAsta) };
     fetch('../api/v1/astePreferite', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("token")},
+        body: JSON.stringify({ userID: sessionStorage.getItem("id"), idAsta: idAsta }),
+    })
+    .then((resp) => resp.json())
+    .then(function (data) {
+        if (data.success) {
+        } else {
+            document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
+    })
+    .catch(error => console.error(error)); // If there is any error you will catch them here
+}
+
+
+function rimuoviPreferita(idAsta){
+    document.getElementById("star"+idAsta).src = '/icone/star-empty.webp';
+    document.getElementById("star"+idAsta).onclick = function () {aggiungiPreferita(idAsta) };
+    fetch('../api/v1/astePreferite', {
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("token")},
         body: JSON.stringify({ userID: sessionStorage.getItem("id"), idAsta: idAsta }),
     })
