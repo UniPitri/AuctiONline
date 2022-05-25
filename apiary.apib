@@ -603,3 +603,63 @@ paths:
                     message:
                       type: string
                       example: "Asta già presente tra i preferiti"
+    delete:
+      summary: Rimuovi asta da preferite
+      description: Rimuove asta dalla lista delle aste preferite dell'utente.
+      operationId: rimozioneAstaDaPreferiti
+      parameters:
+        - in: header
+          name: x-access-token
+          description: Token di autenticazione dell'utente che vuole rimuovere l'asta dai preferiti
+          schema:
+            type: string
+            example: "5b2g3613g"
+          required: true
+      requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userID:
+                    description: ID dell'utente che vuole rimuovere l'asta dai preferiti 
+                    type: string
+                    example: "423"
+                  idAsta:
+                    description: ID dell'asta da rimuovere dalla lista dei preferiti
+                    type: string
+                    example: "734"
+                required:
+                  - userID
+                  - idAsta
+      responses:
+        "201":
+          description: L'asta è stata rimossa dai preferiti con successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Asta rimossa dai preferiti"
+                  self:
+                    description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
+                    type: string
+                    example: "api/v1/aste/5b2g3613g"
+        "409":
+          description: Rimozione asta dai preferiti fallita. L'asta scelta non è tra i preferiti.
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Asta non è tra i preferiti"
