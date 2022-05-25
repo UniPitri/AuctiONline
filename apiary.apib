@@ -1,262 +1,605 @@
-FORMAT: 1A
-HOST: https://auctionline-is2.herokuapp.com/
-
-# API AuctiONline
-
-Documentazione API AuctiONline. Le API permettono di gestire la compravendita di beni attraverso le aste.
-
-
-## /api/v1/autenticazione
-
-### Autentica utente [POST]
-
-Verifica le credenziali inserite dall'utente e in caso positivo crea un token di autenticazione per l'utente.
-
-+ Request (application/json)
-
-    + Attributes
-        + username (required, string) - Username dell'utente
-        + password (required, string) - Password dell'utente
-      
-+ Response 201 (application/json)
-
-    Autenticazione avvenuta con successo. Invio token e redirect alla pagina del catalogo.
-
-    + Body
-    {
-        "success": true,
-        "message": "Enjoy your token!",
-        "token": token,
-        "email": user.email,
-        "id": user._id,
-        "self": "api/v1/" + user._id
-    }
-
-+ Response 401 (application/json)
-
-    Autenticazione fallita. Invio messaggio di errore.
-    
-    + Body
-    {
-        "success": false, 
-        "message": "Autenticazione fallita. Utente o password errati"
-    }
-
-## /api/v1/registrazione
-
-### Registra utente [POST]
-
-Ritorna la lista tutte le aste presenti sul catalogo che devono ancora iniziare.
-
-+ Request (application/json)
-
-    + Attributes
-        + email (required, string) - Mail dell'account da creare
-        + username (required, string) - Username dell'account da creare
-        + password (required, string) - Password dell'account da creare
-        
-+ Response 201 (application/json)
-
-    Creazione account avvenuta con successo. Invio token e redirect alla pagina del catalogo.
-
-    + Body
-    {
-        "success": true,
-        "message": "Nuovo Utente registrato con successo!",
-        "token": token,
-        "email": newUser.email,
-        "id": newUser._id,
-        "self": "api/v1/" + newUser._id
-    }         
-
-+ Response 409 (application/json)
-
-    Creazione account fallita. Esiste già un account con la mail inserita.
-
-    + Body
-    {
-        "success": false, 
-        "message": "Email gia in utilizzo"
-    }
-        
-+ Response 409 (application/json)
-
-    Creazione account fallita. Esiste già un account con l'username inserito.
-
-    + Body
-    {
-        "success": false, 
-        "message": "Username gia in utilizzo"
-    }   
-
-## /api/v1/aste
-
-### Visualizza catalogo aste [GET]
-
-Recupera la lista delle aste disponibili.
-
-+ Request (application/json)
-      
-+ Response 200 (application/json)
-
-    Catalogo delle aste disponibili è pronta.
-
-    + Body
-    [
-        {
-            "self": "/api/v1/aste/" + asta1._id,
-            "dettagliProdotto": asta1.DeattgliProdotto,
-            "dettagliAsta": asta1.DettagliAsta
-            "preferenze": asta1.Preferenze
-        },
-        {
-            "self": "/api/v1/aste/" + asta2._id,
-            "dettagliProdotto": asta2.DeattgliProdotto,
-            "dettagliAsta": ast2.DettagliAsta
-            "preferenze": asta2.Preferenze
-        }
-    ]
-
-### Aggiungi asta al catalogo [POST]
-
-Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dati inseriti dall'utente.
-
-+ Request
-
-    + Attributes
-        + token (required, string) - Token di autenticazione dell'utente che vuole creare l'asta
-        + nome (required, string) - Nome del prodotto che verrà messo all'asta
-        + categorie (required, [string]) - Categorie associate al prodotto che verrà messo all'asta (necessaria una)
-        + descrizione (required, string) - Descrizione del prodotto che verrà messo all'asta
-        + foto (required, [strint]) - Riferimenti alle foto del prodotto che verrà messo all'asta (necessaria uno)
-        + inizio (required, string) - Data e ora inizio dell'asta
-        + fine (required, string) - Data e ora fine dell'asta
-        + tipo (required, number) - Tipo dell'asta (0 a Busta chiusa, 1 all'inglese)
-        + prezzoMinimo (optional, number) - Prezzo minimo richiesto per vendere il prodotto
-      
-+ Response 201 (application/json)
-
-    Creazione asta avvenuta con successo. Redirect alla pagina del catalogo.
-    
-    + Body
-    {
-        "success": true,
-        "message": "Nuova asta aggiunta correttamente",
-        "self": "api/v1/" + newAsta._id
-    }
-
-+ Response 400 (application/json)
-    
-    Creazione asta fallita. La data e/o l'ora specificata in inizio/fine non è valida.
-    
-    + Body
-    {
-        "success": false,
-        "message": "Attributo Inizio o Fine non valido"
-    }
-
-+ Response 400 (application/json)
-    
-    Creazione asta fallita. Il prezzo minimo inserito dall'utente non è un numero.
-    
-    + Body
-    {
-        "success": false,
-        "message": "Attributo prezzo minimo non valido"
-    }
-
-+ Response 400 (application/json)
-    
-    Creazione asta fallita. Uno o più file inseriti dall'utente non sono immagini .jpeg o .png.
-    
-    + Body
-    {
-        "success": false,
-        "message": "Estensione immagine inserita non valida"
-    }
-
-## /api/v1/aste/:id
-
-### Formula nuova offerta [PUT]
-
-Formula una nuova offerta per il prodotto identificato da id.
-
-+ Request (application/json)
-
-    + Attributes
-        +id (required,string) - ID dell'asta per cui si sta offrendo
-        +prezzo (required, number) - Offerta fatta dall'utente 
-
-+ Response 200 (application/json)
-
-    La nuova offerta è stata correttamente effettuata.
-
-    + Body
-    {
-        "success": true,
-        "message": "Nuova offerta avvenuta con successo"
-    }
-
-+ Response 404 (application/json)
-
-    Offerta fallita. L'asta non esiste.
-
-    + Body
-    {
-        "success": false,
-        "message": "Asta non trovata"
-    }
-
-+ Response 400 (application/json)
-
-    Offerta fallita. L'offerta inserita è più bassa del prezzo attuale.
-
-    + Body
-    {
-        "success": false,
-        "message": "Prezzo troppo basso"
-    }
-
-+ Response 400 (application/json)
-
-    Offerta fallita. L'offerta inserita è composta da caratteri alfanumerici.
-
-    + Body
-    {
-        "success": false,
-        "message": "Prezzo non valido"
-    }
-
-## /api/v1/astePreferite
-
-### Aggiungi nuova asta preferita [POST]
-
-Aggiunge nuova asta alla lista delle aste preferite dell'utente.
-
-+ Request (application/json)
-
-    + Attributes
-        + token (required, string) - Token di autenticazione dell'utente che vuole aggiungere l'asta ai preferiti
-        + userID(required, string) - ID dell'utente che vuole aggiungere l'asta ai preferiti
-        + idAsta (required, string) - ID dell'asta da inserire come preferita
-
-+ Response 201 (application/json)
-
-    L'asta è stata aggiunta tra i preferiti con successo.
-
-    + Body
-    {
-        "success": true,
-        "message": "Asta aggiunta ai preferiti"
-        "self": '/api/v1/aste/' + req.body.idAsta
-    }
-
-+ Response 409 (application/json)
-
-    Aggiunta asta ai preferiti fallita. L'asta scelta è già tra i preferiti.
-    
-    + Body
-    {
-        "success": false,
-        "message": "Asta già presente tra i preferiti"
-    }
+openapi: 3.0.0
+info: 
+  title: API AuctiONline
+  description: Documentazione API AuctiONline. Le API permettono di gestire la compravendita di beni attraverso le aste.
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Production server (uses live data)
+paths:
+  /api/v1/autenticazione:
+    x-summary: ''
+    x-description: ''
+    post:
+      summary: Autentica utente
+      description: Verifica le credenziali inserite dall'utente e in caso positivo crea un token di autenticazione per l'utente.
+      operationId: autenticazione
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username: 
+                  description: Username dell'utente
+                  type: string
+                  example: "FitriPerra"
+                password:
+                  description: Password dell'utente
+                  type: string
+                  example: "Pitri"
+              required:
+                - username
+                - password
+      responses:
+        "201":
+          description: Autenticazione avvenuta con successo. Invio token e redirect alla pagina del catalogo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: "Enjoy your token!"
+                  token:
+                    type: string
+                    example: "123456789"
+                  email:
+                    type: string
+                    example: "fitri.perra@gmail.com"
+                  id:
+                    type: string
+                    example: "1"
+                  self:
+                    description: Formato dalla stringa "api/v1/" concatenata all'ID dell'utente
+                    type: string
+                    example: "api/v1/1"
+        "401":
+          description: Autenticazione fallita. Invio messaggio di errore.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:       
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Autenticazione fallita. Utente o password errati"
+  /api/v1/registrazione:
+    x-summary: ''
+    x-description: ''
+    post:
+      summary: Registra utente
+      description: Verifica le credenziali inserite dall'utente e in caso positivo crea un token di autenticazione per l'utente.
+      operationId: registrazione
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  description: Mail dell'account da creare
+                  type: string
+                  example: "fitri.perra@gmail.com"
+                username: 
+                  description: Username dell'account da creare
+                  type: string
+                  example: "FitriPerra"
+                password:
+                  description: Password dell'account da creare
+                  type: string
+                  example: "Pitri"
+              required:
+                - email
+                - username
+                - password
+      responses:
+        "201":
+          description: Creazione account avvenuta con successo. Invio token e redirect alla pagina del catalogo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: "Nuovo Utente registrato con successo!"
+                  token:
+                    type: string
+                    example: "123456789"
+                  email:
+                    type: string
+                    example: "fitri.perra@gmail.com"
+                  id:
+                    type: string
+                    example: "1"
+                  self:
+                    description: Formato dalla stringa "api/v1/" concatenata all'ID dell'utente
+                    type: string
+                    example: "api/v1/1"
+        "409":
+          description:  Creazione account fallita. Esiste già un account con la mail inserita.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:       
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Email gia in utilizzo"
+        "409":
+          description:  Creazione account fallita. Esiste già un account con l'username inserito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:       
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Username gia in utilizzo"
+  /api/v1/aste:
+    x-summary: ''
+    x-description: ''
+    get:
+      summary: Visualizza catalogo aste
+      description: Recupera la lista delle aste disponibili.
+      operationId: visualizzazioneCatalogo
+      responses:
+        "200":
+          description: Catalogo delle aste disponibili è pronto.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    self:
+                      description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
+                      type: string
+                      example: "api/v1/aste/1"
+                    dettagliProdotto:
+                      type: object
+                      properties:
+                        Nome:
+                          type: string
+                          example: "Il ragazzo di firenze"
+                        Categorie:
+                          type: array
+                          items:
+                            type: string
+                          example: ["Arte", "Antico"]
+                        Descrizione:
+                          type: string
+                          example: "Un quadro"
+                        Foto:
+                          description: URI delle varie foto associate al prodotto messo all'asta
+                          type: array
+                          items:
+                            type: string
+                          example: ["foto1.jpeg", "foto2.jpeg"]
+                    dettagliAsta:
+                      type: object
+                      properties:
+                        Inizio:
+                          type: string
+                          example: "2022-05-25T09:35:00.000+00:00"
+                        Fine:
+                          type: string
+                          example: "2022-06-02T01:33:00.000+00:00"
+                        Tipo:
+                          type: integer
+                          example: 0
+                        PrezzoMinimo:
+                          type: number
+                          example: 35.50
+                        Offerte:
+                          type: array
+                          items:
+                            type: number
+                          example: [40.0,45.25]
+                        Offerenti:
+                          type: array
+                          items:
+                            type: string
+                          example: ["123","416"]
+                    preferenze:
+                      type: array
+                      items:
+                          type: string
+                      example: ["423","416"]
+    post:
+        summary: Aggiungi asta al catalogo
+        description: Aggiunge una nuova asta al catalogo, dopo aver verificato la correttezza dei dati inseriti dall'utente.
+        operationId: creazioneAsta
+        parameters:
+          - in: header
+            name: x-access-token
+            description: Token di autenticazione dell'utente che vuole creare l'asta
+            schema:
+              type: string
+            example: "aswu3323ljk34nmklu9HHGSSjknwe"
+            required: true
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  nome: 
+                    description: Nome del prodotto che verrà messo all'asta
+                    type: string
+                    example: "Il ragazzo di Firenze"
+                  categorie: 
+                    description: Categorie associate al prodotto che verrà messo all'asta (necessaria una)
+                    type: array
+                    items:
+                      type: string
+                    example: ["Arte", "Antico"]
+                  descrizione:
+                    description: Descrizione del prodotto che verrà messo all'asta
+                    type: string
+                    example: "Un quadro"
+                  foto: 
+                    description: Foto del prodotto che verrà messo all'asta (necessaria uno)
+                    type: array
+                    items:
+                      type: string
+                      format: 7bit
+                    example: ["foto1.jpeg", "foto2.jpeg"]
+                  inizio: 
+                    description: Data e ora inizio dell'asta
+                    type: string
+                    example: "2022-05-25T09:35:00.000+00:00"
+                  fine: 
+                    description: Data e ora fine dell'asta
+                    type: string
+                    example: "2022-06-02T01:33:00.000+00:00"
+                  tipo:
+                    description: Tipo dell'asta (0 a Busta chiusa, 1 all'inglese)
+                    type: integer
+                    example: 0
+                  prezzoMinimo:
+                    description: Prezzo minimo richiesto per vendere il prodotto
+                    type: number
+                    example: 15.55
+                required:
+                  - nome
+                  - categorie
+                  - descrizione
+                  - foto
+                  - inizio
+                  - fine
+                  - tipo
+              encoding:
+                foto:
+                  contentType: image/png, image/jpeg
+        responses:
+          "201":
+            description: Creazione asta avvenuta con successo. Redirect alla pagina del catalogo.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+                    message: 
+                      type: string
+                      example: "Nuova asta aggiunta correttamente"
+                    self:
+                      description: Formato dalla stringa "api/v1/aste/" concatenata all'ID dell'asta
+                      type: string
+                      example: "api/v1/aste/1"
+          "400":
+            description: Creazione asta fallita. La data e/o l'ora specificata in inizio/fine non è valida.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Attributo Inizio o Fine non valido"
+          "400":
+            description: Creazione asta fallita. Il prezzo minimo inserito dall'utente non è un numero.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Attributo prezzo minimo non valido"
+          "400":
+            description: Creazione asta fallita. Uno o più file inseriti dall'utente non sono immagini .jpeg o .png.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Estensione immagine inserita non valida"
+  /api/v1/aste/:id:
+    x-summary: ''
+    x-description: ''
+    get:
+      summary: Visualizza dettagli di un'asta
+      description: Mostra tutte le informazioni utili relative ad un'asta.
+      operationId: visualizzazioneDettagliAsta
+      parameters:
+        - in: path
+          name: id
+          description: ID dell'asta per cui si vuole vedere le informazioni
+          schema:
+            type: string
+          example: "5b2g3613g"
+          required: true
+      responses:
+        "200":
+          description: Informazioni sull'asta disponibili.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  self:
+                    description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
+                    type: string
+                    example: "api/v1/aste/5b2g3613g"
+                  dettagliProdotto:
+                    type: object
+                    properties:
+                      Nome:
+                        type: string
+                        example: "Il ragazzo di firenze"
+                      Categorie:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Arte", "Antico"]
+                      Descrizione:
+                        type: string
+                        example: "Un quadro"
+                      Foto:
+                        description: URI delle varie foto associate al prodotto messo all'asta
+                        type: array
+                        items:
+                          type: string
+                        example: ["foto1.jpeg", "foto2.jpeg"]
+                  dettagliAsta:
+                    type: object
+                    properties:
+                      Inizio:
+                        type: string
+                        example: "2022-05-25T09:35:00.000+00:00"
+                      Fine:
+                        type: string
+                        example: "2022-06-02T01:33:00.000+00:00"
+                      Tipo:
+                        type: integer
+                        example: 0
+                      PrezzoMinimo:
+                        type: number
+                        example: 35.50
+                      Offerte:
+                        type: array
+                        items:
+                          type: number
+                        example: [40.0,45.25]
+                      Offerenti:
+                        type: array
+                        items:
+                          type: string
+                        example: ["123","416"]
+                  preferenze:
+                    type: array
+                    items:
+                        type: string
+                    example: ["423","416"]
+        "404":
+          description: Informazioni non disponibile. L'asta non esiste.
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Asta non trovata"
+    put:
+        summary: Formula nuova offerta
+        description: Formula una nuova offerta per il prodotto identificato da ID.
+        operationId: formulazioneOfferta
+        parameters:
+          - in: path
+            name: id
+            description: ID dell'asta per cui si sta offrendo
+            schema:
+              type: string
+              example: "5b2g3613g"
+            required: true
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  prezzo:
+                    description: Offerta fatta dall'utente 
+                    type: number
+                    example: 45.67
+                required:
+                  - prezzo
+        responses:
+          "200":
+            description: La nuova offerta è stata correttamente effettuata.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+                    message: 
+                      type: string
+                      example: "Nuova offerta avvenuta con successo"
+          "404":
+            description: Offerta fallita. L'asta non esiste.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Asta non trovata"
+          "400":
+            description: Offerta fallita. Si sta offrendo per un'asta che deve ancora iniziare o che è già terminata.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Non puoi offrire per questa asta"
+          "400":
+            description: Offerta fallita. L'offerta inserita è più bassa del prezzo attuale.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Prezzo troppo basso"
+          "400":
+            description: Offerta fallita. L'offerta inserita è composta da caratteri alfanumerici.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Prezzo non valido"
+          "400":
+            description: Offerta fallita. L'utente sta offrendo ad un'asta a busta chiusa ed ha già recapitato un'offerta in precedenza.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "L'asta è a busta chiusa ed è presente già una tua offerta"
+  /api/v1/astePreferite:
+    x-summary: ''
+    x-description: ''
+    post:
+      summary: Aggiungi nuova asta preferita
+      description: Aggiunge nuova asta alla lista delle aste preferite dell'utente.
+      operationId: aggiuntaAstaAPreferiti
+      parameters:
+        - in: header
+          name: x-access-token
+          description: Token di autenticazione dell'utente che vuole aggiungere l'asta ai preferiti
+          schema:
+            type: string
+            example: "5b2g3613g"
+          required: true
+      requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userID:
+                    description: ID dell'utente che vuole aggiungere l'asta ai preferiti 
+                    type: string
+                    example: "423"
+                  idAsta:
+                    description: ID dell'asta da inserire come preferita
+                    type: string
+                    example: "734"
+                required:
+                  - userID
+                  - idAsta
+      responses:
+        "201":
+          description: L'asta è stata aggiunta tra i preferiti con successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Asta aggiunta ai preferiti"
+                  self:
+                    description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
+                    type: string
+                    example: "api/v1/aste/5b2g3613g"
+        "409":
+          description: Aggiunta asta ai preferiti fallita. L'asta scelta è già tra i preferiti.
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Asta già presente tra i preferiti"
