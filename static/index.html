@@ -18,7 +18,7 @@
         </style>
     </head>
     <body onload="caricaAste()">
-        <div class="modal fade" id="alert">
+        <div class="modal fade" id="alert" hidden>
             <div class="modal-dialog">
                 <div class="modal-content bg-success" id="modalContent">
                     <h5 class="modal-title" id="modalTitle">Successo</h5>
@@ -29,20 +29,20 @@
                 </div>
             </div>
         </div>
-        <div id="headerSloggati" style="background-color: #38d996; text-align:right;" hidden>
+        <div id="headerSloggati" style="background-color: #38d996; text-align:right; position:fixed;top: 0px; width:100%; height: 25px; z-index: 1;" hidden>
             <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
                 <li><a href="#home" style="color:white">Home</a></li>|
                 <li><a href="login.html" style="color:white">Login</a></li>
             </ul>
         </div>
-        <div id="headerLoggati" style="background-color: #38d996; text-align:right" hidden>
+        <div id="headerLoggati" style="background-color: #38d996; text-align:right; position:fixed;top: 0px; width:100%; height: 25px; z-index: 1;" hidden>
             <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
                 <li><a href="#home" style="color:white">Home</a></li>|
                 <li><a href="#tueAste" onclick='redirectSicuro("tueAste.html")' style="color:white">Le tue aste</a></li>|
                 <li><a href="#logout" onclick="logout()" style="color:white">Logout</a></li>
             </ul>
         </div>
-        <div class="card-deck" id="cardDeck" style="margin: 1% 5%"></div>
+        <div class="card-deck" id="cardDeck" style="margin: 2% 5%"></div>
 
         <script src="script.js"></script>
         
