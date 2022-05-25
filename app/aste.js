@@ -71,7 +71,7 @@ router.post('', async function(req, res) {
 });
 
 router.put('/:id', async function(req, res) {
-    let asta = await Asta.findById(req.params.id);
+    let asta = await Asta.findById(req.params.id).catch((err)=>{console.log(err);});
 
     if(!asta) 
         return res.status(404).json({ success: false, message: 'Asta non trovata'});
@@ -85,8 +85,24 @@ router.put('/:id', async function(req, res) {
 
     asta.DettagliAsta.PrezzoAttuale = req.body.prezzo;
     await asta.save();
-    console.log('Asta modificata');
+
     return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });
+});
+
+router.get('/:id', async function(req, res){
+    let asta = await Asta.findById(req.params.id).catch((err)=>{console.log(err);});
+    
+    if(!asta){
+        return res.status(404).json({ success: false, message: 'Asta non trovata'});
+    }
+
+    return res.status(200).json({
+        self: '/api/v1/aste/' + asta._id,
+        idAsta: asta._id,
+        dettagliProdotto: asta.DettagliProdotto,
+        dettagliAsta: asta.DettagliAsta,
+        preferenze: (typeof asta.Preferenze === 'undefined' || asta.Preferenze.length == 0) ? null : asta.Preferenze
+    });
 });
 
 module.exports = router;
