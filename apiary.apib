@@ -553,7 +553,7 @@ paths:
           description: Token di autenticazione dell'utente che vuole aggiungere l'asta ai preferiti
           schema:
             type: string
-          example: "5b2g3613g"
+          example: "5323233g"
           required: true
       requestBody:
           content:
@@ -613,7 +613,7 @@ paths:
           description: Token di autenticazione dell'utente che vuole rimuovere l'asta dai preferiti
           schema:
             type: string
-          example: "5b2g3613g"
+          example: "5e4ffe13g"
           required: true
       requestBody:
           content:
@@ -663,3 +663,158 @@ paths:
                     message:
                       type: string
                       example: "Asta non è tra i preferiti"
+  /api/v1/utenti/:id/asteVinte:
+    x-summary: ''
+    x-description: ''
+    get:
+      summary: Visualizza lista delle aste vinte
+      description: Recupera la lista delle aste vinte da un particolare utente.
+      operationId: visualizzazioneAsteVinte
+      parameters:
+        - in: path
+          name: id
+          description: ID dell'utente che vuole vedere le aste vinte
+          schema:
+            type: string
+          example: "38193"
+          required: true
+        - in: header
+          name: x-access-token
+          description: Token di autenticazione dell'utente che vuole vedere le aste vinte
+          schema:
+            type: string
+          example: "5b2g3613g"
+          required: true
+      responses:
+        "200":
+          description: La lista delle aste vinte è disponibile.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  self:
+                    description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
+                    type: string
+                    example: "api/v1/aste/5b2g3613g"
+                  idAsta:
+                    type: string
+                    example: "5b2g3613g"
+                  dettagliProdotto:
+                    type: object
+                    properties:
+                      Nome:
+                        type: string
+                        example: "Il ragazzo di firenze"
+                      Categorie:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Arte", "Antico"]
+                      Descrizione:
+                        type: string
+                        example: "Un quadro"
+                      Foto:
+                        description: URI delle varie foto associate al prodotto messo all'asta
+                        type: array
+                        items:
+                          type: string
+                        example: ["foto1.jpeg", "foto2.jpeg"]
+                  inizioAsta:
+                    type: string
+                    example: "2022-05-25T09:35:00.000+00:00"
+                  fineAsta:
+                    type: string
+                    example: "2022-05-28T19:35:00.000+00:00"
+                  tipoAsta:
+                    type: integer
+                    example: 0
+                  offertaVincente:
+                    type: number
+                    example: 345.75
+  /api/v1/utenti/:id/astePreferite:
+    x-summary: ''
+    x-description: ''
+    get:
+      summary: Visualizza aste preferite
+      description: Recupera la lista delle aste preferite da un particolare utente.
+      operationId: visualizzazioneAstePreferite
+      parameters:
+        - in: path
+          name: id
+          description: ID dell'utente che vuole vedere le aste preferite
+          schema:
+            type: string
+          example: "38193"
+          required: true
+        - in: header
+          name: x-access-token
+          description: Token di autenticazione dell'utente che vuole vedere le aste preferite
+          schema:
+            type: string
+          example: "5b2g3613g"
+          required: true
+      responses:
+        "200":
+          description: La lista delle aste preferite è disponibile.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    self:
+                      description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
+                      type: string
+                      example: "api/v1/aste/1"
+                    dettagliProdotto:
+                      type: object
+                      properties:
+                        Nome:
+                          type: string
+                          example: "Il ragazzo di firenze"
+                        Categorie:
+                          type: array
+                          items:
+                            type: string
+                          example: ["Arte", "Antico"]
+                        Descrizione:
+                          type: string
+                          example: "Un quadro"
+                        Foto:
+                          description: URI delle varie foto associate al prodotto messo all'asta
+                          type: array
+                          items:
+                            type: string
+                          example: ["foto1.jpeg", "foto2.jpeg"]
+                    dettagliAsta:
+                      type: object
+                      properties:
+                        Inizio:
+                          type: string
+                          example: "2022-05-25T09:35:00.000+00:00"
+                        Fine:
+                          type: string
+                          example: "2022-06-02T01:33:00.000+00:00"
+                        Tipo:
+                          type: integer
+                          example: 0
+                        PrezzoMinimo:
+                          type: number
+                          example: 35.50
+                        Offerte:
+                          type: array
+                          items:
+                            type: number
+                          example: [40.0,45.25]
+                        Offerenti:
+                          type: array
+                          items:
+                            type: string
+                          example: ["123","416"]
+                    preferenze:
+                      type: array
+                      items:
+                          type: string
+                      example: ["423","416"]
