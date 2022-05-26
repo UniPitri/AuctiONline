@@ -108,6 +108,7 @@ function offerta(asta, prezzo) {
             
             document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
+            window.alert("SSSSS")
         })
         .catch( error => console.error(error) );
 }
