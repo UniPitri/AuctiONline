@@ -11,9 +11,8 @@
         <!-- Our CSS -->
         <link rel="stylesheet" href="style.css">
         <style>
-            li {
-                display: inline;
-                padding: 10px;
+            .logged, .slogged {
+                display: none;
             }
         </style>
     </head>
@@ -29,26 +28,17 @@
                 </div>
             </div>
         </div>
-        <div id="headerSloggati" style="background-color: #38d996; text-align:right;" hidden>
-            <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
-                <li><a href="#home" style="color:white">Home</a></li>|
-                <li><a href="login.html" style="color:white">Login</a></li>
-            </ul>
-        </div>
-        <div id="headerLoggati" style="background-color: #38d996; text-align:right" hidden>
-            <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
-                <li><a href="#home" style="color:white">Home</a></li>|
-                <li><a href="#tueAste" onclick='redirectSicuro("tueAste.html")' style="color:white">Le tue aste</a></li>|
-                <li><a href="#logout" onclick="logout()" style="color:white">Logout</a></li>
-            </ul>
-        </div>
-        <div class="row" style="margin: 1% 1%">
-            <div class="col-sm-8">
+        <ul class="justify-content-end nav nav-pills" style="background-color: #38d996">
+            <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+            <li class="nav-item slogged"><a class="nav-link" href="login.html">Login</a></li>
+            <li class="nav-item logged"><a class="nav-link" href="#" onclick="redirectSicuro('tueAste.html')">Le tue aste</a></li>
+            <li class="nav-item logged"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
+        </ul>
+        <div class="row" style="margin: 5%">
+            <div class="col-sm-8" style="padding: 0% 1%">
                 <div class="card-deck" id="cardDeck"></div>
             </div>
-            <div class="col-sm-4">
-                <div class="card-deck" id="sideCardDeck"></div>
-            </div>
+            <aside class="col-sm-4" id="col2" style="border-left: 3px solid #111; padding: 0% 1%"></aside>
         </div>
         
 

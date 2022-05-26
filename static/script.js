@@ -1,17 +1,28 @@
 var categoriaClick = 0;
 
 function caricaPagina() {
+    caricaHeader();
     caricaAste();
     caricaPannelloLaterale();
 }
 
+function caricaHeader() {
+    if(sessionStorage.getItem("token")) {
+        const items = document.querySelectorAll('.logged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    } else {
+        const items = document.querySelectorAll('.slogged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+
 function caricaAste() {
-    if (sessionStorage.getItem("token")){
-        document.getElementById("headerLoggati").hidden = false;
-    }
-    else{
-        document.getElementById("headerSloggati").hidden = false;
-    }
     const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/aste', {
         method: 'GET',
@@ -21,7 +32,7 @@ function caricaAste() {
         return data.map(function (asta) { // Map through the results and for each run the code below
             let container = document.createElement('div');
             container.className = "container";
-            container.style = "margin: 0";
+            container.style = "margin: 0; padding: 0";
             let row = document.createElement('div');
             row.className = "row";
             let div = document.createElement('div');
@@ -154,14 +165,17 @@ function caricaAste() {
 }
 
 function caricaPannelloLaterale() {
-    if(sessionStorage.getItem("token")){
-        const cardDeck = document.getElementById('sideCardDeck');
+    const column2 = document.getElementById('col2');
+
+    if(sessionStorage.getItem("token"))
         fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste', {
             method: 'GET',
         })
         .then((resp) => resp.json()) // Transform the data into json
         .then(function (data) { // Here you get the data to modify as you please        
             return data.map(function (asta) { // Map through the results and for each run the code below
+                let cardDeck = document.createElement('div');
+                cardDeck.className = "card-deck";
                 let container = document.createElement('div');
                 container.className = "container";
                 container.style = "margin: 0";
@@ -238,11 +252,16 @@ function caricaPannelloLaterale() {
                 row.appendChild(div);
                 container.appendChild(row);
                 cardDeck.appendChild(container);
+                column2.appendChild(cardDeck);
             })
         })
         .catch( error => console.error(error) );
-    } else
-        console.log("sloggato");
+    else {
+        let card = document.createElement('div');
+        card.className = "card h-100 rounded";
+        card.style = "background-color: #38d996; cursor: pointer; position: fixed";
+        column2.appendChild(card);
+    }
 }
 
 function login() {
