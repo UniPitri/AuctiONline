@@ -81,7 +81,7 @@ router.put('/:id', async function(req, res) {
         return res.status(400).json({ success: false, message: 'Non puoi offrire per questa asta'});
     }
 
-    if((asta.DettagliAsta.Offerte.length != 0 && req.body.prezzo <= asta.DettagliAsta.Offerte[asta.DettagliAsta.Offerte.length-1]) || (asta.DettagliAsta.PrezzoMinimo && req.body.prezzo < asta.DettagliAsta.PrezzoMinimo))
+    if((asta.DettagliAsta.Offerte.length != 0 && req.body.prezzo <= asta.DettagliAsta.Offerte[0]) || (asta.DettagliAsta.PrezzoMinimo && req.body.prezzo < asta.DettagliAsta.PrezzoMinimo))
         return res.status(400).json({ success: false, message: 'Prezzo troppo basso'});
 
     if(isNaN(req.body.prezzo) || req.body.prezzo==null){
@@ -92,16 +92,13 @@ router.put('/:id', async function(req, res) {
         return res.status(400).json({ success: false, message: "L'asta è a busta chiusa ed è presente già una tua offerta"});
     }
 
-    /* asta.DettagliAsta.Offerte[asta.DettagliAsta.Offerte.length] = req.body.prezzo;
-    asta.DettagliAsta.Offerenti[asta.DettagliAsta.Offerenti.length] = req.headers["id-account"];
-    await asta.save(); */
-    /* await Asta.updateOne({
+    await Asta.updateOne({
         _id: req.params.id
     },
     {
-        $push:{'DettagliAsta.Offerte':req.body.prezzo,$position:0},
-        $push:{'DettagliAsta.Offerenti':req.headers["id-account"],$position:0},
-    }); */
+        $push:{'DettagliAsta.Offerte':{$each:[parseFloat(req.body.prezzo)],$position:0},
+        'DettagliAsta.Offerenti':{$each:[req.headers["id-account"]],$position:0}}
+    })
 
     return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });
 });

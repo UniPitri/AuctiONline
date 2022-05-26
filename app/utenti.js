@@ -5,7 +5,7 @@ const Utente = require('./models/utente');
 
 router.get('/:id/asteVinte', async function(req, res){
     let aste = await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).exec();
-    console.log(aste)
+    
     aste = aste.map( (asta) => {
         if(asta.DettagliAsta.Offerenti[asta.DettagliAsta.Offerenti.length-1].toString() == req.params.id){
             return {

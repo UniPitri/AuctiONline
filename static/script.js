@@ -108,14 +108,8 @@ function offerta(asta, prezzo) {
             
             document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
-            window.alert("SSSSS")
         })
         .catch( error => console.error(error) );
-}
-
-function redirect2(e, n) {
-    if (e.target.id != "input")
-        alert(n);
 }
 
 function caricaAste() {
@@ -165,8 +159,8 @@ function caricaAste() {
             let form = document.createElement('div');
             form.style = "display: none";
             if(asta.dettagliAsta.Offerte.length != 0){
-                offer.value = asta.dettagliAsta.Offerte[asta.dettagliAsta.Offerte.length-1] + 0.01;
-                offer.min = asta.dettagliAsta.Offerte[asta.dettagliAsta.Offerte.length-1] + 0.01;
+                offer.value = asta.dettagliAsta.Offerte[0] + 0.01;
+                offer.min = asta.dettagliAsta.Offerte[0] + 0.01;
             }
             else{
                 if(asta.dettagliAsta.PrezzoMinimo != null){
@@ -192,7 +186,7 @@ function caricaAste() {
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
                     if (asta.dettagliAsta.Offerte.length != 0){
-                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.Offerte[asta.dettagliAsta.Offerte.length-1] + "€";
+                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.Offerte[0] + "€";
                     }
                     else{
                         p.innerHTML = "Prezzo attuale: X";
@@ -405,8 +399,11 @@ function caricaAsteVinte() {
     })
     .then((resp) => resp.json())
     .then(function (data) {     
-        if(!data || data.length==0){
-        
+        if(data.length==0){
+            document.getElementById('modalContent').className = 'modal-content bg-danger';
+            document.getElementById('modalTitle').innerHTML = 'Nessun acquisto effetuato';     
+            document.getElementById('message').innerHTML = "Al momento non sei riuscito a vincere alcuna asta.\nPartecipa subito ad un'asta per poter comprare il tuo primo oggetto!";
+            $('#alert').modal('show');
         }
         else{
             return data.map(function (asta) { 
