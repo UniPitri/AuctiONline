@@ -92,9 +92,16 @@ router.put('/:id', async function(req, res) {
         return res.status(400).json({ success: false, message: "L'asta è a busta chiusa ed è presente già una tua offerta"});
     }
 
-    asta.DettagliAsta.Offerte[asta.DettagliAsta.Offerte.length] = req.body.prezzo;
+    /* asta.DettagliAsta.Offerte[asta.DettagliAsta.Offerte.length] = req.body.prezzo;
     asta.DettagliAsta.Offerenti[asta.DettagliAsta.Offerenti.length] = req.headers["id-account"];
-    await asta.save();
+    await asta.save(); */
+    /* await Asta.updateOne({
+        _id: req.params.id
+    },
+    {
+        $push:{'DettagliAsta.Offerte':req.body.prezzo,$position:0},
+        $push:{'DettagliAsta.Offerenti':req.headers["id-account"],$position:0},
+    }); */
 
     return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });
 });

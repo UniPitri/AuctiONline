@@ -4,17 +4,18 @@ const Asta = require('./models/asta');
 const Utente = require('./models/utente');
 
 router.get('/:id/asteVinte', async function(req, res){
-    let aste = await Asta.find({'DettagliAsta.Fine':{$lte: new Date()}}).exec();
-
+    let aste = await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).exec();
+    console.log(aste)
     aste = aste.map( (asta) => {
         if(asta.DettagliAsta.Offerenti[asta.DettagliAsta.Offerenti.length-1].toString() == req.params.id){
             return {
-                success: true,
                 self: '/api/v1/aste/' + asta._id,
                 idAsta: asta._id,
                 dettagliProdotto: asta.DettagliProdotto,
-                dettagliAsta: asta.DettagliAsta,
-                preferenze: (typeof asta.Preferenze === 'undefined' || asta.Preferenze.length == 0) ? null : asta.Preferenze
+                inizioAsta: asta.DettagliAsta.Inizio,
+                fineAsta: asta.DettagliAsta.Fine,
+                tipoAsta: asta.DettagliAsta.Tipo,
+                offertaVincente: asta.DettagliAsta.Offerte[asta.DettagliAsta.Offerte.length-1]
             };
         }
     });

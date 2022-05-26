@@ -24,6 +24,7 @@ app.use((req,res,next) => {
 
 app.use('/tueAste.html', tokenCheckerPagine);
 app.use('/creazioneAsta.html', tokenCheckerPagine);
+app.use('/articoliAcquistati.html', tokenCheckerPagine);
 
 app.use('/api/v1/autenticazione', autenticazione);
 app.use('/api/v1/registrazione', registrazione);
