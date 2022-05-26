@@ -156,7 +156,7 @@ function caricaAste() {
 function caricaPannelloLaterale() {
     if(sessionStorage.getItem("token")){
         const cardDeck = document.getElementById('sideCardDeck');
-        fetch('../api/v1/aste', {
+        fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste', {
             method: 'GET',
         })
         .then((resp) => resp.json()) // Transform the data into json
@@ -235,25 +235,6 @@ function caricaPannelloLaterale() {
                 row2.appendChild(col1);
                 row2.appendChild(col2);
                 div.appendChild(row2);
-    
-                if (sessionStorage.getItem("token")) {
-                    var img = document.createElement('img');
-                    div.appendChild(img);
-                    if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
-                        img.src = '/icone/Plain_Yellow_Star.png';
-                    }
-                    else{
-                        img.onclick = function () {aggiungiPreferita(asta.idAsta) };
-                        img.src = '/icone/star-empty.webp';
-                    }  
-                    img.id = "star"+asta.idAsta;                  
-                    img.style.height = '20px';
-                    img.style.width = '20px';
-                    img.style.width = '20px';
-                    img.style.position= 'absolute';
-                    img.style.top= '5px';
-                    img.style.right= '5px';
-                }
                 row.appendChild(div);
                 container.appendChild(row);
                 cardDeck.appendChild(container);
