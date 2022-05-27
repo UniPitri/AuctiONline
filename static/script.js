@@ -30,22 +30,17 @@ function caricaAste() {
     .then((resp) => resp.json()) // Transform the data into json
     .then(function (data) { // Here you get the data to modify as you please        
         return data.map(function (asta) { // Map through the results and for each run the code below
-            let container = document.createElement('div');
-            container.className = "container";
-            container.style = "margin: 0; padding: 0";
-            let row = document.createElement('div');
-            row.className = "row";
             let div = document.createElement('div');
             div.className = "card rounded";
             //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
-            div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0%";
+            div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0";
             let row2 = document.createElement('div');
-            row2.className = "row no-gutters";
+            row2.className = "row g-0";
             let col1 = document.createElement('div');
             col1.className = "col-md-4";
             let imgProdotto = document.createElement('img');
+            imgProdotto.className = "img-fluid rounded-start";
             imgProdotto.src = "fotoProdotti/" + asta.dettagliProdotto.Foto[0];
-            imgProdotto.style = "max-width: 100%";
             let col2 = document.createElement('div');
             col2.className = "col-md-8";
             let div2 = document.createElement('div');
@@ -141,24 +136,23 @@ function caricaAste() {
             if (sessionStorage.getItem("token")) {
                 var img = document.createElement('img');
                 div.appendChild(img);
+
                 if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
                     img.src = '/icone/Plain_Yellow_Star.png';
-                }
-                else{
+                } else{
                     img.onclick = function () {aggiungiPreferita(asta.idAsta) };
                     img.src = '/icone/star-empty.webp';
                 }  
+
                 img.id = "star"+asta.idAsta;                  
                 img.style.height = '20px';
-                img.style.width = '20px';
                 img.style.width = '20px';
                 img.style.position= 'absolute';
                 img.style.top= '5px';
                 img.style.right= '5px';
             }
-            row.appendChild(div);
-            container.appendChild(row);
-            cardDeck.appendChild(container);
+            
+            cardDeck.appendChild(div);
         })
     })
     .catch( error => console.error(error) );
@@ -167,33 +161,31 @@ function caricaAste() {
 function caricaPannelloLaterale() {
     const column2 = document.getElementById('col2');
 
-    if(sessionStorage.getItem("token"))
+    if(sessionStorage.getItem("token")) {
+        let cardDeck = document.createElement('div');
+        cardDeck.className = "card-deck";
+
         fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste', {
             method: 'GET',
         })
         .then((resp) => resp.json()) // Transform the data into json
         .then(function (data) { // Here you get the data to modify as you please        
             return data.map(function (asta) { // Map through the results and for each run the code below
-                let cardDeck = document.createElement('div');
-                cardDeck.className = "card-deck";
-                let container = document.createElement('div');
-                container.className = "container";
-                container.style = "margin: 0";
-                let row = document.createElement('div');
-                row.className = "row";
                 let div = document.createElement('div');
                 div.className = "card rounded";
                 //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
-                div.style = "background-color: #38d996; cursor: pointer; margin: 1% 5%";
+                div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0";
                 let row2 = document.createElement('div');
-                row2.className = "row no-gutters";
+                row2.className = "row g-0";
                 let col1 = document.createElement('div');
                 col1.className = "col-md-4";
+                col1.style = "padding: 0";
                 let imgProdotto = document.createElement('img');
+                imgProdotto.className = "img-fluid rounded-start";
                 imgProdotto.src = "fotoProdotti/" + asta.dettagliProdotto.Foto[0];
-                imgProdotto.style = "max-width: 100%";
                 let col2 = document.createElement('div');
                 col2.className = "col-md-8";
+                col2.style = "padding: 0";
                 let div2 = document.createElement('div');
                 div2.className = "card-body";
                 let h5 = document.createElement('h5');
@@ -249,14 +241,12 @@ function caricaPannelloLaterale() {
                 row2.appendChild(col1);
                 row2.appendChild(col2);
                 div.appendChild(row2);
-                row.appendChild(div);
-                container.appendChild(row);
-                cardDeck.appendChild(container);
+                cardDeck.appendChild(div);
                 column2.appendChild(cardDeck);
             })
         })
         .catch( error => console.error(error) );
-    else {
+    } else {
         let card = document.createElement('div');
         card.className = "card h-100 rounded";
         card.style = "background-color: #38d996; cursor: pointer; position: fixed; top: 0";

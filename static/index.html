@@ -16,6 +16,8 @@
                 color: white !important;
             }
         </style>
+        
+        <script src="script.js"></script>
     </head>
     <body onload="caricaPagina()">
         <div class="modal fade" id="alert">
@@ -38,12 +40,15 @@
                     <li class="nav-item logged"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
                 </ul>
             </div>
-          </nav>
-        <span class="card-deck" id="cardDeck" style="margin: 3%; width: 60%"></span>
-        <span><aside class="col-sm-4" id="col2" style="border-left: 3px solid #111; padding: 0% 1%"></aside></span>
-        
-
-        <script src="script.js"></script>
+        </nav>
+        <div class="container-fluid" style="margin: 0%; position: absolute">
+            <div class="row">
+                <div class="col-8" style="border-right: 1px solid black; padding: 1%">
+                    <div class="card-deck" id="cardDeck"></div>
+                </div>
+                <div class="col-4" id="col2" style="padding: 1%"></div>
+            </div>
+        </div>
         
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
