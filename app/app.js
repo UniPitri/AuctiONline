@@ -3,12 +3,15 @@ var app = express();
 var multer = require('multer');
 var upload = multer()
 const mongoose = require('mongoose');
+
+const tokenChecker = require('./tokenChecker.js');
+const tokenCheckerPagine = require('./tokenCheckerPagine.js')
+
 const autenticazione = require('./autenticazione.js');
 const registrazione = require('./registrazione.js');
 const astePreferite = require('./astePreferite.js');
-const tokenChecker = require('./tokenChecker.js');
-const tokenCheckerPagine = require('./tokenCheckerPagine.js')
 const aste = require('./aste.js');
+const utenti = require('./utenti.js');
 
 //Configurazione parsing middleware
 app.use(express.json());
@@ -21,6 +24,7 @@ app.use((req,res,next) => {
 
 app.use('/tueAste.html', tokenCheckerPagine);
 app.use('/creazioneAsta.html', tokenCheckerPagine);
+app.use('/articoliAcquistati.html', tokenCheckerPagine);
 
 app.use('/api/v1/autenticazione', autenticazione);
 app.use('/api/v1/registrazione', registrazione);
@@ -28,9 +32,11 @@ app.use('/api/v1/registrazione', registrazione);
 app.post('/api/v1/aste', tokenChecker);
 app.put('/api/v1/aste', tokenChecker);
 app.use('/api/v1/astePreferite', tokenChecker);
+app.use('/api/v1/utenti',tokenChecker);
 
 app.use('/api/v1/aste', upload.array('foto',5),aste);
 app.use('/api/v1/astePreferite', astePreferite);
+app.use('/api/v1/utenti',utenti);
 
 /**
  * Serve front-end static files
