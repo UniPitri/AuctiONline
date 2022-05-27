@@ -120,12 +120,12 @@ function caricaAste() {
         document.getElementById("headerSloggati").hidden = false;
     }
     const cardDeck = document.getElementById('cardDeck');
-    fetch('../api/v1/aste', {
+    fetch('../api/v1/aste?orderBy='+orderBy+'&order='+order, {
         method: 'GET',
     })
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function (data) { // Here you get the data to modify as you please        
-        return data.map(function (asta) { // Map through the results and for each run the code below
+    .then((resp) => resp.json())
+    .then(function (data) {   
+        return data.map(function (asta) {
             let container = document.createElement('div');
             container.className = "container";
             container.style = "margin: 0";
@@ -133,7 +133,6 @@ function caricaAste() {
             row.className = "row";
             let div = document.createElement('div');
             div.className = "card rounded";
-            //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
             div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0%";
             let row2 = document.createElement('div');
             row2.className = "row no-gutters";
@@ -173,27 +172,44 @@ function caricaAste() {
                 }
             }
 
+            var now = new Date().getTime();
+            if (new Date(asta.dettagliAsta.Inizio).getTime() > now) {
+                if (asta.dettagliAsta.PrezzoMinimo != null)
+                    p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
+                else
+                    p.innerHTML = "Prezzo minimo: X";
+
+                countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
+            } else {
+                if (asta.dettagliAsta.Offerte.length != 0){
+                    p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.Offerte[0] + "€";
+                }
+                else{
+                    p.innerHTML = "Prezzo attuale: X";
+                }
+                countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
+                form.style = "display: show";
+            }
+
+            var distance = countDownDate - now;
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            p2.innerHTML = ((new Date(asta.dettagliAsta.Inizio).getTime() > now) ? "L'asta inizierà tra: " : "Tempo rimanente: ") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(x);
+                p2.innerHTML = "EXPIRED";
+            }
+
             var x = setInterval(function () {
                 var now = new Date().getTime();
 
                 if (new Date(asta.dettagliAsta.Inizio).getTime() > now) {
-                    if (asta.dettagliAsta.PrezzoMinimo != null)
-                        p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
-                    else
-                        p.innerHTML = "Prezzo minimo: X";
-
-                    p2.innerHTML = "L'asta inizierà tra: ";
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    if (asta.dettagliAsta.Offerte.length != 0){
-                        p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.Offerte[0] + "€";
-                    }
-                    else{
-                        p.innerHTML = "Prezzo attuale: X";
-                    }
-                    p2.innerHTML = "Tempo rimanente: ";
                     countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
-                    form.style = "display: show";
                 }
 
                 var distance = countDownDate - now;
@@ -468,20 +484,28 @@ function caricaAsteVinte() {
 }
 
 var down = true;
+var orderBy = document.getElementById("ordinamento").value;
+var order = "asc";
 
 function cambiaTriangolo(){
     if(down){
         document.getElementById("upTriangle").hidden = false;
         document.getElementById("downTriangle").hidden = true;
         down = false;
+        order = "desc";
     }
     else{
         document.getElementById("downTriangle").hidden = false;
         document.getElementById("upTriangle").hidden = true;
         down = true;
+        order = "asc";
     }
+    document.getElementById("cardDeck").innerHTML="";
+    caricaAste();
 }
 
-function newOrdinamento(){
-    window.alert("SSSSSSS")
+function newOrderBy(){
+    orderBy = document.getElementById("ordinamento").value;
+    document.getElementById("cardDeck").innerHTML="";
+    caricaAste();
 }

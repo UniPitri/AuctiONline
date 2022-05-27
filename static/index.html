@@ -29,13 +29,13 @@
                 </div>
             </div>
         </div>
-        <div id="headerSloggati" style="background-color: #38d996; text-align:right; position:fixed;top: 0px; width:100%; height: 25px; z-index: 1;" hidden>
+        <div id="headerSloggati" style="background-color: #38d996; text-align:right; position:fixed;top: 0px; width:100%; height: 25px; z-index: 2;" hidden>
             <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
                 <li><a href="#home" style="color:white">Home</a></li>|
                 <li><a href="login.html" style="color:white">Login</a></li>
             </ul>
         </div>
-        <div id="headerLoggati" style="background-color: #38d996; text-align:right; position:fixed;top: 0px; width:100%; height: 25px; z-index: 1;" hidden>
+        <div id="headerLoggati" style="background-color: #38d996; text-align:right; position:fixed;top: 0px; width:100%; height: 25px; z-index: 2;" hidden>
             <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
                 <li><a href="#home" style="color:white">Home</a></li>|
                 <li><a href="#tueAste" onclick='redirectSicuro("tueAste.html")' style="color:white">Le tue aste</a></li>|
@@ -43,16 +43,16 @@
                 <li><a href="#logout" onclick="logout()" style="color:white">Logout</a></li>
             </ul>
         </div>
-        <div style="position:fixed; top: 40px; left: 70%; z-index: 1;">
-            <div style="width:175px; height: 40px; float: left;">
-                <select name="ordinamento" id="ordinamento" style="background-color: #000000; color: white; width: 100%; height: 100%; border-radius: 5px; border-color: #000000; text-align: center;" onchange="newOrdinamento()">
+        <div style="position:fixed; top: 0px; z-index: 1; width: 100%; background-color: grey; height: 100px;">
+            <div style="width:175px; height: 40px; float: left; margin-left: 70%; margin-top: 45px;">
+                <select name="ordinamento" id="ordinamento" style="background-color: #000000; color: white; width: 100%; height: 100%; border-radius: 5px; border-color: #000000; text-align: center;" onchange="newOrderBy()">
                     <option value="0">Tempo rimanente</option>
                     <option value="1">Prezzo</opion>
                     <option value="2">Nome prodotto</option>
                 </select>
             </div>
-            <div id="upTriangle" style="float: left; margin-left: 10px; margin-top: 5px;width: 0; height: 0; border-left: 12.5px solid transparent; border-right: 12.5px solid transparent; border-bottom: 25px solid #000" onclick="cambiaTriangolo()" hidden></div>
-            <div id="downTriangle" style="float: left; margin-left: 10px; margin-top: 5px;width: 0; height: 0; border-left: 12.5px solid transparent; border-right: 12.5px solid transparent; border-top: 25px solid #000" onclick="cambiaTriangolo()"></div>
+            <div id="upTriangle" style="float: left; margin-left: 10px; margin-top: 50px;width: 0; height: 0; border-left: 12.5px solid transparent; border-right: 12.5px solid transparent; border-bottom: 25px solid #000" onclick="cambiaTriangolo()" hidden></div>
+            <div id="downTriangle" style="float: left; margin-left: 10px; margin-top: 50px;width: 0; height: 0; border-left: 12.5px solid transparent; border-right: 12.5px solid transparent; border-top: 25px solid #000" onclick="cambiaTriangolo()"></div>
         </div>
         <div class="card-deck" id="cardDeck" style="margin: 6% 5%"></div>
 
