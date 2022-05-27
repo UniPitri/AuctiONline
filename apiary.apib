@@ -209,6 +209,9 @@ paths:
                         PrezzoMinimo:
                           type: number
                           example: 35.50
+                        Venditore:
+                          type: string
+                          example: "423"
                         Offerte:
                           type: array
                           items:
@@ -374,6 +377,9 @@ paths:
                     description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
                     type: string
                     example: "api/v1/aste/5b2g3613g"
+                  idAsta:
+                    type: string
+                    example: "5b2g3613g"
                   dettagliProdotto:
                     type: object
                     properties:
@@ -394,31 +400,37 @@ paths:
                         items:
                           type: string
                         example: ["foto1.jpeg", "foto2.jpeg"]
-                  dettagliAsta:
+                  inizioAsta:
+                    type: string
+                    example: "2022-05-25T09:35:00.000+00:00"
+                  fineAsta:
+                    type: string
+                    example: "2022-06-02T01:33:00.000+00:00"
+                  tipoAsta:
+                    type: integer
+                    example: 0
+                  prezzoMinimo:
+                    type: number
+                    example: 35.50
+                  offerteAsta:
+                    type: array
+                    items:
+                      type: number
+                    example: [40.0,45.25]
+                  offerentiAsta:
+                    type: array
+                    items:
+                      type: string
+                    example: ["123","416"]
+                  venditoreAsta:
                     type: object
                     properties:
-                      Inizio:
+                      _id:
                         type: string
-                        example: "2022-05-25T09:35:00.000+00:00"
-                      Fine:
+                        example: "423"
+                      Username:
                         type: string
-                        example: "2022-06-02T01:33:00.000+00:00"
-                      Tipo:
-                        type: integer
-                        example: 0
-                      PrezzoMinimo:
-                        type: number
-                        example: 35.50
-                      Offerte:
-                        type: array
-                        items:
-                          type: number
-                        example: [40.0,45.25]
-                      Offerenti:
-                        type: array
-                        items:
-                          type: string
-                        example: ["123","416"]
+                        example: "FitriPerra"
                   preferenze:
                     type: array
                     items:
@@ -729,6 +741,15 @@ paths:
                   tipoAsta:
                     type: integer
                     example: 0
+                  venditoreAsta:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: "423"
+                      Username:
+                        type: string
+                        example: "FitriPerra"
                   offertaVincente:
                     type: number
                     example: 345.75
@@ -803,6 +824,9 @@ paths:
                         PrezzoMinimo:
                           type: number
                           example: 35.50
+                        Venditore:
+                          type: string
+                          example: "423"
                         Offerte:
                           type: array
                           items:
