@@ -467,14 +467,18 @@ function caricaAsteVinte() {
     .catch( error => console.error(error) );
 }
 
-function cambiaTriangolo(down){
+var down = true;
+
+function cambiaTriangolo(){
     if(down){
         document.getElementById("upTriangle").hidden = false;
         document.getElementById("downTriangle").hidden = true;
+        down = false;
     }
     else{
         document.getElementById("downTriangle").hidden = false;
         document.getElementById("upTriangle").hidden = true;
+        down = true;
     }
 }
 
