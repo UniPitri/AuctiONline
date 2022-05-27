@@ -6,6 +6,10 @@ const Utente = require('./models/utente');
 
 router.get('', async function(req, res){
     let aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()}}).exec();
+
+    /* let aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}}).sort({'DettagliAsta.Fine': 'asc'}).exec();
+    aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}}).sort({'DettagliAsta.Inizio': 'asc'}).exec()); */
+
     aste = aste.map( (asta) => {
         return {
             self: '/api/v1/aste/' + asta._id,

@@ -466,3 +466,18 @@ function caricaAsteVinte() {
     })
     .catch( error => console.error(error) );
 }
+
+function cambiaTriangolo(down){
+    if(down){
+        document.getElementById("upTriangle").hidden = false;
+        document.getElementById("downTriangle").hidden = true;
+    }
+    else{
+        document.getElementById("downTriangle").hidden = false;
+        document.getElementById("upTriangle").hidden = true;
+    }
+}
+
+function newOrdinamento(){
+    window.alert("SSSSSSS")
+}
