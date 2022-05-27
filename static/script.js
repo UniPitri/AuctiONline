@@ -31,9 +31,9 @@ function caricaAste() {
     .then(function (data) { // Here you get the data to modify as you please        
         return data.map(function (asta) { // Map through the results and for each run the code below
             let div = document.createElement('div');
-            div.className = "card rounded";
+            div.className = "card product rounded";
             //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
-            div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0";
+            div.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
             let row2 = document.createElement('div');
             row2.className = "row g-0";
             let col1 = document.createElement('div');
@@ -172,9 +172,9 @@ function caricaPannelloLaterale() {
         .then(function (data) { // Here you get the data to modify as you please        
             return data.map(function (asta) { // Map through the results and for each run the code below
                 let div = document.createElement('div');
-                div.className = "card rounded";
+                div.className = "card product rounded";
                 //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
-                div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0";
+                div.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
                 let row2 = document.createElement('div');
                 row2.className = "row g-0";
                 let col1 = document.createElement('div');
@@ -248,8 +248,12 @@ function caricaPannelloLaterale() {
         .catch( error => console.error(error) );
     } else {
         let card = document.createElement('div');
-        card.className = "card h-100 rounded";
-        card.style = "background-color: #38d996; cursor: pointer; position: fixed; top: 0";
+        card.className = "card rounded text-center";
+        card.style = "align-items: center; background-color: #38d996; display: flex; height: 90%; justify-content: center; position: fixed; width: 30%";
+        let message = document.createElement('h1');
+        message.className = "card-title";
+        message.innerHTML = '<a href="login.html">Crea il tuo account</a> e partecipa anche tu!';
+        card.appendChild(message);
         column2.appendChild(card);
     }
 }
