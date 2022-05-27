@@ -259,7 +259,7 @@ function caricaPannelloLaterale() {
     else {
         let card = document.createElement('div');
         card.className = "card h-100 rounded";
-        card.style = "background-color: #38d996; cursor: pointer; position: fixed";
+        card.style = "background-color: #38d996; cursor: pointer; position: fixed; top: 0";
         column2.appendChild(card);
     }
 }
