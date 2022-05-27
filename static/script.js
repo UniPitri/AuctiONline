@@ -435,20 +435,24 @@ function caricaAsteVinte() {
                 let inizio = new Date(asta.inizioAsta);
                 let p2 = document.createElement('p');
                 p2.className = "card-text";
-                p2.innerHTML = "Inizio asta: " + inizio.getDate()+"/" + ("0" + (inizio.getMonth() + 1 )).slice(-2) + "/" + inizio.getFullYear() + " - ore: " + ("0" + (inizio.getHours() + 1 )).slice(-2) + ":" + ("0" + (inizio.getMinutes() + 1 )).slice(-2);
+                p2.innerHTML = "Inizio asta: " + ("0" + (inizio.getDate() + 1 )).slice(-2)+"/" + ("0" + (inizio.getMonth() + 1 )).slice(-2) + "/" + inizio.getFullYear() + " - ore: " + ("0" + (inizio.getHours() + 1 )).slice(-2) + ":" + ("0" + (inizio.getMinutes() + 1 )).slice(-2);
                 let fine = new Date(asta.fineAsta);
                 let p3 = document.createElement('p');
                 p3.className = "card-text";
-                p3.innerHTML = "Fine asta: " + fine.getDate()+"/" + ("0" + (fine.getMonth() + 1 )).slice(-2) + "/" + fine.getFullYear() + " - ore: " + ("0" + (fine.getHours() + 1 )).slice(-2) + ":" + ("0" + (fine.getMinutes() + 1 )).slice(-2);
+                p3.innerHTML = "Fine asta: " + ("0" + (fine.getDate() + 1 )).slice(-2)+"/" + ("0" + (fine.getMonth() + 1 )).slice(-2) + "/" + fine.getFullYear() + " - ore: " + ("0" + (fine.getHours() + 1 )).slice(-2) + ":" + ("0" + (fine.getMinutes() + 1 )).slice(-2);
                 let p4 = document.createElement('p');
                 p4.className = "card-text";
                 p4.innerHTML = "Tipo asta: " + (asta.tipoAsta ? "Asta \"inglese\"" : "Busta chiusa");
+                let p5 = document.createElement('p');
+                p5.className = "card-text";
+                p5.innerHTML = "Venditore: " + asta.venditoreAsta.Username;
                 
                 div2.appendChild(h5);
                 div2.appendChild(p);
                 div2.appendChild(p2);
                 div2.appendChild(p3);
-                div2.appendChild(p4);   
+                div2.appendChild(p4);  
+                div2.appendChild(p5); 
                 col2.appendChild(div2);         
                 col1.appendChild(imgProdotto);
                 row2.appendChild(col1);

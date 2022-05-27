@@ -50,7 +50,7 @@ router.post('', async function(req, res) {
 
     const newAsta = new Asta({
 		DettagliProdotto:{Nome:req.body.nome, Categorie:req.body.categoria,Descrizione:req.body.descrizione,Foto:nomeFoto},
-		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != "null") ? req.body.prezzoMinimo : null,Offerte:[],Offerenti:[]},
+		DettagliAsta:{Inizio:req.body.inizio,Fine:req.body.fine,Tipo:req.body.tipo,PrezzoMinimo:(req.body.prezzoMinimo != "null") ? req.body.prezzoMinimo : null,Venditore:req.headers["id-account"],Offerte:[],Offerenti:[]},
 		Preferenze: [req.headers["id-account"]]
 	});
 
@@ -110,11 +110,19 @@ router.get('/:id', async function(req, res){
         return res.status(404).json({ success: false, message: 'Asta non trovata'});
     }
 
+    let venditore = await Utente.findOne({_id: asta.DettagliAsta.Venditore}, { Username: 1}).exec();
+
     return res.status(200).json({
         self: '/api/v1/aste/' + asta._id,
         idAsta: asta._id,
         dettagliProdotto: asta.DettagliProdotto,
-        dettagliAsta: asta.DettagliAsta,
+        inizioAsta: asta.DettagliAsta.Inizio,
+        fineAsta: asta.DettagliAsta.Fine,
+        tipoAsta: asta.DettagliAsta.Tipo,
+        prezzoMinimo: asta.DettagliAsta.PrezzoMinimo,
+        offerteAsta: asta.DettagliAsta.Offerte,
+        offerentiAsta: asta.DettagliAsta.Offerenti,
+        venditoreAsta: venditore,
         preferenze: (typeof asta.Preferenze === 'undefined' || asta.Preferenze.length == 0) ? null : asta.Preferenze
     });
 });
