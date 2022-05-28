@@ -119,6 +119,10 @@ router.put('/:id', async function(req, res) {
     if(!asta) 
         return res.status(404).json({ success: false, message: 'Asta non trovata'});
 
+    if(asta.DettagliAsta.Venditore == req.headers["id-account"]){
+        return res.status(400).json({ success: false, message: "Non puoi offrire per un'asta creata da te stesso"});
+    }
+
     let dateTimeAttuale = new Date().getTime();
     if(asta.DettagliAsta.Inizio > dateTimeAttuale || asta.DettagliAsta.Fine < dateTimeAttuale){
         return res.status(400).json({ success: false, message: 'Non puoi offrire per questa asta'});

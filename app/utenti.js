@@ -3,8 +3,20 @@ const router = express.Router();
 const Asta = require('./models/asta');
 const Utente = require('./models/utente');
 
-router.get('/:id/asteVinte', async function(req, res){
-    let aste = await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).exec();
+router.get('/:id/aste', async function(req, res){
+    let aste;
+    if(req.query.orderBy === "1"){
+        aste = (req.query.order === "asc") ? await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliAsta.Fine': 'asc'}).exec() : await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliAsta.Fine': 'desc'}).exec();
+    }
+    else if(req.query.orderBy === "2"){
+        aste = (req.query.order === "asc") ? await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliProdotto.Nome': 'asc'}).exec() : await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliProdotto.Nome': 'desc'}).exec();
+    }
+    else if(req.query.orderBy === "3"){
+        aste = (req.query.order === "asc") ? await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliAsta.Offerte.0': 'asc'}).exec() : await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliAsta.Offerte.0': 'desc'}).exec();
+    }
+    else{
+        aste = (req.query.order === "desc") ? await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliAsta.Inizio': 'desc'}).exec() : await Asta.find({'DettagliAsta.Offerenti.0':req.params.id,'DettagliAsta.Fine':{$lte: new Date()}}).sort({'DettagliAsta.Inizio': 'asc'}).exec();
+    }
 
     let venditore = [];
 
