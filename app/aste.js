@@ -106,11 +106,19 @@ router.get('/:id', async function(req, res){
         return res.status(404).json({ success: false, message: 'Asta non trovata'});
     }
 
+    let venditore = await Utente.findOne({_id: asta.DettagliAsta.Venditore}, { Username: 1}).exec();
+    console.log(venditore);
     return res.status(200).json({
         self: '/api/v1/aste/' + asta._id,
         idAsta: asta._id,
         dettagliProdotto: asta.DettagliProdotto,
-        dettagliAsta: asta.DettagliAsta,
+        inizioAsta: asta.DettagliAsta.Inizio,
+        fineAsta: asta.DettagliAsta.Fine,
+        tipoAsta: asta.DettagliAsta.Tipo,
+        prezzoMinimo: asta.DettagliAsta.PrezzoMinimo,
+        offerteAsta: asta.DettagliAsta.Offerte,
+        offerentiAsta: asta.DettagliAsta.Offerenti,
+        venditoreAsta: venditore,
         preferenze: (typeof asta.Preferenze === 'undefined' || asta.Preferenze.length == 0) ? null : asta.Preferenze
     });
 });

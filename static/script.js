@@ -68,6 +68,7 @@ function register() {
                 sessionStorage.setItem("email",data.email);
                 sessionStorage.setItem("id",data.id);
                 sessionStorage.setItem("self",data.self);
+                sessionStorage.setItem("username",data.username);
                 window.location.href = "index.html";
             } else {
                 document.getElementById('message').innerHTML = data.message;
@@ -146,7 +147,9 @@ function caricaAste() {
             col1.className = "col-md-4";
             let imgProdotto = document.createElement('img');
             imgProdotto.src = "fotoProdotti/" + asta.dettagliProdotto.Foto[0];
-            imgProdotto.style = "max-width: 100%";
+            imgProdotto.style.width = "200px";
+            imgProdotto.style.height = "200px";
+            imgProdotto.style= "width:200px;object-fit: cover;height:200px";
             let col2 = document.createElement('div');
             col2.className = "col-md-8";
             let div2 = document.createElement('div');
@@ -239,6 +242,8 @@ function caricaAste() {
             row2.appendChild(col2);
             div.appendChild(row2);
 
+            div.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
+
             if (sessionStorage.getItem("token")) {
                 var img = document.createElement('img');
                 div.appendChild(img);
@@ -248,10 +253,9 @@ function caricaAste() {
                 else{
                     img.onclick = function () {aggiungiPreferita(asta.idAsta) };
                     img.src = '/icone/star-empty.webp';
-                }  
+                }
                 img.id = "star"+asta.idAsta;                  
                 img.style.height = '20px';
-                img.style.width = '20px';
                 img.style.width = '20px';
                 img.style.position= 'absolute';
                 img.style.top= '5px';
@@ -368,6 +372,103 @@ function aggiungiPreferita(idAsta){
         if (data.success) {
         } else {
             document.getElementById('message').innerHTML = data.message;
+            $('#alert').modal('show');
+        }
+    })
+    .catch(error => console.error(error)); // If there is any error you will catch them here
+}
+
+function caricaPaginaDettagli(idAsta){
+    
+    window.location.href = "/dettaglioAsta.html?idAsta="+idAsta;
+}
+
+function caricaDettagliAsta(){
+    const params = new URLSearchParams(window.location.search)
+    idAsta=params.get('idAsta');
+    fetch('../api/v1/aste/' +idAsta, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json'}
+    })
+    .then((resp) => resp.json())
+    .then(function (data) {
+        if (data.success) {
+
+            document.getElementById("nomeAsta").innerHTML=data.dettagliProdotto.Nome;
+            document.getElementById("descrizione").innerHTML=data.dettagliProdotto.Descrizione;
+            document.getElementById("venditore").innerHTML=data.dettagliProdotto.Descrizione;
+            document.getElementById("immaginiAsta").src = "fotoProdotti/" + data.dettagliProdotto.Foto[0];
+            
+            if(data.dettagliProdotto.Categorie!=null){
+                //alert(data.dettagliProdotto.Categorie.length);
+                document.getElementById("categorie").innerHTML=data.dettagliProdotto.Categorie[0];
+                for (var i = 1; i < data.dettagliProdotto.Categorie.length; i++) {
+                    document.getElementById("categorie").innerHTML=document.getElementById("categorie").innerHTML+" - " + data.dettagliProdotto.Categorie[i];
+                }
+            }
+            offer=document.getElementById("offerta");
+            //alert(data.venditoreAsta.Username);
+            if(data.venditoreAsta == null){
+                
+                if(data.offerteAsta.length != 0){
+                    offer.value = data.offerteAsta[data.offerteAsta.length-1] + 0.01;
+                    offer.min = data.offerteAsta[data.offerteAsta.length-1] + 0.01;
+                }
+                else{
+                    if(data.PrezzoMinimo != null){
+                        offer.value = data.PrezzoMinimo + 0.01;
+                        offer.min = data.PrezzoMinimo + 0.01;
+                    }
+                    else{
+                        offer.value = 0.01;
+                        offer.min = 0.01;
+                    }
+                }
+                document.getElementById("inviaOfferta").onClick = function() {
+                    offerta(data.self, offer);
+                }
+            }else{
+                offer.style="display:none";
+                document.getElementById("inviaOfferta").style="display:none";
+            }
+
+
+            var x = setInterval(function () {
+                var now = new Date().getTime();
+
+                if (new Date(data.inizioAsta).getTime() > now) {
+                
+                    document.getElementById("titoloTempo").innerHTML = "L'asta inizierà tra: ";
+                    countDownDate = new Date(data.inizioAsta).getTime();
+                } else {
+                    if (data.offerteAsta.length != 0){
+                        document.getElementById("ultimaOfferta").innerHTML = data.offerteAsta[data.offerteAsta.length-1] + "€";
+                    }
+                    else{
+                        document.getElementById("ultimaOfferta").innerHTML = "00€";
+                    }
+                    document.getElementById("titoloTempo").innerHTML = "Tempo rimanente: ";
+                    countDownDate = new Date(data.fineAsta).getTime();
+                    //form.style = "display: show";
+                }
+
+                var distance = countDownDate - now;
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById("tempoRimanente").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("titoloTempo").innerHTML = "";
+                    document.getElementById("tempoRimanente").innerHTML = "EXPIRED";
+                }
+            },1000);
+
+        } else {
+            //document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
         }
     })
