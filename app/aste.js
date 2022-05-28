@@ -11,12 +11,16 @@ router.get('', async function(req, res){
             aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': {$ne: []}}).sort({'DettagliAsta.Offerte.0': 'asc'}).exec();
             let aste2 = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': []}).sort({'DettagliAsta.PrezzoMinimo': 'asc'}).exec();
             let j = 0;
-            for(let i = 0; i < aste.length; i++){
+            let i = 0;
+            for(i; i < aste.length && j < aste2.length; i++){
                 if(aste2[j].DettagliAsta.PrezzoMinimo < aste[i].DettagliAsta.Offerte[0]){
                     aste.splice(i,0,aste2[j]);
                     j++;
-                    i++
                 }
+            }
+            for(j; j < aste2.length; j++){
+                aste[i] = aste2[j];
+                i++;
             }
             aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}}).sort({'DettagliAsta.PrezzoMinimo': 'asc'}).exec());
         }
@@ -24,12 +28,16 @@ router.get('', async function(req, res){
             aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': {$ne: []}}).sort({'DettagliAsta.Offerte.0': 'desc'}).exec();
             let aste2 = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': []}).sort({'DettagliAsta.PrezzoMinimo': 'desc'}).exec();
             let j = 0;
-            for(let i = 0; i < aste.length; i++){
+            let i = 0;
+            for(i; i < aste.length && j < aste2.length; i++){
                 if(aste2[j].DettagliAsta.PrezzoMinimo > aste[i].DettagliAsta.Offerte[0]){
                     aste.splice(i,0,aste2[j]);
                     j++;
-                    i++
                 }
+            }
+            for(j; j < aste2.length; j++){
+                aste[i] = aste2[j];
+                i++;
             }
             aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}}).sort({'DettagliAsta.PrezzoMinimo': 'desc'}).exec());
         }
