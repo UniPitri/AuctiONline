@@ -230,7 +230,7 @@ function caricaAste() {
 
                     if (distance < 0) {
                         clearInterval(x);
-                        p2.innerHTML = "EXPIRED";
+                        container.remove();
                     }
                 });
             }, 1000);
