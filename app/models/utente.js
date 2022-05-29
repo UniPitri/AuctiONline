@@ -6,5 +6,5 @@ module.exports = mongoose.model('Utenti', new Schema({
 	Username: String,
     Password: String,
     Mail: String,
-    AstePreferite: [Schema.Types.ObjectId]
+    AstePreferite: [{ type: Schema.Types.ObjectId, ref: 'Aste' }]
 }, {collection: 'Utenti'}));
