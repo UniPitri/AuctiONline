@@ -46,22 +46,190 @@ router.get('/:id/aste', async function(req, res){
         //Voglio aste preferite
         let utente = await Utente.findById(req.params.id, 'AstePreferite').populate('AstePreferite').exec();
         astePreferite = utente.AstePreferite;
-        
-        /* if(req.query.orderBy === "1"){
+
+        if(req.query.orderBy === "1"){
+            let now = new Date().getTime();
             if(req.query.order === "asc"){
+                astePreferite.sort(function(a,b){
+                    if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio < now){
+                        if(a.DettagliAsta.Offerte.length != 0 && b.DettagliAsta.Offerte.length != 0){
+                            if(a.DettagliAsta.Offerte[0] < b.DettagliAsta.Offerte[0]){
+                                return -1;
+                            }
+                            else{
+                                return 1;
+                            }
+                        }
+                        else if(a.DettagliAsta.Offerte.length == 0 && b.DettagliAsta.Offerte.length != 0){
+                            if(a.DettagliAsta.prezzoMinimo == null || a.DettagliAsta.prezzoMinimo < b.DettagliAsta.Offerte[0]){
+                                return -1;
+                            }
+                            else{
+                                return 1;
+                            }
+                        }
+                        else if(a.DettagliAsta.Offerte.length != 0 && b.DettagliAsta.Offerte.length == 0){
+                            if(b.DettagliAsta.prezzoMinimo == null || b.DettagliAsta.prezzoMinimo < a.DettagliAsta.Offerte[0]){
+                                return 1;
+                            }
+                            else{
+                                return -1;
+                            }
+                        }
+                        else{
+                            if(a.DettagliAsta.prezzoMinimo == null || a.DettagliAsta.prezzoMinimo < b.DettagliAsta.prezzoMinimo){
+                                return -1;
+                            }
+                            else{
+                                return 1;
+                            }
+                        }
+                    }
+                    else if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio > now){
+                        return -1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio < now){
+                        return 1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio > now){
+                        if(a.DettagliAsta.prezzoMinimo == null || a.DettagliAsta.prezzoMinimo < b.DettagliAsta.prezzoMinimo){
+                            return -1;
+                        }
+                        else{
+                            return 1;
+                        }
+                    }
+                    return 0;
+                });
             }
-            else{                
+            else{               
+                astePreferite.sort(function(a,b){
+                    if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio < now){
+                        if(a.DettagliAsta.Offerte.length != 0 && b.DettagliAsta.Offerte.length != 0){
+                            if(a.DettagliAsta.Offerte[0] < b.DettagliAsta.Offerte[0]){
+                                return 1;
+                            }
+                            else{
+                                return -1;
+                            }
+                        }
+                        else if(a.DettagliAsta.Offerte.length == 0 && b.DettagliAsta.Offerte.length != 0){
+                            if(a.DettagliAsta.prezzoMinimo == null || a.DettagliAsta.prezzoMinimo < b.DettagliAsta.Offerte[0]){
+                                return 1;
+                            }
+                            else{
+                                return -1;
+                            }
+                        }
+                        else if(a.DettagliAsta.Offerte.length != 0 && b.DettagliAsta.Offerte.length == 0){
+                            if(b.DettagliAsta.prezzoMinimo == null || b.DettagliAsta.prezzoMinimo < a.DettagliAsta.Offerte[0]){
+                                return -1;
+                            }
+                            else{
+                                return 1;
+                            }
+                        }
+                        else{
+                            if(a.DettagliAsta.prezzoMinimo == null || a.DettagliAsta.prezzoMinimo < b.DettagliAsta.prezzoMinimo){
+                                return 1;
+                            }
+                            else{
+                                return -1;
+                            }
+                        }
+                    }
+                    else if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio > now){
+                        return 1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio < now){
+                        return -1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio > now){
+                        if(a.DettagliAsta.prezzoMinimo == null || a.DettagliAsta.prezzoMinimo < b.DettagliAsta.prezzoMinimo){
+                            return 1;
+                        }
+                        else{
+                            return -1;
+                        }
+                    }
+                    return 0;
+                });
             }
         }
         else if(req.query.orderBy === "2"){
-            aste = (req.query.order === "asc") ? await Asta.find({'DettagliAsta.Fine':{$gte: new Date()}}).sort({'DettagliProdotto.Nome': 'asc'}).exec() : await Asta.find({'DettagliAsta.Fine':{$gte: new Date()}}).sort({'DettagliProdotto.Nome': 'desc'}).exec();
+            if(req.query.order === "asc"){
+                astePreferite.sort(function(a,b){
+                    if(a.DettagliProdotto.Nome < b.DettagliProdotto.Nome){return -1;}
+                    if(a.DettagliProdotto.Nome > b.DettagliProdotto.Nome){return 1;}
+                    return 0;
+                });
+            }
+            else{     
+                astePreferite.sort(function(a,b){
+                    if(a.DettagliProdotto.Nome > b.DettagliProdotto.Nome){return -1;}
+                    if(a.DettagliProdotto.Nome < b.DettagliProdotto.Nome){return 1;}
+                    return 0;
+                });           
+            }
         }
         else{
+            let now = new Date().getTime();
+
             if(req.query.order === "asc" || req.query.order == null){   
+                astePreferite.sort(function(a,b){
+                    if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio < now){
+                        if(a.DettagliAsta.Fine < b.DettagliAsta.Fine){
+                            return -1;
+                        }
+                        else{
+                            return 1;
+                        }
+                    }
+                    else if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio > now){
+                        return -1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio < now){
+                        return 1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio > now){
+                        if(a.DettagliAsta.Fine < b.DettagliAsta.Fine){
+                            return -1;
+                        }
+                        else{
+                            return 1;
+                        }
+                    }
+                    return 0;
+                });
             }
             else{  
+                astePreferite.sort(function(a,b){
+                    if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio < now){
+                        if(a.DettagliAsta.Fine < b.DettagliAsta.Fine){
+                            return 1;
+                        }
+                        else{
+                            return -1;
+                        }
+                    }
+                    else if(a.DettagliAsta.Inizio < now && b.DettagliAsta.Inizio > now){
+                        return 1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio < now){
+                        return -1;
+                    }
+                    else if(a.DettagliAsta.Inizio > now && b.DettagliAsta.Inizio > now){
+                        if(a.DettagliAsta.Fine < b.DettagliAsta.Fine){
+                            return 1;
+                        }
+                        else{
+                            return -1;
+                        }
+                    }
+                    return 0;
+                });
             }
-        } */
+        }
 
         astePreferite = astePreferite.map( (astaPreferita) => {
             return {

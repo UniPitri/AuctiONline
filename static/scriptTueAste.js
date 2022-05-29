@@ -84,18 +84,18 @@ function cambiaTriangolo(){
         down = true;
         order = "asc";
     }
-    /* document.getElementById("cardDeck").innerHTML="";
-    caricaAstePreferite(); */
+    document.getElementById("cardDeck").innerHTML="";
+    caricaAstePreferite();
 }
 
 function newOrderBy(){
     orderBy = document.getElementById("ordinamento").value;
-    /* document.getElementById("cardDeck").innerHTML="";
-    caricaAstePreferite(); */
+    document.getElementById("cardDeck").innerHTML="";
+    caricaAstePreferite();
 }
 
 function caricaAstePreferite() {
-    fetch('./api/v1/utenti/'+sessionStorage.getItem("id")+"/aste?get=preferite", {
+    fetch('./api/v1/utenti/'+sessionStorage.getItem("id")+"/aste?get=preferite&orderBy="+orderBy+"&order="+order, {
         method: 'GET',
         headers: { 'x-access-token': sessionStorage.getItem("token")}
     })
