@@ -46,7 +46,23 @@ router.get('/:id/aste', async function(req, res){
         //Voglio aste preferite
         let utente = await Utente.findById(req.params.id, 'AstePreferite').populate('AstePreferite').exec();
         astePreferite = utente.AstePreferite;
-        //console.log(astePreferite2);
+        
+        /* if(req.query.orderBy === "1"){
+            if(req.query.order === "asc"){
+            }
+            else{                
+            }
+        }
+        else if(req.query.orderBy === "2"){
+            aste = (req.query.order === "asc") ? await Asta.find({'DettagliAsta.Fine':{$gte: new Date()}}).sort({'DettagliProdotto.Nome': 'asc'}).exec() : await Asta.find({'DettagliAsta.Fine':{$gte: new Date()}}).sort({'DettagliProdotto.Nome': 'desc'}).exec();
+        }
+        else{
+            if(req.query.order === "asc" || req.query.order == null){   
+            }
+            else{  
+            }
+        } */
+
         astePreferite = astePreferite.map( (astaPreferita) => {
             return {
                 self: '/api/v1/aste/' + astaPreferita._id,

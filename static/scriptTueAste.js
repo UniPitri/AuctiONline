@@ -1,6 +1,7 @@
 var down = true;
 var orderBy = document.getElementById("ordinamento").value;
 var order = "asc";
+var refContainer = [];
 
 function logout(){
     sessionStorage.removeItem("token");
@@ -52,29 +53,7 @@ function redirectSicuro(file){
     window.location.href = file+"?token="+sessionStorage.getItem("token");
 }
 
-function aggiungiPreferita(idAsta){
-    document.getElementById("star"+idAsta).src = '/icone/Plain_Yellow_Star.png';
-    document.getElementById("star"+idAsta).onclick = function () {rimuoviPreferita(idAsta) };
-    fetch('../api/v1/astePreferite', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("token")},
-        body: JSON.stringify({ userID: sessionStorage.getItem("id"), idAsta: idAsta }),
-    })
-    .then((resp) => resp.json())
-    .then(function (data) {
-        if (data.success) {
-        } else {
-            document.getElementById('message').innerHTML = data.message;
-            $('#alert').modal('show');
-        }
-    })
-    .catch(error => console.error(error)); // If there is any error you will catch them here
-}
-
-
 function rimuoviPreferita(idAsta){
-    document.getElementById("star"+idAsta).src = '/icone/star-empty.webp';
-    document.getElementById("star"+idAsta).onclick = function () {aggiungiPreferita(idAsta) };
     fetch('../api/v1/astePreferite', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("token")},
@@ -83,6 +62,7 @@ function rimuoviPreferita(idAsta){
     .then((resp) => resp.json())
     .then(function (data) {
         if (data.success) {
+            refContainer[idAsta].remove();
         } else {
             document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
@@ -124,6 +104,7 @@ function caricaAstePreferite() {
         return data.map(function (asta) {
             if(new Date(asta.dettagliAsta.Fine).getTime() >= new Date().getTime()){
                 let container = document.createElement('div');
+                refContainer[asta.idAsta] = container;
                 container.className = "container";
                 container.style = "margin: 0";
                 let row = document.createElement('div');
@@ -133,6 +114,9 @@ function caricaAstePreferite() {
                 let colore;
                 if(asta.dettagliAsta.Venditore == sessionStorage.getItem("id")){
                     colore = "#2c5e86";
+                }
+                else if(new Date(asta.dettagliAsta.Inizio).getTime() > new Date().getTime()){
+                    colore = "#38d996";
                 }
                 else if(asta.dettagliAsta.Offerenti[0] != sessionStorage.getItem("id")){
                     colore = "#f24d3a"
@@ -267,25 +251,17 @@ function caricaAstePreferite() {
                 row2.appendChild(col2);
                 div.appendChild(row2);
 
-                if (sessionStorage.getItem("token")) {
-                    var img = document.createElement('img');
-                    div.appendChild(img);
-                    if(asta.preferenze != null && asta.preferenze.includes(sessionStorage.getItem("id"))){
-                        img.onclick = function () {rimuoviPreferita(asta.idAsta) };
-                        img.src = '/icone/Plain_Yellow_Star.png';
-                    }
-                    else{
-                        img.onclick = function () {aggiungiPreferita(asta.idAsta) };
-                        img.src = '/icone/star-empty.webp';
-                    }  
-                    img.id = "star"+asta.idAsta;                  
-                    img.style.height = '20px';
-                    img.style.width = '20px';
-                    img.style.width = '20px';
-                    img.style.position= 'absolute';
-                    img.style.top= '5px';
-                    img.style.right= '5px';
-                }
+                var img = document.createElement('img');
+                div.appendChild(img);
+                img.onclick = function () {rimuoviPreferita(asta.idAsta) };
+                img.src = '/icone/Plain_Yellow_Star.png';
+                img.id = "star"+asta.idAsta;                  
+                img.style.height = '20px';
+                img.style.width = '20px';
+                img.style.width = '20px';
+                img.style.position= 'absolute';
+                img.style.top= '5px';
+                img.style.right= '5px';
                 row.appendChild(div);
                 container.appendChild(row);
                 cardDeck.appendChild(container);
