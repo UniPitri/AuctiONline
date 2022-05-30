@@ -13,6 +13,8 @@ const astePreferite = require('./astePreferite.js');
 const aste = require('./aste.js');
 const utenti = require('./utenti.js');
 
+const port = process.env.PORT || 3000;
+
 //Configurazione parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -51,7 +53,7 @@ app.locals.db = mongoose.connect(process.env.DB_URL,
 .then( () => {
     console.log("Connected to Database");
 
-    app.listen(3000, function() {
-    console.log('Server running on port ', 3000);
+    app.listen(port, function() {
+    console.log('Server running on port ', port);
     });
 });
