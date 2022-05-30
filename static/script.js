@@ -158,6 +158,34 @@ function caricaAste() {
     .catch( error => console.error(error) );
 }
 
+function aggiornaValori(asta, timer, card) {
+    fetch(asta.self + '?get=valori', {
+        method: 'GET',
+    })
+    .then((resp) => resp.json()) // Transform the data into json
+    .then(function(data) {
+        now = new Date().getTime();
+        inizio = new Date(asta.dettagliAsta.Inizio).getTime();
+
+        if(now > inizio) { // L'asta è aperta
+            distance = new Date(data.fine).getTime() - now;
+            document.getElementById('prezzo' + asta.idAsta).innerHTML = data.offerta;
+            card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
+            document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+        } else { // L'asta non è ancora aperta
+            distance = inizio - now;
+            document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+        }
+        
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        timer.innerHTML = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+    })
+    .catch(error => console.error(error));
+}
+
 function caricaPannelloLaterale() {
     const column2 = document.getElementById('col2');
 
@@ -182,11 +210,12 @@ function caricaPannelloLaterale() {
                 h5.innerHTML = asta.dettagliProdotto.Nome;
                 let p = document.createElement('p');
                 p.className = "card-text";
-                p.innerHTML = "Loading...";
+                p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '"></span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.dettagliAsta.PrezzoMinimo) ? asta.dettagliAsta.PrezzoMinimo : '' ) + '</span>€';
                 let p2 = document.createElement('p');
                 p2.className = "card-text";
-                p2.innerHTML = "Loading...";
-    
+                p2.innerHTML = 'Tempo rimanente: ';
+                let timer = document.createElement('span');
+    /*
                 var x = setInterval(function () {
                     var now = new Date().getTime();
     
@@ -221,18 +250,14 @@ function caricaPannelloLaterale() {
                         p2.innerHTML = "EXPIRED";
                     }
                 }, 1000);
-/*
-                var x = setInterval(function() {
-                    fetch(asta.self + '?get=valori', {
-                        method: 'GET',
-                    })
-                    .then((resp) => resp.json()) // Transform the data into json
-                    .then(function (data) {
-
-                    })
-                    .catch( error => console.error(error) );
-                }, 1000);
 */
+                aggiornaValori(asta, timer, div);
+
+                var x = setInterval(function() {
+                    aggiornaValori(asta, timer, div);
+                }, 1000);
+                
+                p2.appendChild(timer);
                 div2.appendChild(h5);
                 div2.appendChild(p);
                 div2.appendChild(p2);
