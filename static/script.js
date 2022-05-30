@@ -165,7 +165,7 @@ function caricaPannelloLaterale() {
         let cardDeck = document.createElement('div');
         cardDeck.className = "card-deck";
 
-        fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste/valide', {
+        fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste?get=aperte', {
             method: 'GET',
         })
         .then((resp) => resp.json()) // Transform the data into json
@@ -175,17 +175,6 @@ function caricaPannelloLaterale() {
                 div.className = "card product rounded";
                 //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
                 div.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
-                let row2 = document.createElement('div');
-                row2.className = "row g-0";
-                let col1 = document.createElement('div');
-                col1.className = "col-md-4";
-                col1.style = "padding: 0";
-                let imgProdotto = document.createElement('img');
-                imgProdotto.className = "img-fluid rounded-start";
-                imgProdotto.src = "fotoProdotti/" + asta.dettagliProdotto.Foto[0];
-                let col2 = document.createElement('div');
-                col2.className = "col-md-8";
-                col2.style = "padding: 0";
                 let div2 = document.createElement('div');
                 div2.className = "card-body";
                 let h5 = document.createElement('h5');
@@ -232,15 +221,22 @@ function caricaPannelloLaterale() {
                         p2.innerHTML = "EXPIRED";
                     }
                 }, 1000);
+/*
+                var x = setInterval(function() {
+                    fetch(asta.self + '?get=valori', {
+                        method: 'GET',
+                    })
+                    .then((resp) => resp.json()) // Transform the data into json
+                    .then(function (data) {
 
+                    })
+                    .catch( error => console.error(error) );
+                }, 1000);
+*/
                 div2.appendChild(h5);
                 div2.appendChild(p);
                 div2.appendChild(p2);
-                col2.appendChild(div2);            
-                col1.appendChild(imgProdotto);
-                row2.appendChild(col1);
-                row2.appendChild(col2);
-                div.appendChild(row2);
+                div.appendChild(div2);
                 cardDeck.appendChild(div);
                 column2.appendChild(cardDeck);
             })
