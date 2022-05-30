@@ -165,7 +165,7 @@ function caricaPannelloLaterale() {
         let cardDeck = document.createElement('div');
         cardDeck.className = "card-deck";
 
-        fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste', {
+        fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste/valide', {
             method: 'GET',
         })
         .then((resp) => resp.json()) // Transform the data into json
