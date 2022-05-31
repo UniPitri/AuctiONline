@@ -158,6 +158,7 @@ router.put('/:id', async function(req, res) {
     return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });
 });
 
+
 router.get('/:id', async function(req, res){
     let asta = await Asta.findById(req.params.id).catch((err)=>{console.log(err);});
     
@@ -166,8 +167,9 @@ router.get('/:id', async function(req, res){
     }
 
     let venditore = await Utente.findOne({_id: asta.DettagliAsta.Venditore}, { Username: 1}).exec();
-
+    
     return res.status(200).json({
+        success:true,
         self: '/api/v1/aste/' + asta._id,
         idAsta: asta._id,
         dettagliProdotto: asta.DettagliProdotto,
