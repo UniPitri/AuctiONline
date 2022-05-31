@@ -137,7 +137,7 @@ function caricaAste() {
             row.className = "row";
             let div = document.createElement('div');
             div.className = "card rounded";
-            div.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
+            
             div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0%";
             let row2 = document.createElement('div');
             row2.className = "row no-gutters";
@@ -151,6 +151,7 @@ function caricaAste() {
             let div2 = document.createElement('div');
             div2.className = "card-body";
             let h5 = document.createElement('h5');
+            h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
             h5.className = "card-title";
             h5.innerHTML = asta.dettagliProdotto.Nome;
             let p = document.createElement('p');
@@ -437,13 +438,14 @@ function caricaDettagliAsta() {
 
                     img = document.getElementById('preferenze');
                     
-                    if (data.preferenze != null && data.preferenze.includes(sessionStorage.getItem("id"))) {
+                    if(data.preferenze != null && data.preferenze.includes(sessionStorage.getItem("id"))){
+                        img.onclick = function () {rimuoviPreferita(data.idAsta) };
                         img.src = '/icone/Plain_Yellow_Star.png';
                     }
-                    else {
-                        img.onclick = function () { aggiungiPreferita(data.idAsta) };
+                    else{
+                        img.onclick = function () {aggiungiPreferita(data.idAsta) };
                         img.src = '/icone/star-empty.webp';
-                    }
+                    }  
                     img.id = "star" + data.idAsta;
                     
                     img.style.width = '40px';
