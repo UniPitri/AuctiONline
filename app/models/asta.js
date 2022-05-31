@@ -14,6 +14,7 @@ module.exports = mongoose.model('Aste', new Schema({
         Fine: Date,
         Tipo: Number,
         PrezzoMinimo: Number,
+        Venditore: Schema.Types.ObjectId,
         Offerte: [Number],
         Offerenti: [Schema.Types.ObjectId]
     },
