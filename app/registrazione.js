@@ -41,7 +41,7 @@ router.post('', async function(req, res) {
 		token: token,
 		email: newUser.Mail,
 		id: newUser._id,
-		self: "api/v1/" + newUser._id
+		self: "api/v1/utenti/" + newUser._id
 	});	
 });
 

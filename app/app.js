@@ -57,3 +57,5 @@ app.locals.db = mongoose.connect(process.env.DB_URL,
     console.log('Server running on port ', port);
     });
 });
+
+module.exports = app;
