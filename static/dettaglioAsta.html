@@ -68,13 +68,6 @@
               background-color: #717171;
             }
             
-            /* Fading animation */
-            .fade {
-              animation-name: fade;
-              animation-duration: 1.5s;
-            }
-            
-            
             
             /* On smaller screens, decrease text size */
             @media only screen and (max-width: 300px) {
@@ -105,6 +98,7 @@
         <div id="headerLoggati" style="background-color: #38d996; text-align:right" hidden>
             <ul style="color: white; list-style-type: none; margin-right:30px; padding: 0">
                 <li><a href="index.html" style="color:white">Home</a></li>|
+                <li><a href="#articoliAcquistati" onclick='redirectSicuro("articoliAcquistati.html")' style="color:white">Articoli acquistati</a></li>|
                 <li><a href="#tueAste" onclick='redirectSicuro("tueAste.html")' style="color:white">Le tue aste</a></li>|
                 <li><a href="#logout" onclick="logout()" style="color:white">Logout</a></li>
             </ul>
