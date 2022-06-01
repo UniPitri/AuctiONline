@@ -29,6 +29,7 @@ describe('POST /api/v1/registrazione', () => {
     afterAll(async () => {
         await cleanDB()
         await mongoose.connection.close()
+        await mongoServer.stop()
         console.log("CONN", mongoose.connection.readyState);
         console.log("MONGO CONN", mongoServer.state)
 
