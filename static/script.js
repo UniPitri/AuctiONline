@@ -386,11 +386,21 @@ function caricaDettagliAstaAttiva(data, now){
     countDownDate = new Date(data.fineAsta).getTime();
     offer = document.getElementById("offerta");
 
-    if ((data.tipoAsta == 1 || data.venditoreAsta._id == sessionStorage.getItem("id")) && data.offerteAsta.length != 0){
-        document.getElementById("ultimaOfferta").innerHTML = data.offerteAsta[0] + "€";
-    }
-    else{
-        document.getElementById("ultimaOfferta").innerHTML = "--";
+    if(data.tipoAsta == 1 || data.venditoreAsta._id == sessionStorage.getItem("id")){
+        if(data.offerteAsta.length != 0){
+            document.getElementById("ultimaOfferta").innerHTML = data.offerteAsta[0] + "€";
+        }
+        else{
+            document.getElementById("ultimaOfferta").innerHTML = "--";
+        }
+    }else{
+        document.getElementById("titoloUltimaOfferta").innerHTML = "<b>Prezzo minimo richiesto:</b>"
+        if(data.prezzoMinimo != null){
+            document.getElementById("ultimaOfferta").innerHTML = data.prezzoMinimo + "€";
+        }
+        else{
+            document.getElementById("ultimaOfferta").innerHTML = "--";
+        }
     }
 
     if (data.venditoreAsta._id != sessionStorage.getItem("id")) {
@@ -410,13 +420,13 @@ function caricaDettagliAstaAttiva(data, now){
         }
 
         if (data.tipoAsta == 1 && data.offerteAsta.length != 0) {
-            offer.value = data.offerteAsta[0] + 0.01;
-            offer.min = data.offerteAsta[0] + 0.01;
+            offer.value = (data.offerteAsta[0] + 0.01).toFixed(2);
+            offer.min = (data.offerteAsta[0] + 0.01).toFixed(2);
         }
         else {
             if (data.prezzoMinimo != null) {
-                offer.value = data.prezzoMinimo + 0.01;
-                offer.min = data.prezzoMinimo + 0.01;
+                offer.value = (data.prezzoMinimo + 0.01).toFixed(2);
+                offer.min = (data.prezzoMinimo + 0.01).toFixed(2);
             }
             else {
                 offer.value = 0.01;
@@ -454,11 +464,13 @@ function caricaDettagliAstaAttiva(data, now){
             let now = new Date().getTime();
             countDownDate = new Date(data.fineAsta).getTime();
 
-            if ((data.tipoAsta == 1 || data.venditoreAsta._id == sessionStorage.getItem("id")) && data.offerteAsta.length != 0){
-                document.getElementById("ultimaOfferta").innerHTML = data.offerteAsta[0] + "€";
-            }
-            else{
-                document.getElementById("ultimaOfferta").innerHTML = "--";
+            if(data.tipoAsta == 1 || data.venditoreAsta._id == sessionStorage.getItem("id")){
+                if(data.offerteAsta.length != 0){
+                    document.getElementById("ultimaOfferta").innerHTML = data.offerteAsta[0] + "€";
+                }
+                else{
+                    document.getElementById("ultimaOfferta").innerHTML = "--";
+                }
             }
 
             if (data.venditoreAsta._id != sessionStorage.getItem("id")) {

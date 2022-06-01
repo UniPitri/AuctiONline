@@ -6,6 +6,5 @@
  const app     = require('./app');
  
  test('app module should be defined', () => {
-   console.log(process.env.DB_URL)
    expect(app).toBeDefined();
  });

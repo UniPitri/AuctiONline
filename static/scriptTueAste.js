@@ -115,7 +115,7 @@ function caricaAstePreferite() {
                 if(asta.dettagliAsta.Venditore == sessionStorage.getItem("id")){
                     colore = "#2c5e86";
                 }
-                else if(new Date(asta.dettagliAsta.Inizio).getTime() > new Date().getTime()){
+                else if(asta.dettagliAsta.Tipo == 0  || new Date(asta.dettagliAsta.Inizio).getTime() > new Date().getTime()){
                     colore = "#38d996";
                 }
                 else if(asta.dettagliAsta.Offerenti[0] != sessionStorage.getItem("id")){
@@ -190,6 +190,19 @@ function caricaAstePreferite() {
                         if (new Date(data.inizioAsta).getTime() > now) {
                             countDownDate = new Date(data.inizioAsta).getTime();
                         } else {
+                            if(data.venditoreAsta._id == sessionStorage.getItem("id")){
+                                colore = "#2c5e86";
+                            }
+                            else if(data.tipoAsta == 0){
+                                colore = "#38d996";
+                            }
+                            else if(data.offerentiAsta[0] != sessionStorage.getItem("id")){
+                                colore = "#f24d3a"
+                            }
+                            else{
+                                colore = "#f2c43a"
+                            }
+                            div.style = "background-color: "+colore+"; cursor: pointer; margin: 1% 0%";
                             if ((data.tipoAsta == 1 || data.venditoreAsta._id == sessionStorage.getItem("id")) && data.offerteAsta.length != 0){
                                 p.innerHTML = "Prezzo attuale: " + data.offerteAsta[0] + "€";
                             }

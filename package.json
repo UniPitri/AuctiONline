@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start-local": "node -r dotenv/config app/app.js"
+    "start-local": "node -r dotenv/config index.js"
   },
   "repository": {
     "type": "git",
