@@ -1,6 +1,24 @@
 var categoriaClick = 0;
 
 function caricaPagina() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
     caricaHeader();
     caricaAste();
     caricaPannelloLaterale();
@@ -159,36 +177,59 @@ function caricaAste() {
 }
 
 function aggiornaValori(asta, timer, card) {
-    fetch(asta.self + '?get=valori', {
-        method: 'GET',
-    })
-    .then((resp) => resp.json()) // Transform the data into json
-    .then(function(data) {
-        now = new Date().getTime();
-        inizio = new Date(asta.dettagliAsta.Inizio).getTime();
+    if(asta.dettagliAsta.Tipo == 0)
+        fetch(asta.self + '?get=fine', {
+            method: 'GET',
+        })
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function(data) {
+            now = new Date().getTime();
+            inizio = new Date(asta.dettagliAsta.Inizio).getTime();
 
-        if(now > inizio) { // L'asta è aperta
-            distance = new Date(data.fine).getTime() - now;
-            //console.log("Dato aggiornato: " + data.offerta + "; dato già presente: " + document.getElementById('prezzo' + asta.idAsta).innerHTML);
+            if(now > inizio) // L'asta è aperta
+                distance = new Date(data.fine).getTime() - now;
+            else // L'asta non è ancora aperta
+                distance = inizio - now;
+            
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            timer.innerHTML = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+        })
+        .catch(error => console.error(error));
+    else
+        fetch(asta.self + '?get=valori', {
+            method: 'GET',
+        })
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function(data) {
+            now = new Date().getTime();
+            inizio = new Date(asta.dettagliAsta.Inizio).getTime();
 
-            if(data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id'))
-                $('#toast' + asta.idAsta).toast('show');
+            if(now > inizio) { // L'asta è aperta
+                distance = new Date(data.fine).getTime() - now;
+                //console.log("Dato aggiornato: " + data.offerta + "; dato già presente: " + document.getElementById('prezzo' + asta.idAsta).innerHTML);
 
-            document.getElementById('prezzo' + asta.idAsta).innerHTML = data.offerta;
-            card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
-            document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
-        } else { // L'asta non è ancora aperta
-            distance = inizio - now;
-            document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
-        }
-        
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        timer.innerHTML = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
-    })
-    .catch(error => console.error(error));
+                if(data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id')) {
+                    toastr.warning('Qualcuno ha offerto ' + data.offerta + '€ per ' + asta.dettagliProdotto.Nome, 'Nuova offerta');
+                }
+
+                document.getElementById('prezzo' + asta.idAsta).innerHTML = data.offerta;
+                card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
+                document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+            } else { // L'asta non è ancora aperta
+                distance = inizio - now;
+                document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+            }
+            
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            timer.innerHTML = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+        })
+        .catch(error => console.error(error));
 }
 
 function caricaPannelloLaterale() {
@@ -221,39 +262,6 @@ function caricaPannelloLaterale() {
                 p2.innerHTML = 'Tempo rimanente: ';
                 let timer = document.createElement('span');
                 aggiornaValori(asta, timer, div);
-
-                /* Creazione toast per notifica */
-                toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.role = 'status';
-                toast.ariaLive = 'polite';
-                toast.ariaAtomic = 'true';
-                toast.id = 'toast' + asta.idAsta;
-                toastHeader = document.createElement('div');
-                toastHeader.className = 'toast-header';
-                bell = document.createElement('i');
-                bell.className = 'bi bi-bell-fill';
-                title = document.createElement('strong');
-                title.className = 'mr-auto';
-                title.innerHTML = 'Bootstrap';
-                time = document.createElement('small');
-                time.innerHTML = '11 mins ago';
-                X = document.createElement('button');
-                X.type = 'button';
-                X.className = 'btn-close';
-                X.dataBsDismiss = 'toast';
-                X.ariaLabel = 'Close';
-                toastBody = document.createElement('div');
-                toastBody.className = 'toast-body';
-                toastBody.innerHTML = 'Hello, world! This is a toast message.';
-                toastHeader.appendChild(bell);
-                toastHeader.appendChild(title);
-                toastHeader.appendChild(time);
-                toastHeader.appendChild(X);
-                toast.appendChild(toastHeader);
-                toast.appendChild(toastBody);
-                document.getElementById('toastPlacement').appendChild(toast);
-                /* ---------------------------------------- */
 
                 var x = setInterval(function() {
                     aggiornaValori(asta, timer, div);

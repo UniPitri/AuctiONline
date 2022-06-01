@@ -108,6 +108,12 @@ router.get('/:id', async function(req, res){
             offerta: asta.DettagliAsta.Offerte,
             offerente: asta.DettagliAsta.Offerenti
         });
+    } else if(req.query.get == 'fine') {
+        asta = await Asta.findById(req.params.id).select('DettagliAsta.Fine').lean();
+
+        return res.status(200).json({
+            fine: asta.DettagliAsta.Fine,
+        });
     } else {
         let asta = await Asta.findById(req.params.id).catch((err)=>{console.log(err);});
         
