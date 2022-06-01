@@ -137,6 +137,7 @@ function caricaAstePreferite() {
                 let div2 = document.createElement('div');
                 div2.className = "card-body";
                 let h5 = document.createElement('h5');
+                h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
                 h5.className = "card-title";
                 h5.innerHTML = asta.dettagliProdotto.Nome;
                 let p = document.createElement('p');
@@ -147,21 +148,6 @@ function caricaAstePreferite() {
                 p2.innerHTML = "Loading...";
                 let offer = document.createElement('input');
                 let form = document.createElement('div');
-                form.style = "display: none";
-                if(asta.dettagliAsta.Offerte.length != 0){
-                    offer.value = asta.dettagliAsta.Offerte[0] + 0.01;
-                    offer.min = asta.dettagliAsta.Offerte[0] + 0.01;
-                }
-                else{
-                    if(asta.dettagliAsta.PrezzoMinimo != null){
-                        offer.value = asta.dettagliAsta.PrezzoMinimo + 0.01;
-                        offer.min = asta.dettagliAsta.PrezzoMinimo + 0.01;
-                    }
-                    else{
-                        offer.value = 0.01;
-                        offer.min = 0.01;
-                    }
-                }
 
                 var now = new Date().getTime();
                 if (new Date(asta.dettagliAsta.Inizio).getTime() > now) {
@@ -172,14 +158,13 @@ function caricaAstePreferite() {
 
                     countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
                 } else {
-                    if (asta.dettagliAsta.Offerte.length != 0){
+                    if ((asta.dettagliAsta.Tipo == 1 || asta.dettagliAsta.Venditore == sessionStorage.getItem("id")) && asta.dettagliAsta.Offerte.length != 0){
                         p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.Offerte[0] + "€";
                     }
                     else{
                         p.innerHTML = "Prezzo attuale: X";
                     }
                     countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
-                    form.style = "display: show";
                 }
 
                 var distance = countDownDate - now;
@@ -205,11 +190,10 @@ function caricaAstePreferite() {
                         if (new Date(data.inizioAsta).getTime() > now) {
                             countDownDate = new Date(data.inizioAsta).getTime();
                         } else {
-                            if (data.offerteAsta.length != 0){
+                            if ((data.tipoAsta == 1 || data.venditoreAsta._id == sessionStorage.getItem("id")) && data.offerteAsta.length != 0){
                                 p.innerHTML = "Prezzo attuale: " + data.offerteAsta[0] + "€";
                             }
                             countDownDate = new Date(data.fineAsta).getTime();
-                            form.style = "display: show";
                         }
 
                         var distance = countDownDate - now;
@@ -229,22 +213,11 @@ function caricaAstePreferite() {
                 let p3 = document.createElement('p');
                 p3.className = "card-text";
                 p3.innerHTML = "Tipo asta: " + (asta.dettagliAsta.Tipo ? "Asta \"inglese\"" : "Busta chiusa");
-                offer.id = "input";
-                offer.step = ".01";
-                offer.type = "number";
-                let button = document.createElement('input');
-                button.onclick = function() {
-                    offerta(asta.self, offer);
-                }
-                button.type = "submit";
-                button.value = "Offri";
                 div2.appendChild(h5);
                 div2.appendChild(p);
                 div2.appendChild(p2);
                 div2.appendChild(p3);
                 form.appendChild(offer);
-                form.appendChild(button);
-                div2.appendChild(form);
                 col2.appendChild(div2);            
                 col1.appendChild(imgProdotto);
                 row2.appendChild(col1);
@@ -269,4 +242,8 @@ function caricaAstePreferite() {
         })
     })
     .catch( error => console.error(error) );
+}
+
+function caricaPaginaDettagli(idAsta) {
+    window.location.href = "/dettaglioAsta.html?idAsta=" + idAsta;
 }
