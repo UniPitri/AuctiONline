@@ -2,29 +2,37 @@ const request  = require('supertest');
 const app      = require('./app');
 const mongoose = require('mongoose');
 const Utente = require('./models/utente');
- 
-describe('POST /api/v1/autenticazione', () => {
-    let connection;
+const { MongoMemoryServer } = require("mongodb-memory-server");
 
-    beforeAll( async () => {
+async function cleanDB() {
+    const collections = mongoose.connection.collections
+
+    for (const key in collections) {
+        await collections[key].deleteMany()
+    }
+}
+
+let mongoServer
+ 
+describe('POST /api/v1/registrazione', () => {
+    beforeAll(async () => {
         jest.setTimeout(8000);
-        jest.unmock('mongoose');
-        connection = await  mongoose.connect(process.env.DB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
-        console.log('Database connected!');
+        mongoServer = await MongoMemoryServer.create()
+        app.locals.db = await mongoose.connect(mongoServer.getUri())
         await request(app).post('/api/v1/registrazione').send({
             username: "test",
             password: "test",
-            email: "test@test",
-            name: "test",
-            surname: "test",
+            email: "test@test"
         })
-    });
+    })
 
     afterAll(async () => {
-        await Utente.deleteOne({Username: "test"});
-        await Utente.deleteOne({Username: "test2"});
-        await mongoose.connection.close();
-    });
+        await cleanDB()
+        await mongoose.connection.close()
+        console.log("CONN", mongoose.connection.readyState);
+        console.log("MONGO CONN", mongoServer.state)
+
+    })
 
     test("Registrazione con email già associata ad un account", async () => {
         const response = await request(app).post("/api/v1/registrazione").send({
