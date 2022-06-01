@@ -4,20 +4,37 @@
  const request  = require('supertest');
  const app      = require('./app');
  const mongoose = require('mongoose');
+ const { MongoMemoryServer } = require("mongodb-memory-server");
+
+async function cleanDB() {
+    const collections = mongoose.connection.collections
+
+    for (const key in collections) {
+        await collections[key].deleteMany()
+    }
+}
+
+let mongoServer
  
 describe('POST /api/v1/autenticazione', () => {
-    let connection;
-
-    beforeAll( async () => {
+    beforeAll(async () => {
         jest.setTimeout(8000);
-        jest.unmock('mongoose');
-        connection = await  mongoose.connect(process.env.DB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
-        console.log('Database connected!');
-    });
+        mongoServer = await MongoMemoryServer.create()
+        app.locals.db = await mongoose.connect(mongoServer.getUri())
+        await request(app).post('/api/v1/registrazione').send({
+            username: "test",
+            password: "test",
+            email: "test@test"
+        })
+    })
 
     afterAll(async () => {
-        await mongoose.connection.close();
-    });
+        await cleanDB()
+        await mongoose.connection.close()
+        console.log("CONN", mongoose.connection.readyState);
+        console.log("MONGO CONN", mongoServer.state)
+
+    })
 
     test("Login con account non registrato", async () => {
         const response = await request(app).post("/api/v1/autenticazione").send({
@@ -31,8 +48,8 @@ describe('POST /api/v1/autenticazione', () => {
 
     test("Login con password sbagliata", async () => {
         const response = await request(app).post("/api/v1/autenticazione").send({
-            username: "a",
-            password: "nonPasswordDiA",
+            username: "test",
+            password: "PasswordNonRegistrata",
         }).expect(401).expect("Content-Type", /json/)
         expect(response.body).toBeDefined()
         expect(response.body.success).toBe(false)
@@ -41,8 +58,8 @@ describe('POST /api/v1/autenticazione', () => {
 
     test("Login con campo username vuoto", async () => {
         const response = await request(app).post("/api/v1/autenticazione").send({
-            username: "a",
-            password: "nonPasswordDiA",
+            username: "",
+            password: "PasswordNonRegistrata",
         }).expect(401).expect("Content-Type", /json/)
         expect(response.body).toBeDefined()
         expect(response.body.success).toBe(false)
@@ -51,8 +68,8 @@ describe('POST /api/v1/autenticazione', () => {
 
     test("Login utilizzando un account registrato", async () => {
         const response = await request(app).post("/api/v1/autenticazione").send({
-            username: "a",
-            password: "a",
+            username: "test",
+            password: "test",
         }).expect(201).expect("Content-Type", /json/)
         expect(response.body).toBeDefined()
         expect(response.body).toMatchObject({ success: true, message: 'Enjoy your token!',token: /(.*)/, email: /(.*)/, id: /(.*)/,self: /\/api\/v1\/utenti\/(.*)/ })
