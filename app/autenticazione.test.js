@@ -1,13 +1,24 @@
-
 /**
  * https://www.npmjs.com/package/supertest
  */
  const request  = require('supertest');
  const app      = require('./app');
- const jwt      = require('jsonwebtoken'); // used to create, sign, and verify tokens
  const mongoose = require('mongoose');
  
 describe('POST /api/v1/autenticazione', () => {
+    let connection;
+
+    beforeAll( async () => {
+        jest.setTimeout(8000);
+        jest.unmock('mongoose');
+        connection = await  mongoose.connect(process.env.DB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+        console.log('Database connected!');
+    });
+
+    afterAll(async () => {
+        await mongoose.connection.close();
+    });
+
     test("Login con account non registrato", async () => {
         const response = await request(app).post("/api/v1/autenticazione").send({
             username: "UsernameNonRegistrato",
