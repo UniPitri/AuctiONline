@@ -3,22 +3,22 @@ const router = express.Router();
 const Utente = require('./models/utente');
     
 router.get('/:id/aste', async (req, res) => {
-    if(req.query.get == 'aperte') {
-        utente = await Utente.findById(req.params.id, 'AstePreferite').populate({ 
+    if(req.query.get == 'aperte')
+        utente = await Utente.findById(req.params.id).select('AstePreferite').populate({ 
             path: 'AstePreferite', 
             match: { 
                 'DettagliAsta.Fine': { 
                     $gt: new Date() 
                 }
             }
-        }).exec();
-    } else
-        utente = await Utente.findById(req.params.id, 'AstePreferite').populate('AstePreferite').exec();
+        }).lean();
+    else
+        utente = await Utente.findById(req.params.id).select('AstePreferite').populate('AstePreferite').lean();
 
     astePreferite = utente.AstePreferite;
     //console.log(utente);
 
-    astePreferite = astePreferite.map( (astaPreferita) => {
+    res.status(200).json(astePreferite.map( (astaPreferita) => {
         return {
             self: '/api/v1/aste/' + astaPreferita._id,
             idAsta: astaPreferita._id,
@@ -26,9 +26,7 @@ router.get('/:id/aste', async (req, res) => {
             dettagliAsta: astaPreferita.DettagliAsta,
             preferenze: (typeof astaPreferita.Preferenze === 'undefined' || astaPreferita.Preferenze.length == 0) ? null : astaPreferita.Preferenze
         };
-    });
-
-    res.status(200).json(astePreferite);
+    }));
 });
 
 module.exports = router;

@@ -169,6 +169,11 @@ function aggiornaValori(asta, timer, card) {
 
         if(now > inizio) { // L'asta è aperta
             distance = new Date(data.fine).getTime() - now;
+            //console.log("Dato aggiornato: " + data.offerta + "; dato già presente: " + document.getElementById('prezzo' + asta.idAsta).innerHTML);
+
+            if(data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id'))
+                $('#toast' + asta.idAsta).toast('show');
+
             document.getElementById('prezzo' + asta.idAsta).innerHTML = data.offerta;
             card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
             document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
@@ -215,43 +220,40 @@ function caricaPannelloLaterale() {
                 p2.className = "card-text";
                 p2.innerHTML = 'Tempo rimanente: ';
                 let timer = document.createElement('span');
-    /*
-                var x = setInterval(function () {
-                    var now = new Date().getTime();
-    
-                    if (new Date(asta.dettagliAsta.Inizio).getTime() > now) {
-                        if (asta.dettagliAsta.PrezzoMinimo != null)
-                            p.innerHTML = "Prezzo minimo: " + asta.dettagliAsta.PrezzoMinimo + "€";
-                        else
-                            p.innerHTML = "Prezzo minimo: X";
-    
-                        p2.innerHTML = "L'asta inizierà tra: ";
-                        countDownDate = new Date(asta.dettagliAsta.Inizio).getTime();
-                    } else {
-                        if (asta.dettagliAsta.Offerte.length != 0){
-                            p.innerHTML = "Prezzo attuale: " + asta.dettagliAsta.Offerte[asta.dettagliAsta.Offerte.length-1] + "€";
-                        }
-                        else{
-                            p.innerHTML = "Prezzo attuale: X";
-                        }
-                        p2.innerHTML = "Tempo rimanente: ";
-                        countDownDate = new Date(asta.dettagliAsta.Fine).getTime();
-                    }
-    
-                    var distance = countDownDate - now;
-                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    p2.innerHTML = ((new Date(asta.dettagliAsta.Inizio).getTime() > now) ? "L'asta inizierà tra: " : "Tempo rimanente: ") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-    
-                    if (distance < 0) {
-                        clearInterval(x);
-                        p2.innerHTML = "EXPIRED";
-                    }
-                }, 1000);
-*/
                 aggiornaValori(asta, timer, div);
+
+                /* Creazione toast per notifica */
+                toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.role = 'status';
+                toast.ariaLive = 'polite';
+                toast.ariaAtomic = 'true';
+                toast.id = 'toast' + asta.idAsta;
+                toastHeader = document.createElement('div');
+                toastHeader.className = 'toast-header';
+                bell = document.createElement('i');
+                bell.className = 'bi bi-bell-fill';
+                title = document.createElement('strong');
+                title.className = 'mr-auto';
+                title.innerHTML = 'Bootstrap';
+                time = document.createElement('small');
+                time.innerHTML = '11 mins ago';
+                X = document.createElement('button');
+                X.type = 'button';
+                X.className = 'btn-close';
+                X.dataBsDismiss = 'toast';
+                X.ariaLabel = 'Close';
+                toastBody = document.createElement('div');
+                toastBody.className = 'toast-body';
+                toastBody.innerHTML = 'Hello, world! This is a toast message.';
+                toastHeader.appendChild(bell);
+                toastHeader.appendChild(title);
+                toastHeader.appendChild(time);
+                toastHeader.appendChild(X);
+                toast.appendChild(toastHeader);
+                toast.appendChild(toastBody);
+                document.getElementById('toastPlacement').appendChild(toast);
+                /* ---------------------------------------- */
 
                 var x = setInterval(function() {
                     aggiornaValori(asta, timer, div);

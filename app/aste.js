@@ -101,7 +101,7 @@ router.put('/:id', async function(req, res) {
 
 router.get('/:id', async function(req, res){
     if(req.query.get == 'valori') {
-        asta = await Asta.findById(req.params.id, 'DettagliAsta.Fine DettagliAsta.Offerte DettagliAsta.Offerenti').slice('DettagliAsta.Offerte', -1).slice('DettagliAsta.Offerenti', -1);
+        asta = await Asta.findById(req.params.id).select('DettagliAsta.Fine DettagliAsta.Offerte DettagliAsta.Offerenti').slice('DettagliAsta.Offerte', -1).slice('DettagliAsta.Offerenti', -1).lean();
 
         return res.status(200).json({
             fine: asta.DettagliAsta.Fine,
