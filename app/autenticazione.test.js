@@ -12,9 +12,13 @@ describe('POST /api/v1/autenticazione', () => {
     beforeAll( async () => {
     jest.setTimeout(8000);
     jest.unmock('mongoose');
+    console.log(process.env.DB_URL)
     connection = await  mongoose.connect(process.env.DB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
     console.log('Database connected!');
-    //return connection; // Need to return the Promise db connection?
+    });
+
+    afterAll(async () => {
+        await mongoose.connection.close();
     });
 
     test("Login con account non registrato", async () => {
