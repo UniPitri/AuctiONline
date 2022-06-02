@@ -117,7 +117,7 @@ router.post('', async function(req, res) {
 	return res.status(200).json({
 		success: true,
 		message: 'Nuova asta aggiunta correttamente',
-		self: "api/v1/" + newAsta._id
+		self: "api/v1/aste/" + newAsta._id
 	});
 });
 
