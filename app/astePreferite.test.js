@@ -22,9 +22,8 @@ describe('POST /api/v1/astePreferite', () => {
     let dummyAsta2;
     let dummyPayload;
     let dummyToken;
-    let fakePayload;
     let options;
-    let fakeToken;
+    let invalidToken;
 
     beforeAll(async () => {
         jest.setTimeout(8000);
@@ -45,22 +44,16 @@ describe('POST /api/v1/astePreferite', () => {
             Preferenze: [mongoose.Types.ObjectId()]
         }).save();
 
-        fakePayload = {
-			email: "fake",
-			id: "fake",
-			username: "fake"
-		}
-		options = {
-			expiresIn: 86400
-		}
-		fakeToken = jwt.sign(fakePayload, "fakeSupersecret", options);
-
         dummyPayload = {
 			email: dummyUtente.Mail,
 			id: dummyUtente._id,
 			username: dummyUtente.Username
 		}
-		dummyToken = jwt.sign(fakePayload, process.env.SUPER_SECRET, options);
+        options = {
+			expiresIn: 86400
+		}
+        invalidToken = jwt.sign(dummyPayload, "fakeSupersecret", options);
+		dummyToken = jwt.sign(dummyPayload, process.env.SUPER_SECRET, options);
     })
 
     afterAll(async () => {
@@ -83,7 +76,7 @@ describe('POST /api/v1/astePreferite', () => {
 
     test("Aggiungi asta ai preferiti con token non valido", async () => {
         const response = await request(app).post("/api/v1/astePreferite")
-        .set("x-access-token", fakeToken)
+        .set("x-access-token", invalidToken)
         .send({
             userID: dummyUtente._id,
             idAsta: dummyAsta._id
@@ -135,9 +128,8 @@ describe('DELETE /api/v1/astePreferite', () => {
     let dummyAsta2;
     let dummyPayload;
     let dummyToken;
-    let fakePayload;
     let options;
-    let fakeToken;
+    let invalidToken;
 
     beforeAll(async () => {
         jest.setTimeout(8000);
@@ -158,22 +150,16 @@ describe('DELETE /api/v1/astePreferite', () => {
             Preferenze: [mongoose.Types.ObjectId()]
         }).save();
 
-        fakePayload = {
-			email: "fake",
-			id: "fake",
-			username: "fake"
-		}
-		options = {
-			expiresIn: 86400
-		}
-		fakeToken = jwt.sign(fakePayload, "fakeSupersecret", options);
-
         dummyPayload = {
 			email: dummyUtente.Mail,
 			id: dummyUtente._id,
 			username: dummyUtente.Username
 		}
-		dummyToken = jwt.sign(fakePayload, process.env.SUPER_SECRET, options);
+        options = {
+			expiresIn: 86400
+		}
+        invalidToken = jwt.sign(dummyPayload, "fakeSupersecret", options);
+		dummyToken = jwt.sign(dummyPayload, process.env.SUPER_SECRET, options);
     })
 
     afterAll(async () => {
@@ -196,7 +182,7 @@ describe('DELETE /api/v1/astePreferite', () => {
 
     test("Rimozione asta dai preferiti con token non valido", async () => {
         const response = await request(app).delete("/api/v1/astePreferite")
-        .set("x-access-token", fakeToken)
+        .set("x-access-token", invalidToken)
         .send({
             userID: dummyUtente._id,
             idAsta: dummyAsta._id
