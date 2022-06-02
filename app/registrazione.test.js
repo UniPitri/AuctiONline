@@ -17,20 +17,21 @@ let mongoServer
 describe('POST /api/v1/registrazione', () => {
     beforeAll(async () => {
         jest.setTimeout(8000);
-        mongoServer = await MongoMemoryServer.create()
+        mongoServer = await MongoMemoryServer.create();
         app.locals.db = await mongoose.connect(mongoServer.getUri())
         await request(app).post('/api/v1/registrazione').send({
             username: "test",
             password: "test",
             email: "test@test"
-        })
+        });
     })
 
     afterAll(async () => {
-        await cleanDB()
-        await mongoose.connection.close()
+        await cleanDB();
+        await mongoose.connection.close();
+        await mongoServer.stop();
         console.log("CONN", mongoose.connection.readyState);
-        console.log("MONGO CONN", mongoServer.state)
+        console.log("MONGO CONN", mongoServer.state);
 
     })
 
