@@ -28,7 +28,7 @@ router.post('', async function(req, res) {
 			token: token,
 			email: user.Mail,
 			id: user._id,
-			self: "api/v1/" + user._id
+			self: "api/v1/utenti" + user._id
 		});
 	}
 });
