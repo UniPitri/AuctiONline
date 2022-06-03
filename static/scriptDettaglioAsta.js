@@ -92,6 +92,45 @@ function offerta(asta, prezzo) {
     }
 }
 
+function caricaPagina() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    caricaHeader();
+    caricaDettagliAsta();
+}
+
+function caricaHeader() {
+    if(sessionStorage.getItem("token")) {
+        const items = document.querySelectorAll('.logged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    } else {
+        const items = document.querySelectorAll('.slogged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+
 function caricaDettagliAstaAttiva(data, now){
     countDownDate = new Date(data.fineAsta).getTime();
     offer = document.getElementById("offerta");
@@ -249,15 +288,6 @@ function caricaDettagliAstaInAttesa(data, now){
 }
 
 function caricaDettagliAsta() {
-
-    if (sessionStorage.getItem("token")) {
-        document.getElementById("headerLoggati").hidden = false;
-
-    }
-    else {
-        document.getElementById("headerSloggati").hidden = false;
-    }
-
     const params = new URLSearchParams(window.location.search)
     idAsta = params.get('idAsta');
 

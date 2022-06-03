@@ -206,7 +206,7 @@ function aggiornaValori(asta, timer, card) {
 
     if(asta.dettagliAsta.Tipo == 0)
         fetch(asta.self + '?get=fine', {
-            method: 'GET',
+            method: 'GET'
         })
         .then((resp) => resp.json()) // Transform the data into json
         .then(function(data) {
@@ -216,7 +216,7 @@ function aggiornaValori(asta, timer, card) {
         .catch(error => console.error(error));
     else
         fetch(asta.self + '?get=valori', {
-            method: 'GET',
+            method: 'GET'
         })
         .then((resp) => resp.json()) // Transform the data into json
         .then(function(data) {
@@ -226,7 +226,7 @@ function aggiornaValori(asta, timer, card) {
 
                 distance = new Date(data.fine).getTime() - now;
                 document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
-                card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
+                card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? '#f2c43a' : '#f24d3a');
                 document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
                 //console.log('inizio per ' + asta.dettagliProdotto.Nome + ': ' + inizioAste[asta.idAsta]);
             } else { // L'asta non è ancora aperta
@@ -249,6 +249,7 @@ function caricaPannelloLaterale() {
 
         fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste?get=aperte', {
             method: 'GET',
+            headers: { 'x-access-token': sessionStorage.getItem("token")}
         })
         .then((resp) => resp.json()) // Transform the data into json
         .then(function (data) { // Here you get the data to modify as you please        
@@ -275,7 +276,7 @@ function caricaPannelloLaterale() {
 
                 if(asta.dettagliAsta.Tipo == 0)
                     fetch(asta.self + '?get=fine', {
-                        method: 'GET',
+                        method: 'GET'
                     })
                     .then((resp) => resp.json()) // Transform the data into json
                     .then(function(data) {
@@ -285,14 +286,14 @@ function caricaPannelloLaterale() {
                     .catch(error => console.error(error));
                 else
                     fetch(asta.self + '?get=valori', {
-                        method: 'GET',
+                        method: 'GET'
                     })
                     .then((resp) => resp.json()) // Transform the data into json
                     .then(function(data) {
                         if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
                             distance = new Date(data.fine).getTime() - now;
                             document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
-                            card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
+                            card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? '#f2c43a' : '#f24d3a');
                             document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
                         } else { // L'asta non è ancora aperta
                             distance = inizioAste[asta.idAsta] - now;

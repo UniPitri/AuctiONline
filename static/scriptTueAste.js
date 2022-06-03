@@ -73,14 +73,10 @@ function rimuoviPreferita(idAsta){
 
 function cambiaTriangolo(){
     if(down){
-        document.getElementById("upTriangle").hidden = false;
-        document.getElementById("downTriangle").hidden = true;
         down = false;
         order = "desc";
     }
     else{
-        document.getElementById("downTriangle").hidden = false;
-        document.getElementById("upTriangle").hidden = true;
         down = true;
         order = "asc";
     }
@@ -93,6 +89,46 @@ function newOrderBy(){
     document.getElementById("cardDeck").innerHTML="";
     caricaAstePreferite();
 }
+
+function caricaPagina() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    caricaHeader();
+    caricaAstePreferite();
+}
+
+function caricaHeader() {
+    if(sessionStorage.getItem("token")) {
+        const items = document.querySelectorAll('.logged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    } else {
+        const items = document.querySelectorAll('.slogged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+
 
 function caricaAstePreferite() {
     fetch('./api/v1/utenti/'+sessionStorage.getItem("id")+"/aste?get=preferite&orderBy="+orderBy+"&order="+order, {

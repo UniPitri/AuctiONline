@@ -8,6 +8,44 @@ function logout() {
     window.location.href = "index.html";
 }
 
+function caricaPagina() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    caricaHeader();
+}
+
+function caricaHeader() {
+    if(sessionStorage.getItem("token")) {
+        const items = document.querySelectorAll('.logged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    } else {
+        const items = document.querySelectorAll('.slogged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+
 function annullaCreazioneAsta() {
     window.location.href = "index.html";
 }
