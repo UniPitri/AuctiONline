@@ -162,7 +162,7 @@ router.put('/:id', async function(req, res) {
         'DettagliAsta.Offerenti':{$each:[req.headers["id-account"]],$position:pos}}
     })
 
-    return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });
+    return res.status(200).json({success: true, message: 'Nuova offerta avvenuta con successo', self: "/api/v1/aste/"+req.params.id});
 });
 
 
