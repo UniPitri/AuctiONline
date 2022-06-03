@@ -22,7 +22,9 @@ input {
     margin: 5px;
 }
 
-
+.product:hover {
+    opacity: 0.75;
+}
 
 /* FORMS AND BUTTONS */
 

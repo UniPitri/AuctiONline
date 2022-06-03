@@ -37,6 +37,8 @@ app.use('/api/v1/aste', upload.array('foto',5),aste);
 app.use('/api/v1/astePreferite', astePreferite);
 app.use('/api/v1/utenti',utenti);
 
+app.use('/api/v1/utenti', utenti);
+
 /**
  * Serve front-end static files
  */
