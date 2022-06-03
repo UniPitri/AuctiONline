@@ -29,7 +29,7 @@ app.use('/api/v1/autenticazione', autenticazione);
 app.use('/api/v1/registrazione', registrazione);
 
 app.post('/api/v1/aste', tokenChecker);
-app.put('/api/v1/aste', tokenChecker);
+app.put('/api/v1/aste/:id', tokenChecker);
 app.use('/api/v1/astePreferite', tokenChecker);
 app.use('/api/v1/utenti',tokenChecker);
 
