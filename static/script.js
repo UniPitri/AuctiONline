@@ -212,11 +212,11 @@ function aggiornaValori(asta, timer, card) {
         .then((resp) => resp.json()) // Transform the data into json
         .then(function(data) {
             if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
-                if(data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id'))
+                if(data.offerta != '' && data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id'))
                     toastr.warning('Qualcuno ha offerto <b>' + data.offerta + '€</b> per <b>' + asta.dettagliProdotto.Nome + '</b>', 'Nuova offerta');
 
                 distance = new Date(data.fine).getTime() - now;
-                document.getElementById('prezzo' + asta.idAsta).innerHTML = data.offerta;
+                document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
                 card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
                 document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
                 //console.log('inizio per ' + asta.dettagliProdotto.Nome + ': ' + inizioAste[asta.idAsta]);
@@ -255,7 +255,7 @@ function caricaPannelloLaterale() {
                 h5.innerHTML = asta.dettagliProdotto.Nome;
                 let p = document.createElement('p');
                 p.className = "card-text";
-                p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '"></span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.dettagliAsta.PrezzoMinimo) ? asta.dettagliAsta.PrezzoMinimo : '' ) + '</span>€';
+                p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '">'+ (asta.dettagliAsta.Tipo ? '' : 'minimo') + '</span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.dettagliAsta.PrezzoMinimo) ? asta.dettagliAsta.PrezzoMinimo : 0 ) + '</span>€';
                 let p2 = document.createElement('p');
                 p2.className = "card-text";
                 p2.innerHTML = 'Tempo rimanente: ';
@@ -282,7 +282,7 @@ function caricaPannelloLaterale() {
                     .then(function(data) {
                         if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
                             distance = new Date(data.fine).getTime() - now;
-                            document.getElementById('prezzo' + asta.idAsta).innerHTML = data.offerta;
+                            document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
                             card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? 'yellow' : 'red');
                             document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
                         } else { // L'asta non è ancora aperta
