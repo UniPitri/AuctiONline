@@ -24,7 +24,7 @@ router.get('/:id/aste', async function(req, res){
                 dettagliAsta: astaPreferita.DettagliAsta,
                 preferenze: (typeof astaPreferita.Preferenze === 'undefined' || astaPreferita.Preferenze.length == 0) ? null : astaPreferita.Preferenze
             };
-        });
+        }));
     } else if(req.query.get == "vinte"){
         //Voglio aste vinte
         let aste;

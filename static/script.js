@@ -378,14 +378,10 @@ function rimuoviPreferita(idAsta){
 
 function cambiaTriangolo(){
     if(down){
-        document.getElementById("upTriangle").hidden = false;
-        document.getElementById("downTriangle").hidden = true;
         down = false;
         order = "desc";
     }
     else{
-        document.getElementById("downTriangle").hidden = false;
-        document.getElementById("upTriangle").hidden = true;
         down = true;
         order = "asc";
     }

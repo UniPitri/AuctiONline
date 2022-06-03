@@ -19,8 +19,6 @@
                 color: white !important;
             }
         </style>
-        
-        <script src="script.js"></script>
     </head>
     <body onload="caricaPagina()">
         <div class="modal fade" id="alert">
@@ -48,25 +46,30 @@
         <div class="container-fluid" style="margin: 0%; position: absolute">
             <div class="row">
                 <div class="col-8" style="border-right: 2px solid black; padding: 1%">
-                    <div style="position:fixed; top: 0px; z-index: 1; width: 100%; background-color: grey; height: 100px;">
-                        <div style="width:175px; height: 40px; float: left; margin-left: 70%; margin-top: 45px;">
-                            <select name="ordinamento" id="ordinamento" style="background-color: #000000; color: white; width: 100%; height: 100%; border-radius: 5px; border-color: #000000; text-align: center;" onchange="newOrderBy()">
+                    <div class="row">
+                        <div class="col-11 d-flex justify-content-end pe-0">
+                            <select class="form-select" aria-label="Default select example" id="ordinamento" name="ordinamento" onchange="newOrderBy()" style="background-color: #000000; color: white; width: auto">
                                 <option value="0">Tempo rimanente</option>
                                 <option value="1">Prezzo</opion>
                                 <option value="2">Nome prodotto</option>
                             </select>
                         </div>
-                        <div id="upTriangle" style="float: left; margin-left: 10px; margin-top: 50px;width: 0; height: 0; border-left: 12.5px solid transparent; border-right: 12.5px solid transparent; border-bottom: 25px solid #000" onclick="cambiaTriangolo()" hidden></div>
-                        <div id="downTriangle" style="float: left; margin-left: 10px; margin-top: 50px;width: 0; height: 0; border-left: 12.5px solid transparent; border-right: 12.5px solid transparent; border-top: 25px solid #000" onclick="cambiaTriangolo()"></div>
+                        <div class="col-1 ps-0" onclick="cambiaTriangolo()" style="cursor: pointer">
+                            <div class="row text-center"><i class="bi bi-triangle-fill" id="triangolo"></i></div>
+                            <div class="row text-center"><i class="bi bi-triangle-fill" id="triangolo" style="transform: rotate(180deg)"></i></div>
+                        </div>                   
                     </div>
-                    <div class="card-deck" id="cardDeck"></div>
+                    <div class="pt-2 row">
+                        <div class="card-deck" id="cardDeck"></div>
+                    </div>                    
                 </div>
                 <div class="col-4" id="col2" style="padding: 1%"></div>
             </div>
         </div>
         <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
             <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastPlacement"></div>
-        </div>
+        </div>        
+        <script src="script.js"></script>
         
         <!-- jQuery first, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
