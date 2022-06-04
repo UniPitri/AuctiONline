@@ -4,6 +4,8 @@ var inizioAste = {};
 var down = true;
 var orderBy = document.getElementById("ordinamento").value;
 var order = "asc";
+var refCard = [];
+var refInterval = []
 
 function caricaPagina() {
     toastr.options = {
@@ -204,7 +206,28 @@ function aggiornaValori(asta, timer, card) {
         toastr.info('L\'asta per <b>' + asta.dettagliProdotto.Nome + '</b> è iniziata', 'Asta aperta');
     }
 
-    if(asta.dettagliAsta.Tipo == 0)
+    if (asta.dettagliAsta.Venditore == sessionStorage.getItem("id")){
+        fetch(asta.self + '?get=valori', {
+            method: 'GET'
+        })
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function(data) {
+            if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
+                if(data.offerta != '' && data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id'))
+                    toastr.warning('Qualcuno ha offerto <b>' + data.offerta + '€</b> per <b>' + asta.dettagliProdotto.Nome + '</b>', 'Nuova offerta');
+                distance = new Date(data.fine).getTime() - now;
+                document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
+                document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+            } else { // L'asta non è ancora aperta
+                distance = inizioAste[asta.idAsta] - now;
+                document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+            }
+            
+            timer.innerHTML = calcolaStringaDistanza();
+        })
+        .catch(error => console.error(error));
+    }
+    else if(asta.dettagliAsta.Tipo == 0)
         fetch(asta.self + '?get=fine', {
             method: 'GET'
         })
@@ -246,15 +269,28 @@ function caricaPannelloLaterale() {
     if(sessionStorage.getItem("token")) {
         let cardDeck = document.createElement('div');
         cardDeck.className = "card-deck";
+        cardDeck.id = "card-deck";
+
+        let cardTitolo = document.createElement('div');
+        let divTitolo = document.createElement('div');
+        divTitolo.className = "card-body";
+        divTitolo.style = "text-align: center"
+        let h5 = document.createElement('h5');
+        h5.className = "card-title";
+        h5.innerHTML = "<b>Le tue aste:</b>";    
+        divTitolo.appendChild(h5);
+        cardTitolo.appendChild(divTitolo)
+        cardDeck.appendChild(cardTitolo);
 
         fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste?get=aperte', {
             method: 'GET',
             headers: { 'x-access-token': sessionStorage.getItem("token")}
         })
         .then((resp) => resp.json()) // Transform the data into json
-        .then(function (data) { // Here you get the data to modify as you please        
+        .then(function (data) { // Here you get the data to modify as you please    
             return data.map(function (asta) { // Map through the results and for each run the code below
                 let card = document.createElement('div');
+                refCard[asta.idAsta] = card;
                 card.className = "card product rounded";
                 //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
                 card.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
@@ -263,6 +299,7 @@ function caricaPannelloLaterale() {
                 let h5 = document.createElement('h5');
                 h5.className = "card-title";
                 h5.innerHTML = asta.dettagliProdotto.Nome;
+                h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
                 let p = document.createElement('p');
                 p.className = "card-text";
                 p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '">'+ (asta.dettagliAsta.Tipo ? '' : 'minimo') + '</span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.dettagliAsta.PrezzoMinimo) ? asta.dettagliAsta.PrezzoMinimo : 0 ) + '</span>€';
@@ -274,7 +311,27 @@ function caricaPannelloLaterale() {
                 inizioAste[asta.idAsta] = new Date(asta.dettagliAsta.Inizio).getTime();
                 areAuctionOpen[asta.idAsta] = (now > inizioAste[asta.idAsta]);
 
-                if(asta.dettagliAsta.Tipo == 0)
+                if (asta.dettagliAsta.Venditore == sessionStorage.getItem("id")){
+                    fetch(asta.self + '?get=valori', {
+                        method: 'GET'
+                    })
+                    .then((resp) => resp.json()) // Transform the data into json
+                    .then(function(data) {
+                        if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
+                            distance = new Date(data.fine).getTime() - now;
+                            document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
+                            card.style.backgroundColor = "#2c5e86"
+                            document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+                        } else { // L'asta non è ancora aperta
+                            distance = inizioAste[asta.idAsta] - now;
+                            document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+                        }
+                        
+                        timer.innerHTML = calcolaStringaDistanza();
+                    })
+                    .catch(error => console.error(error));
+                }
+                else if(asta.dettagliAsta.Tipo == 0)
                     fetch(asta.self + '?get=fine', {
                         method: 'GET'
                     })
@@ -307,6 +364,8 @@ function caricaPannelloLaterale() {
                 var x = setInterval(function() {
                     aggiornaValori(asta, timer, card);
                 }, 1000);
+
+                refInterval[asta.idAsta] = x; 
                 
                 p2.appendChild(timer);
                 div2.appendChild(h5);
@@ -314,10 +373,10 @@ function caricaPannelloLaterale() {
                 div2.appendChild(p2);
                 card.appendChild(div2);
                 cardDeck.appendChild(card);
-                column2.appendChild(cardDeck);
             })
         })
         .catch( error => console.error(error) );
+        column2.appendChild(cardDeck);
     } else {
         let card = document.createElement('div');
         card.className = "card rounded text-center";
@@ -328,6 +387,165 @@ function caricaPannelloLaterale() {
         card.appendChild(message);
         column2.appendChild(card);
     }
+}
+
+function aggiornaValoriNuovaCard(asta, timer, card) {
+    now = new Date().getTime();
+    inizioAste[asta.idAsta] = new Date(asta.inizioAsta).getTime();
+
+    if((now > inizioAste[asta.idAsta]) != areAuctionOpen[asta.idAsta]) {
+        areAuctionOpen[asta.idAsta] = (now > inizioAste[asta.idAsta]);
+        toastr.info('L\'asta per <b>' + asta.dettagliProdotto.Nome + '</b> è iniziata', 'Asta aperta');
+    }
+
+    if (asta.venditoreAsta._id == sessionStorage.getItem("id")){
+        fetch(asta.self + '?get=valori', {
+            method: 'GET'
+        })
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function(data) {
+            if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
+                if(data.offerta != '' && data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id'))
+                    toastr.warning('Qualcuno ha offerto <b>' + data.offerta + '€</b> per <b>' + asta.dettagliProdotto.Nome + '</b>', 'Nuova offerta');
+                distance = new Date(data.fine).getTime() - now;
+                document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
+                document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+            } else { // L'asta non è ancora aperta
+                distance = inizioAste[asta.idAsta] - now;
+                document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+            }
+            
+            timer.innerHTML = calcolaStringaDistanza();
+        })
+        .catch(error => console.error(error));
+    }
+    else if(asta.tipoAsta == 0)
+        fetch(asta.self + '?get=fine', {
+            method: 'GET'
+        })
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function(data) {
+            distance = ((areAuctionOpen[asta.idAsta]) ? new Date(data.fine).getTime() - now : inizioAste[asta.idAsta] - now);
+            timer.innerHTML = calcolaStringaDistanza();
+        })
+        .catch(error => console.error(error));
+    else
+        fetch(asta.self + '?get=valori', {
+            method: 'GET'
+        })
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function(data) {
+            if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
+                if(data.offerta != '' && data.offerta != document.getElementById('prezzo' + asta.idAsta).innerHTML && data.offerente != sessionStorage.getItem('id'))
+                    toastr.warning('Qualcuno ha offerto <b>' + data.offerta + '€</b> per <b>' + asta.dettagliProdotto.Nome + '</b>', 'Nuova offerta');
+
+                distance = new Date(data.fine).getTime() - now;
+                document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
+                card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? '#f2c43a' : '#f24d3a');
+                document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+                //console.log('inizio per ' + asta.dettagliProdotto.Nome + ': ' + inizioAste[asta.idAsta]);
+            } else { // L'asta non è ancora aperta
+                distance = inizioAste[asta.idAsta] - now;
+                document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+                //console.log('inizio per ' + asta.dettagliProdotto.Nome + ': ' + inizioAste[asta.idAsta]);
+            }
+
+            timer.innerHTML = calcolaStringaDistanza();
+        })
+        .catch(error => console.error(error));
+}
+
+function aggiuniCard(idAsta){
+    fetch('../api/v1/aste/' + idAsta, {
+        method: 'GET'
+    })
+    .then((resp) => resp.json()) // Transform the data into json
+    .then(function (asta) { // Here you get the data to modify as you please    
+        let cardDeck = document.getElementById("card-deck");
+        let card = document.createElement('div');
+        refCard[asta.idAsta] = card;
+        card.className = "card product rounded";
+        //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
+        card.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
+        let div2 = document.createElement('div');
+        div2.className = "card-body";
+        let h5 = document.createElement('h5');
+        h5.className = "card-title";
+        h5.innerHTML = asta.dettagliProdotto.Nome;
+        h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
+        let p = document.createElement('p');
+        p.className = "card-text";
+        p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '">'+ (asta.tipoAsta ? '' : 'minimo') + '</span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.prezzoMinimo) ? asta.prezzoMinimo : 0 ) + '</span>€';
+        let p2 = document.createElement('p');
+        p2.className = "card-text";
+        p2.innerHTML = 'Tempo rimanente: ';
+        let timer = document.createElement('span');
+        now = new Date().getTime();
+        inizioAste[asta.idAsta] = new Date(asta.inizioAsta).getTime();
+        areAuctionOpen[asta.idAsta] = (now > inizioAste[asta.idAsta]);
+
+        if (asta.venditoreAsta._id == sessionStorage.getItem("id")){
+            fetch(asta.self + '?get=valori', {
+                method: 'GET'
+            })
+            .then((resp) => resp.json()) // Transform the data into json
+            .then(function(data) {
+                if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
+                    distance = new Date(data.fine).getTime() - now;
+                    document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
+                    card.style.backgroundColor = "#2c5e86"
+                    document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+                } else { // L'asta non è ancora aperta
+                    distance = inizioAste[asta.idAsta] - now;
+                    document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+                }
+                
+                timer.innerHTML = calcolaStringaDistanza();
+            })
+            .catch(error => console.error(error));
+        }
+        else if(asta.tipoAsta == 0)
+            fetch(asta.self + '?get=fine', {
+                method: 'GET'
+            })
+            .then((resp) => resp.json()) // Transform the data into json
+            .then(function(data) {
+                distance = ((areAuctionOpen[asta.idAsta]) ? new Date(data.fine).getTime() - now : inizioAste[asta.idAsta] - now);
+                timer.innerHTML = calcolaStringaDistanza();
+            })
+            .catch(error => console.error(error));
+        else
+            fetch(asta.self + '?get=valori', {
+                method: 'GET'
+            })
+            .then((resp) => resp.json()) // Transform the data into json
+            .then(function(data) {
+                if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
+                    distance = new Date(data.fine).getTime() - now;
+                    document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
+                    card.style.backgroundColor = (data.offerente == sessionStorage.getItem('id') ? '#f2c43a' : '#f24d3a');
+                    document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
+                } else { // L'asta non è ancora aperta
+                    distance = inizioAste[asta.idAsta] - now;
+                    document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
+                }
+                
+                timer.innerHTML = calcolaStringaDistanza();
+            })
+            .catch(error => console.error(error));
+
+        var x = setInterval(function() {
+            aggiornaValoriNuovaCard(asta, timer, card);
+        }, 1000);
+        
+        p2.appendChild(timer);
+        div2.appendChild(h5);
+        div2.appendChild(p);
+        div2.appendChild(p2);
+        card.appendChild(div2);
+        cardDeck.appendChild(card);
+    })
+    .catch( error => console.error(error) );
 }
 
 function redirectSicuro(file) {
@@ -345,6 +563,7 @@ function aggiungiPreferita(idAsta){
         .then((resp) => resp.json())
         .then(function (data) {
             if (data.success) {
+                aggiuniCard(idAsta)
             } else {
                 document.getElementById('message').innerHTML = data.message;
                 $('#alert').modal('show');
@@ -369,6 +588,8 @@ function rimuoviPreferita(idAsta){
     .then((resp) => resp.json())
     .then(function (data) {
         if (data.success) {
+            clearInterval(refInterval[idAsta]);
+            refCard[idAsta].remove();
         } else {
             document.getElementById('message').innerHTML = data.message;
             $('#alert').modal('show');
