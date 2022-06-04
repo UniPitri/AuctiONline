@@ -4,28 +4,7 @@ const Asta = require('./models/asta');
 const Utente = require('./models/utente');
 
 router.get('/:id/aste', async function(req, res){
-    if(req.query.get == 'aperte') {
-        utente = await Utente.findById(req.params.id).select('AstePreferite').populate({ 
-            path: 'AstePreferite', 
-            match: { 
-                'DettagliAsta.Fine': { 
-                    $gt: new Date() 
-                }
-            }
-        }).lean();
-      
-        astePreferite = utente.AstePreferite;
-
-        res.status(200).json(astePreferite.map( (astaPreferita) => {
-            return {
-                self: '/api/v1/aste/' + astaPreferita._id,
-                idAsta: astaPreferita._id,
-                dettagliProdotto: astaPreferita.DettagliProdotto,
-                dettagliAsta: astaPreferita.DettagliAsta,
-                preferenze: (typeof astaPreferita.Preferenze === 'undefined' || astaPreferita.Preferenze.length == 0) ? null : astaPreferita.Preferenze
-            };
-        }));
-    } else if(req.query.get == "vinte"){
+    if(req.query.get == "vinte"){
         //Voglio aste vinte
         let aste;
         if(req.query.orderBy === "1"){
@@ -65,7 +44,14 @@ router.get('/:id/aste', async function(req, res){
     }
     else{
         //Voglio aste preferite
-        let utente = await Utente.findById(req.params.id, 'AstePreferite').populate('AstePreferite').exec();
+        let utente = await Utente.findById(req.params.id, 'AstePreferite').select('AstePreferite').populate({ 
+            path: 'AstePreferite', 
+            match: { 
+                'DettagliAsta.Fine': { 
+                    $gt: new Date() 
+                }
+            }
+        }).exec();
         astePreferite = utente.AstePreferite;
 
         if(req.query.orderBy === "1"){
@@ -193,7 +179,7 @@ router.get('/:id/aste', async function(req, res){
                 });           
             }
         }
-        else{
+        else if(req.query.orderBy === "0"){
             let now = new Date().getTime();
 
             if(req.query.order === "asc" || req.query.order == null){   

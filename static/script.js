@@ -289,7 +289,7 @@ function caricaPannelloLaterale() {
         cardTitolo.appendChild(divTitolo)
         cardDeck.appendChild(cardTitolo);
 
-        fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste?get=aperte', {
+        fetch('../api/v1/utenti/' + sessionStorage.getItem('id') + '/aste?get=preferite', {
             method: 'GET',
             headers: { 'x-access-token': sessionStorage.getItem("token")}
         })
