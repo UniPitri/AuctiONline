@@ -314,7 +314,7 @@ function caricaDettagliAsta() {
                     img.style.height = '40px';
                 }
 
-                document.getElementById("nomeAsta").innerHTML = data.dettagliProdotto.Nome;
+                document.getElementById("nomeAsta").innerHTML = "<h3><b>"+data.dettagliProdotto.Nome+"</h3></b>";
                 document.getElementById("descrizione").innerHTML = data.dettagliProdotto.Descrizione;
                 document.getElementById("venditore").innerHTML = data.venditoreAsta.Username;
                 document.getElementById("tipo").innerHTML = (data.tipoAsta == 0) ? "Asta a busta chiusa" : "Asta all'inglese";

@@ -132,11 +132,11 @@
 
 
             <div class="card-body">
-                <div style="text-align: center;">
-                    <div id="nomeAsta" style="color: white; font-size: larger;display:inline;width:50%"><b>Nome
-                            dell'asta</b></div>
-                    <div style="display:inline;width:50%;text-align: left;">
+                <div class="row" style="text-align: center;">
+                    <div class="col-1">
                         <img id="preferenze">
+                    </div>
+                    <div class="col-10" id="nomeAsta" style="color: white; font-size: larger; float: left;">
                     </div>
                 </div>
 
@@ -197,8 +197,10 @@
 
                 </div>
                 </form>
-                <div id="offri" style="text-align: center;" hidden><input type="number" id="offerta" step="0.01"><button
-                        id="inviaOfferta">Offri</button></div>
+                <div id="offri" style="text-align: center;" hidden>
+                    <input type="number" id="offerta" step="0.01" style="border-bottom:none">
+                    <button id="inviaOfferta">Offri</button>
+                </div>
 
 
 
