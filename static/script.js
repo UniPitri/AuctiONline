@@ -114,11 +114,6 @@ function caricaAste() {
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
             p2.innerHTML = ((new Date(asta.dettagliAsta.Inizio).getTime() > now) ? "L'asta inizierà tra: " : "Tempo rimanente: ") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
-            if (distance < 0) {
-                clearInterval(x);
-                p2.innerHTML = "EXPIRED";
-            }
-
             var x = setInterval(function () {
                 fetch('..'+asta.self, {
                     method: 'GET',
@@ -143,7 +138,7 @@ function caricaAste() {
                     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
                     p2.innerHTML = ((new Date(data.inizioAsta).getTime() > now) ? "L'asta inizierà tra: " : "Tempo rimanente: ") + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
-                    if (distance < 0) {
+                    if (new Date(data.inizioAsta).getTime() > now && distance < 0) {
                         clearInterval(x);
                         div.remove();
                     }
@@ -224,7 +219,7 @@ function aggiornaValori(asta, timer, card) {
             }
             
             timer.innerHTML = calcolaStringaDistanza();
-            if(timer.innerHTML == "0d 0h 0m 0s"){
+            if(areAuctionOpen[asta.idAsta] && timer.innerHTML == "0d 0h 0m 0s"){
                 clearInterval(refInterval[asta.idAsta]);
                 refCard[asta.idAsta].remove();
             }
@@ -239,7 +234,7 @@ function aggiornaValori(asta, timer, card) {
         .then(function(data) {
             distance = ((areAuctionOpen[asta.idAsta]) ? new Date(data.fine).getTime() - now : inizioAste[asta.idAsta] - now);
             timer.innerHTML = calcolaStringaDistanza();
-            if(timer.innerHTML == "0d 0h 0m 0s"){
+            if(areAuctionOpen[asta.idAsta] && timer.innerHTML == "0d 0h 0m 0s"){
                 clearInterval(refInterval[asta.idAsta]);
                 refCard[asta.idAsta].remove();
             }
@@ -267,7 +262,7 @@ function aggiornaValori(asta, timer, card) {
             }
 
             timer.innerHTML = calcolaStringaDistanza();
-            if(timer.innerHTML == "0d 0h 0m 0s"){
+            if(areAuctionOpen[asta.idAsta] && timer.innerHTML == "0d 0h 0m 0s"){
                 clearInterval(refInterval[asta.idAsta]);
                 refCard[asta.idAsta].remove();
             }
@@ -428,7 +423,7 @@ function aggiornaValoriNuovaCard(asta, timer, card) {
             }
             
             timer.innerHTML = calcolaStringaDistanza();
-            if(timer.innerHTML == "0d 0h 0m 0s"){
+            if(areAuctionOpen[asta.idAsta] && timer.innerHTML == "0d 0h 0m 0s"){
                 clearInterval(refInterval[asta.idAsta]);
                 refCard[asta.idAsta].remove();
             }
@@ -443,7 +438,7 @@ function aggiornaValoriNuovaCard(asta, timer, card) {
         .then(function(data) {
             distance = ((areAuctionOpen[asta.idAsta]) ? new Date(data.fine).getTime() - now : inizioAste[asta.idAsta] - now);
             timer.innerHTML = calcolaStringaDistanza();
-            if(timer.innerHTML == "0d 0h 0m 0s"){
+            if(areAuctionOpen[asta.idAsta] && timer.innerHTML == "0d 0h 0m 0s"){
                 clearInterval(refInterval[asta.idAsta]);
                 refCard[asta.idAsta].remove();
             }
@@ -471,7 +466,7 @@ function aggiornaValoriNuovaCard(asta, timer, card) {
             }
 
             timer.innerHTML = calcolaStringaDistanza();
-            if(timer.innerHTML == "0d 0h 0m 0s"){
+            if(areAuctionOpen[asta.idAsta] && timer.innerHTML == "0d 0h 0m 0s"){
                 clearInterval(refInterval[asta.idAsta]);
                 refCard[asta.idAsta].remove();
             }
