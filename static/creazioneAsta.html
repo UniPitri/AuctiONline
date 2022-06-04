@@ -21,6 +21,18 @@
         </style>
     </head>
     <body onload="caricaPagina()">
+        <div class="modal fade" id="alert">
+            <div class="modal-dialog">
+                <div class="modal-content bg-success" id="modalContent">
+                    <h5 class="modal-title" id="modalTitle">Successo</h5>
+                    <div class="modal-body">
+                        <p id="message"></p>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #178658; padding: 0;">          
             <div class="collapse justify-content-end navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto nav-pills">
@@ -33,14 +45,14 @@
             </div>
         </nav>
 
-        <div id="cardProdotto" class="container" style="margin: 40 auto;">
-            <div style="background-color: #0ba062; height:400px; height: 650px; border-radius: 50px;">
+        <div id="cardProdotto" class="container" style="margin: 40 auto; width: 1210; height: 650px;">
+            <div style="background-color: #0ba062; width: 1210; height: 650px; border-radius: 50px;">
                 <div class="card-body">
                     <div style="text-align: center;">
                         <a style="color: white; font-size: larger;"><b>Crea la tua asta! </b></a>
                     </div>
                     <a style="color: white; font-size: large; margin-left: 2%;"><b>Informazioni prodotto</b></a>
-                    <hr style="background-color: #38d996; height:2px">
+                    <hr style="background-color: #38d996; height:4px">
                     <form id="form">
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Nome prodotto: </b></a>
                         <input required style="background-color: #001a0f; color: white; width: 25%; height: 5%; text-align: left; border-bottom:none" type="text" id="nomeProdotto" name="nomeProdotto">
@@ -84,22 +96,22 @@
                         <input type="file" name="immagineProdotto" id="immagineProdotto" accept="image/*" style="color: white; border-radius: 5px; border-color: #001a0f;" multiple="multiple">
                         <br>
                         <div class="containerBottoni">
-                            <input id="bottoneAnnulla" style="margin-top: 8%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
-                            <input id="bottoneAvanti" style="margin-top: 8%; margin-left: 49%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Avanti" onclick="cardAstaOn()">
+                            <input id="bottoneAnnulla" style="margin-top: 6%; margin-left: 6%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Annulla" onclick="annullaCreazioneAsta()">
+                            <input id="bottoneAvanti" style="margin-top: 6%; margin-left: 49%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Avanti" onclick="cardAstaOn()">
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div id="cardAsta" class="container" style="margin: 40 auto;" hidden>
-            <div style="background-color: #0ba062; height:400px; height: 650px; border-radius: 50px;">
+        <div id="cardAsta" class="container" style="margin: 40 auto; width: 1210; height: 650px;" hidden>
+            <div style="background-color: #0ba062; width: 1210; height: 650px; border-radius: 50px;">
                 <div class="card-body">
                     <div style="text-align: center;">
                         <a style="color: white; font-size: larger;"><b>Crea la tua asta!</b></a>
                     </div>
                     <a style="color: white; font-size: large; margin-left: 2%;"><b>Impostazioni asta</b></a>
-                    <hr style="background-color: #38d996; height:2px">
+                    <hr style="background-color: #38d996; height:4px">
                     <form id="form">
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Inizio asta: </b></a>
                         <input required style="background-color: #001a0f; color: white; width: 19%; height: 5%;border-radius: 5px; border-color: #001a0f;" type="datetime-local" id="inizioAsta" name="inizioAsta">
@@ -112,20 +124,20 @@
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Tipo asta: </b></a>
                         <input required type="radio" name="tipoAsta" id="astaInglese" value="1" style="accent-color: #001a0f;" checked>
                         <label for="astaInglese" style="color: white;"><b>Asta all'inglese</b></label><br>
-                        <input required type="radio" name="tipoAsta" id="astaBustaChiusa" value="0" style="margin-left: 12.3%; accent-color: #001a0f;">
+                        <input required type="radio" name="tipoAsta" id="astaBustaChiusa" value="0" style="margin-left: 11.4%; accent-color: #001a0f;">
                         <label for="astaBustaChiusa" style="color: white;"><b>Asta a busta chiusa</b></label>
                         <br>
                         <br>
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Impostazioni asta opzionali</b></a>
-                        <hr style="background-color: #38d996; height:2px">
+                        <hr style="background-color: #38d996; height:4px">
                         <a style="color: white; font-size: large; margin-left: 2%;"><b>Prezzo minimo: </b></a>
                         <input required style="background-color: #001a0f; color: white; width: 10%; height: 5%; text-align: center; border-radius: 5px; border-color: #001a0f;" type="number" id="prezzoMinimo" name="prezzoMinimo" min="0.01">
                         <a style="color: white; font-size: large;"><b> €</b></a>
                         <br>
                         <br>
                         <div class="containerBottoni">
-                            <input id="bottoneAnnulla" style="margin-top: 11.2%; margin-left: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Indietro" onclick="cardProdottoOn()">
-                            <input id="bottoneAvanti" style="margin-top: 11.2%; margin-left: 46%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Conferma" onclick="creaAsta()">
+                            <input id="bottoneAnnulla" style="margin-top: 10.8%; margin-left: 6%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Indietro" onclick="cardProdottoOn()">
+                            <input id="bottoneAvanti" style="margin-top: 10.8%; margin-left: 46%; margin-right: 4%; background-color: white; box-shadow: none; color: black; font-weight: bold;" type="button" value="Conferma" onclick="creaAsta()">
                         </div>
                     </form>
                 </div>

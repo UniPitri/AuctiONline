@@ -70,7 +70,10 @@ function creaAsta() {
     var prezzoMinimoProdotto = document.getElementById("prezzoMinimo").value;
 
     if (nomeProdotto == "" || descrizioneProdotto == "" || !immaginiProdotto || !inizioAsta || !fineAsta) {
-        window.alert("Devi compilare tutti i campi obbligatori!");
+        document.getElementById('modalContent').className = 'modal-content bg-danger';
+        document.getElementById('modalTitle').innerHTML = 'Errore';
+        document.getElementById('message').innerHTML = 'Devi compilare tutti i campi obbligatori';
+        $('#alert').modal('show');
     }
     else {
         var fd = new FormData();
@@ -95,14 +98,23 @@ function creaAsta() {
             },
             body: fd
         })
-            .then((resp) => resp.json())
-            .then(function (data) {
-                window.alert(data.message);
-                if (data.success) {
-                    window.location.href = "index.html";
-                }
-            })
-            .catch(error => console.error(error));
+        .then((resp) => resp.json())
+        .then(function (data) {
+            if (data.success) {
+                document.getElementById('modalContent').className = 'modal-content bg-success';
+                document.getElementById('modalTitle').innerHTML = 'Successo';
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+                window.location.href = "index.html";
+            }
+            else{
+                document.getElementById('modalContent').className = 'modal-content bg-danger';
+                document.getElementById('modalTitle').innerHTML = 'Errore';
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+            }
+        })
+        .catch(error => console.error(error));
     }
 }
 
