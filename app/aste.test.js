@@ -81,7 +81,19 @@ describe('GET /api/v1/aste/:id', () => {
         expect(response.body.message).toBe('Asta non trovata')
     })
 
-    test("Visione dettaglia asta di asta estitente", async () => {
+    test("Visione dettagli chiave asta di asta estitente", async () => {
+        const response = await request(app).get("/api/v1/aste/"+dummyAsta._id+"?get=valori").send().expect(200).expect("Content-Type", /json/)
+        expect(response.body).toBeDefined()
+        expect(response.body).toMatchObject({ fine: /(.*)/, offerta: /(.*)/, offerente: /(.*)/})
+    })
+
+    test("Visione fine asta di asta estitente", async () => {
+        const response = await request(app).get("/api/v1/aste/"+dummyAsta._id+"?get=fine").send().expect(200).expect("Content-Type", /json/)
+        expect(response.body).toBeDefined()
+        expect(response.body).toMatchObject({ fine: /(.*)/})
+    })
+
+    test("Visione dettagli completi asta di asta estitente", async () => {
         const response = await request(app).get("/api/v1/aste/"+dummyAsta._id).send().expect(200).expect("Content-Type", /json/)
         expect(response.body).toBeDefined()
         expect(response.body).toMatchObject({ success: true,self: /\/api\/v1\/aste\/(.*)/, idAsta: /(.*)/, dettagliProdotto: /(.*)/, inizioAsta: /(.*)/, fineAsta: /(.*)/, tipoAsta: /(.*)/, prezzoMinimo: /(.*)/, offerteAsta: /(.*)/, offerentiAsta: /(.*)/, venditoreAsta: /(.*)/, preferenze: /(.*)/})
