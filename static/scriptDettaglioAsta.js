@@ -332,7 +332,7 @@ function caricaDettagliAsta() {
 
                     if(data.venditoreAsta._id == sessionStorage.getItem('id')) {
                         btnChiusura = document.createElement('button');
-                        btnChiusura.className = 'btn btn-lg btn-warning float-end me-5 text-nowrap';
+                        btnChiusura.className = 'btn btn-lg btn-warning text-nowrap';
                         btnChiusura.innerHTML = 'Chiudi asta';
                         
                         btnChiusura.onclick = function() {
@@ -340,6 +340,7 @@ function caricaDettagliAsta() {
                                 method: 'PUT',
                                 headers: { 
                                     'Content-Type': 'application/json',
+                                    'x-access-token': sessionStorage.getItem("token"),
                                     'id-account': sessionStorage.getItem('id')
                                 }
                             })
@@ -354,7 +355,7 @@ function caricaDettagliAsta() {
                         }
 
                         btnChiusura.type = 'button';
-                        document.getElementById('cardBody').appendChild(btnChiusura);
+                        document.getElementById('td').appendChild(btnChiusura);
                     }
                 }
                 else{
