@@ -8,6 +8,44 @@ function logout() {
     window.location.href = "index.html";
 }
 
+function caricaPagina() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    caricaHeader();
+}
+
+function caricaHeader() {
+    if(sessionStorage.getItem("token")) {
+        const items = document.querySelectorAll('.logged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    } else {
+        const items = document.querySelectorAll('.slogged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+
 function annullaCreazioneAsta() {
     window.location.href = "index.html";
 }
@@ -32,7 +70,10 @@ function creaAsta() {
     var prezzoMinimoProdotto = document.getElementById("prezzoMinimo").value;
 
     if (nomeProdotto == "" || descrizioneProdotto == "" || !immaginiProdotto || !inizioAsta || !fineAsta) {
-        window.alert("Devi compilare tutti i campi obbligatori!");
+        document.getElementById('modalContent').className = 'modal-content bg-danger';
+        document.getElementById('modalTitle').innerHTML = 'Errore';
+        document.getElementById('message').innerHTML = 'Devi compilare tutti i campi obbligatori';
+        $('#alert').modal('show');
     }
     else {
         var fd = new FormData();
@@ -57,14 +98,23 @@ function creaAsta() {
             },
             body: fd
         })
-            .then((resp) => resp.json())
-            .then(function (data) {
-                window.alert(data.message);
-                if (data.success) {
-                    window.location.href = "index.html";
-                }
-            })
-            .catch(error => console.error(error));
+        .then((resp) => resp.json())
+        .then(function (data) {
+            if (data.success) {
+                document.getElementById('modalContent').className = 'modal-content bg-success';
+                document.getElementById('modalTitle').innerHTML = 'Successo';
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+                window.location.href = "index.html";
+            }
+            else{
+                document.getElementById('modalContent').className = 'modal-content bg-danger';
+                document.getElementById('modalTitle').innerHTML = 'Errore';
+                document.getElementById('message').innerHTML = data.message;
+                $('#alert').modal('show');
+            }
+        })
+        .catch(error => console.error(error));
     }
 }
 

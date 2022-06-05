@@ -92,6 +92,45 @@ function offerta(asta, prezzo) {
     }
 }
 
+function caricaPagina() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    caricaHeader();
+    caricaDettagliAsta();
+}
+
+function caricaHeader() {
+    if(sessionStorage.getItem("token")) {
+        const items = document.querySelectorAll('.logged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    } else {
+        const items = document.querySelectorAll('.slogged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+
 function caricaDettagliAstaAttiva(data, now){
     countDownDate = new Date(data.fineAsta).getTime();
     offer = document.getElementById("offerta");
@@ -249,15 +288,6 @@ function caricaDettagliAstaInAttesa(data, now){
 }
 
 function caricaDettagliAsta() {
-
-    if (sessionStorage.getItem("token")) {
-        document.getElementById("headerLoggati").hidden = false;
-
-    }
-    else {
-        document.getElementById("headerSloggati").hidden = false;
-    }
-
     const params = new URLSearchParams(window.location.search)
     idAsta = params.get('idAsta');
 
@@ -284,7 +314,7 @@ function caricaDettagliAsta() {
                     img.style.height = '40px';
                 }
 
-                document.getElementById("nomeAsta").innerHTML = data.dettagliProdotto.Nome;
+                document.getElementById("nomeAsta").innerHTML = "<h3><b>"+data.dettagliProdotto.Nome+"</h3></b>";
                 document.getElementById("descrizione").innerHTML = data.dettagliProdotto.Descrizione;
                 document.getElementById("venditore").innerHTML = data.venditoreAsta.Username;
                 document.getElementById("tipo").innerHTML = (data.tipoAsta == 0) ? "Asta a busta chiusa" : "Asta all'inglese";

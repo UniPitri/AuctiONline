@@ -176,7 +176,7 @@ router.put('/:id', async function(req, res) {
             }
         });
 
-        return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true });
+        return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true, self: "/api/v1/aste/"+req.params.id });
     }
 
     return res.status(code).json({
@@ -188,27 +188,41 @@ router.put('/:id', async function(req, res) {
 
 router.get('/:id', async function(req, res){
     let asta = await Asta.findById(req.params.id).catch((err)=>{console.log(err);});
-    
-    if(!asta){
-        return res.status(404).json({ success: false, message: 'Asta non trovata'});
-    }
 
-    let venditore = await Utente.findOne({_id: asta.DettagliAsta.Venditore}, { Username: 1}).exec();
+    if(!asta)
+        return res.status(404).json({ success: false, message: 'Asta non trovata'});
+  
+    if(req.query.get == 'valori') {
+        asta = await Asta.findById(req.params.id).select('DettagliAsta.Fine DettagliAsta.Offerte DettagliAsta.Offerenti').slice('DettagliAsta.Offerte', 1).slice('DettagliAsta.Offerenti', 1).lean();
+        return res.status(200).json({
+            fine: asta.DettagliAsta.Fine,
+            offerta: asta.DettagliAsta.Offerte,
+            offerente: asta.DettagliAsta.Offerenti
+        });
+    } else if(req.query.get == 'fine') {
+        asta = await Asta.findById(req.params.id).select('DettagliAsta.Fine').lean();
+
+        return res.status(200).json({
+            fine: asta.DettagliAsta.Fine,
+        });
+    } else {
+        let venditore = await Utente.findOne({_id: asta.DettagliAsta.Venditore}, { Username: 1}).exec();
     
-    return res.status(200).json({
-        success:true,
-        self: '/api/v1/aste/' + asta._id,
-        idAsta: asta._id,
-        dettagliProdotto: asta.DettagliProdotto,
-        inizioAsta: asta.DettagliAsta.Inizio,
-        fineAsta: asta.DettagliAsta.Fine,
-        tipoAsta: asta.DettagliAsta.Tipo,
-        prezzoMinimo: asta.DettagliAsta.PrezzoMinimo,
-        offerteAsta: asta.DettagliAsta.Offerte,
-        offerentiAsta: asta.DettagliAsta.Offerenti,
-        venditoreAsta: venditore,
-        preferenze: (typeof asta.Preferenze === 'undefined' || asta.Preferenze.length == 0) ? null : asta.Preferenze
-    });
+        return res.status(200).json({
+            success:true,
+            self: '/api/v1/aste/' + asta._id,
+            idAsta: asta._id,
+            dettagliProdotto: asta.DettagliProdotto,
+            inizioAsta: asta.DettagliAsta.Inizio,
+            fineAsta: asta.DettagliAsta.Fine,
+            tipoAsta: asta.DettagliAsta.Tipo,
+            prezzoMinimo: asta.DettagliAsta.PrezzoMinimo,
+            offerteAsta: asta.DettagliAsta.Offerte,
+            offerentiAsta: asta.DettagliAsta.Offerenti,
+            venditoreAsta: venditore,
+            preferenze: (typeof asta.Preferenze === 'undefined' || asta.Preferenze.length == 0) ? null : asta.Preferenze
+        });
+    }
 });
 
 module.exports = router;

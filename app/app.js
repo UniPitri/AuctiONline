@@ -29,13 +29,15 @@ app.use('/api/v1/autenticazione', autenticazione);
 app.use('/api/v1/registrazione', registrazione);
 
 app.post('/api/v1/aste', tokenChecker);
-app.put('/api/v1/aste', tokenChecker);
+app.put('/api/v1/aste/:id', tokenChecker);
 app.use('/api/v1/astePreferite', tokenChecker);
 app.use('/api/v1/utenti',tokenChecker);
 
 app.use('/api/v1/aste', upload.array('foto',5),aste);
 app.use('/api/v1/astePreferite', astePreferite);
 app.use('/api/v1/utenti',utenti);
+
+app.use('/api/v1/utenti', utenti);
 
 /**
  * Serve front-end static files

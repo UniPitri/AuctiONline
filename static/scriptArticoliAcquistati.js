@@ -14,6 +14,45 @@ function redirectSicuro(file) {
     window.location.href = file + "?token=" + sessionStorage.getItem("token");
 }
 
+function caricaPagina() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    caricaHeader();
+    caricaAsteVinte();
+}
+
+function caricaHeader() {
+    if(sessionStorage.getItem("token")) {
+        const items = document.querySelectorAll('.logged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    } else {
+        const items = document.querySelectorAll('.slogged');
+
+        items.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+}
+
 function caricaAsteVinte() {
     const cardDeck = document.getElementById('cardDeck');
     fetch('../api/v1/utenti/'+sessionStorage.getItem("id")+"/aste?get=vinte&orderBy="+orderBy+"&order="+order, {
@@ -92,14 +131,10 @@ function caricaAsteVinte() {
 
 function cambiaTriangolo(){
     if(down){
-        document.getElementById("upTriangle").hidden = false;
-        document.getElementById("downTriangle").hidden = true;
         down = false;
         order = "desc";
     }
     else{
-        document.getElementById("downTriangle").hidden = false;
-        document.getElementById("upTriangle").hidden = true;
         down = true;
         order = "asc";
     }

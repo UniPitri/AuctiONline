@@ -44,7 +44,14 @@ router.get('/:id/aste', async function(req, res){
     }
     else{
         //Voglio aste preferite
-        let utente = await Utente.findById(req.params.id, 'AstePreferite').populate('AstePreferite').exec();
+        let utente = await Utente.findById(req.params.id, 'AstePreferite').select('AstePreferite').populate({ 
+            path: 'AstePreferite', 
+            match: { 
+                'DettagliAsta.Fine': { 
+                    $gt: new Date() 
+                }
+            }
+        }).exec();
         astePreferite = utente.AstePreferite;
 
         if(req.query.orderBy === "1"){
@@ -172,7 +179,7 @@ router.get('/:id/aste', async function(req, res){
                 });           
             }
         }
-        else{
+        else if(req.query.orderBy === "0"){
             let now = new Date().getTime();
 
             if(req.query.order === "asc" || req.query.order == null){   
