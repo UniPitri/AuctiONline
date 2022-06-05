@@ -391,4 +391,43 @@ describe('PUT /api/v1/aste/:id', () => {
         expect(response.body).toBeDefined()
         expect(response.body).toMatchObject({ success: true, message: 'Nuova offerta avvenuta con successo',self: /\/api\/v1\/aste\/(.*)/ })
     })
+
+    test("Chiusura asta senza essere loggato", async () => {
+        const response = await request(app).put("/api/v1/aste/"+dummyAsta1._id+"?put=fine")
+        .set("id-account", "")
+        .send().expect(401).expect("Content-Type", /json/)
+        expect(response.body).toBeDefined()
+        expect(response.body.success).toBe(false)
+        expect(response.body.message).toBe('No token provided.')
+    })
+
+    test("Chiusura asta con token non valido", async () => {
+        const response = await request(app).put("/api/v1/aste/"+dummyAsta1._id+"?put=fine")
+        .set("x-access-token", invalidToken)
+        .set("id-account", dummyUtente._id)
+        .send().expect(403).expect("Content-Type", /json/)
+        expect(response.body).toBeDefined()
+        expect(response.body.success).toBe(false)
+        expect(response.body.message).toBe('Failed to authenticate token.')
+    })
+
+    test("Chiusura di un'asta di cui non sono il venditore", async () => {
+        const response = await request(app).put("/api/v1/aste/"+dummyAsta4._id+"?put=fine")
+        .set("x-access-token", dummyToken)
+        .set("id-account", dummyUtente._id)
+        .send().expect(400).expect("Content-Type", /json/)
+        expect(response.body).toBeDefined()
+        expect(response.body.success).toBe(false)
+        expect(response.body.message).toBe("Quest'asta non ti appartiene")
+    })
+
+    test("Chiusura di un'asta di cui sono il venditore", async () => {
+        const response = await request(app).put("/api/v1/aste/"+dummyAsta2._id+"?put=fine")
+        .set("x-access-token", dummyToken)
+        .set("id-account", dummyUtente._id)
+        .send().expect(200).expect("Content-Type", /json/)
+        expect(response.body).toBeDefined()
+        expect(response.body.success).toBe(true)
+        expect(response.body.message).toBe("Asta conclusa correttamente")
+    })
 });
