@@ -55,9 +55,9 @@ paths:
                     type: string
                     example: "1"
                   self:
-                    description: Formato dalla stringa "api/v1/" concatenata all'ID dell'utente
+                    description: Formato dalla stringa "api/v1/utenti/" concatenata all'ID dell'utente
                     type: string
-                    example: "api/v1/1"
+                    example: "api/v1/utenti/1"
         "401":
           description: Autenticazione fallita. Invio messaggio di errore.
           content:
@@ -124,9 +124,9 @@ paths:
                     type: string
                     example: "1"
                   self:
-                    description: Formato dalla stringa "api/v1/" concatenata all'ID dell'utente
+                    description: Formato dalla stringa "api/v1/utenti/" concatenata all'ID dell'utente
                     type: string
-                    example: "api/v1/1"
+                    example: "api/v1/utenti/1"
         "409":
           description:  Creazione account fallita. Esiste già un account con la mail inserita.
           content:
@@ -139,7 +139,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: "Email gia in utilizzo"
+                    example: "Email già in utilizzo"
         "409":
           description:  Creazione account fallita. Esiste già un account con l'username inserito.
           content:
@@ -152,7 +152,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: "Username gia in utilizzo"
+                    example: "Username già in utilizzo"
   /api/v1/aste:
     x-summary: ''
     x-description: ''
@@ -160,6 +160,19 @@ paths:
       summary: Visualizza catalogo aste
       description: Recupera la lista delle aste disponibili.
       operationId: visualizzazioneCatalogo
+      parameters:
+          - in: query
+            name: orderBy
+            description: Ordinamento richiesto al catalogo ("0" (DEFAULT) -> per tempo rimasto; "1" -> per prezzo attuale; "2" -> per nome)
+            schema:
+              type: string
+            example: "0"
+          - in: query
+            name: order
+            description: Tipo di ordinamento richiesto al catalogo ("asc" (DEFAULT) -> crescente; "desc" -> decrescente)
+            schema:
+              type: string
+            example: "asc"
       responses:
         "200":
           description: Catalogo delle aste disponibili è pronto.
@@ -239,6 +252,13 @@ paths:
               type: string
             example: "aswu3323ljk34nmklu9HHGSSjknwe"
             required: true
+          - in: header
+            name: id-account
+            description: ID dell'utente che vuole creare l'asta
+            schema:
+              type: string
+            example: "1240"
+            required: true
         requestBody:
           content:
             multipart/form-data:
@@ -249,7 +269,7 @@ paths:
                     description: Nome del prodotto che verrà messo all'asta
                     type: string
                     example: "Il ragazzo di Firenze"
-                  categorie: 
+                  categoria: 
                     description: Categorie associate al prodotto che verrà messo all'asta (necessaria una)
                     type: array
                     items:
@@ -284,7 +304,7 @@ paths:
                     example: 15.55
                 required:
                   - nome
-                  - categorie
+                  - categoria
                   - descrizione
                   - foto
                   - inizio
@@ -294,7 +314,7 @@ paths:
                 foto:
                   contentType: image/png, image/jpeg
         responses:
-          "201":
+          "200":
             description: Creazione asta avvenuta con successo. Redirect alla pagina del catalogo.
             content:
               application/json:
@@ -365,9 +385,15 @@ paths:
             type: string
           example: "5b2g3613g"
           required: true
+        - in: query
+          name: get
+          description: Tipo di informazioni che si vuole ricevere ("completo" (DEFAULT) -> Ritorna tutte le informazioni relative al prodotto selezionato; "valori" -> Ritorna esclusivamente quando è prevista la fine dell'asta, le offerte attualmente fatte per l'asta e chi ha fatto tali offerte; "fine" -> Ritorna esclusivamente quando è previsto la fine dell'asta)
+          schema:
+            type: string
+          example: "completo"
       responses:
         "200":
-          description: Informazioni sull'asta disponibili.
+          description: Informazioni sull'asta disponibili (formato "COMPLETO").
           content:
             application/json:
               schema:
@@ -436,6 +462,36 @@ paths:
                     items:
                         type: string
                     example: ["423","416"]
+        "200":
+          description: Informazioni sull'asta disponibili (formato "VALORI").
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fine:
+                    type: string
+                    example: "2022-06-02T01:33:00.000+00:00"
+                  offerta:
+                    type: array
+                    items:
+                      type: number
+                    example: [40.0,45.25]
+                  offerente:
+                    type: array
+                    items:
+                      type: string
+                    example: ["123","416"]
+        "200":
+          description: Informazioni sull'asta disponibili (formato "FINE").
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fine:
+                    type: string
+                    example: "2022-06-02T01:33:00.000+00:00"
         "404":
           description: Informazioni non disponibile. L'asta non esiste.
           content:
@@ -460,6 +516,20 @@ paths:
             schema:
               type: string
             example: "5b2g3613g"
+            required: true
+          - in: header
+            name: x-access-token
+            description: Token di autenticazione dell'utente che vuole offrire per l'asta
+            schema:
+              type: string
+            example: "5b2g3613g"
+            required: true
+          - in: header
+            name: id-account
+            description: ID dell'utente che vuole offrire per l'asta
+            schema:
+              type: string
+            example: "1240"
             required: true
         requestBody:
           content:
@@ -487,6 +557,10 @@ paths:
                     message: 
                       type: string
                       example: "Nuova offerta avvenuta con successo"
+                    self:
+                      description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
+                      type: string
+                      example: "api/v1/aste/5b2g3613g"
           "404":
             description: Offerta fallita. L'asta non esiste.
             content:
@@ -500,6 +574,19 @@ paths:
                     message:
                       type: string
                       example: "Asta non trovata"
+          "400":
+            description: Offerta fallita. L'utente sta offrendo per un'asta che ha creato lui stesso.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Non puoi offrire per un'asta creata da te stesso"
           "400":
             description: Offerta fallita. Si sta offrendo per un'asta che deve ancora iniziare o che è già terminata.
             content:
@@ -552,6 +639,79 @@ paths:
                     message:
                       type: string
                       example: "L'asta è a busta chiusa ed è presente già una tua offerta"
+                      
+  /api/v1/aste/:id?put=fine:
+    x-summary: ''
+    x-description: ''
+    put:
+      summary: Chiudi anticipatamente asta
+      description: Chiude in anticipo l'asta specificata da ID.
+      operationId: chiusuraAsta
+      parameters:
+        - in: path
+          name: id
+          description: ID dell'asta da chiudere anticipatamente
+          schema:
+            type: string
+          example: "3819dsd3ewe"
+          required: true
+        - in: header
+          name: x-access-token
+          description: Token di autenticazione dell'utente che vuole chiudere l'asta anticipatamente
+          schema:
+            type: string
+          example: "5b2g3613g"
+          required: true
+        - in: header
+          name: id-account
+          description: ID dell'utente che vuole terminare anticipatamente l'asta
+          schema:
+            type: string
+          example: "1240"
+          required: true
+      responses:
+        "200":
+          description: L'asta è stata chiusa correttamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      example: "Asta conclusa correttamente"
+        "404":
+          description: Chiusura asta anticipata fallita. L'asta non esiste.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:       
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Asta non trovata"
+        "400":
+          description: Chiusura asta anticipata fallita. L'asta non è stata creata dall'utente che sta facendo la richiesta.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:       
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Quest'asta non ti appartiene"
+                    
   /api/v1/astePreferite:
     x-summary: ''
     x-description: ''
@@ -602,6 +762,19 @@ paths:
                     description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
                     type: string
                     example: "api/v1/aste/5b2g3613g"
+        "404":
+            description: Aggiunta asta ai preferiti fallita. L'asta non esiste.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Asta non trovata"
         "409":
           description: Aggiunta asta ai preferiti fallita. L'asta scelta è già tra i preferiti.
           content:
@@ -662,6 +835,19 @@ paths:
                     description: Formato dalla stringa "api/v1/aste" concatenata all'ID dell'asta
                     type: string
                     example: "api/v1/aste/5b2g3613g"
+        "404":
+            description: Rimozione asta dai preferiti fallita. L'asta non esiste.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:       
+                    success:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: "Asta non trovata"
         "409":
           description: Rimozione asta dai preferiti fallita. L'asta scelta non è tra i preferiti.
           content:
@@ -675,7 +861,8 @@ paths:
                     message:
                       type: string
                       example: "Asta non è tra i preferiti"
-  /api/v1/utenti/:id/asteVinte:
+                      
+  /api/v1/utenti/:id/aste?get=vinte:
     x-summary: ''
     x-description: ''
     get:
@@ -683,6 +870,18 @@ paths:
       description: Recupera la lista delle aste vinte da un particolare utente.
       operationId: visualizzazioneAsteVinte
       parameters:
+        - in: query
+          name: orderBy
+          description: Ordinamento richiesto al catalogo ("0" (DEFAULT) -> per inizio asta; "1" -> per fine asta; "2" -> per nome; "3" -> per costo)
+          schema:
+            type: string
+          example: "0"
+        - in: query
+          name: order
+          description: Tipo di ordinamento richiesto al catalogo ("asc" (DEFAULT) -> crescente; "desc" -> decrescente)
+          schema:
+            type: string
+          example: "asc"
         - in: path
           name: id
           description: ID dell'utente che vuole vedere le aste vinte
@@ -753,7 +952,7 @@ paths:
                   offertaVincente:
                     type: number
                     example: 345.75
-  /api/v1/utenti/:id/astePreferite:
+  /api/v1/utenti/:id/aste?get=preferite:
     x-summary: ''
     x-description: ''
     get:
@@ -775,6 +974,18 @@ paths:
             type: string
           example: "5b2g3613g"
           required: true
+        - in: query
+          name: orderBy
+          description: Ordinamento richiesto al catalogo (Non specificato (DEFAULT) -> per inserimento della preferenza nel sistema;"0" -> per tempo rimasto; "1" -> per prezzo attuale; "2" -> per nome)
+          schema:
+            type: string
+          example: "0"
+        - in: query
+          name: order
+          description: Tipo di ordinamento richiesto al catalogo ("asc" (DEFAULT) -> crescente; "desc" -> decrescente)
+          schema:
+            type: string
+          example: "asc"
       responses:
         "200":
           description: La lista delle aste preferite è disponibile.
