@@ -63,7 +63,7 @@ function cardProdottoOn() {
 function creaAsta() {
     var nomeProdotto = document.getElementById("nomeProdotto").value;
     var descrizioneProdotto = document.getElementById("descrizioneProdotto").value;
-    var immaginiProdotto = document.getElementById("immagineProdotto").files[0];
+    var immaginiProdotto = document.getElementById("immagineProdotto").files;
     var inizioAsta = document.getElementById("inizioAsta").value;
     var fineAsta = document.getElementById("fineAsta").value;
     var tipoAsta = document.querySelector('input[name="tipoAsta"]:checked').value;
@@ -84,7 +84,9 @@ function creaAsta() {
         }
 
         fd.append("descrizione", descrizioneProdotto);
-        fd.append("foto", immaginiProdotto);
+        for (let i = 0; i < immaginiProdotto.length; i++){
+            fd.append("foto", immaginiProdotto[i]);
+        }
         fd.append("inizio", inizioAsta);
         fd.append("fine", fineAsta);
         fd.append("tipo", tipoAsta);
