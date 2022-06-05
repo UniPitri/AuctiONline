@@ -252,6 +252,13 @@ paths:
               type: string
             example: "aswu3323ljk34nmklu9HHGSSjknwe"
             required: true
+          - in: header
+            name: id-account
+            description: ID dell'utente che vuole creare l'asta
+            schema:
+              type: string
+            example: "1240"
+            required: true
         requestBody:
           content:
             multipart/form-data:
@@ -510,6 +517,20 @@ paths:
               type: string
             example: "5b2g3613g"
             required: true
+          - in: header
+            name: x-access-token
+            description: Token di autenticazione dell'utente che vuole offrire per l'asta
+            schema:
+              type: string
+            example: "5b2g3613g"
+            required: true
+          - in: header
+            name: id-account
+            description: ID dell'utente che vuole offrire per l'asta
+            schema:
+              type: string
+            example: "1240"
+            required: true
         requestBody:
           content:
             application/json:
@@ -618,6 +639,79 @@ paths:
                     message:
                       type: string
                       example: "L'asta è a busta chiusa ed è presente già una tua offerta"
+                      
+  /api/v1/aste/:id?put=fine:
+    x-summary: ''
+    x-description: ''
+    put:
+      summary: Chiudi anticipatamente asta
+      description: Chiude in anticipo l'asta specificata da ID.
+      operationId: chiusuraAsta
+      parameters:
+        - in: path
+          name: id
+          description: ID dell'asta da chiudere anticipatamente
+          schema:
+            type: string
+          example: "3819dsd3ewe"
+          required: true
+        - in: header
+          name: x-access-token
+          description: Token di autenticazione dell'utente che vuole chiudere l'asta anticipatamente
+          schema:
+            type: string
+          example: "5b2g3613g"
+          required: true
+        - in: header
+          name: id-account
+          description: ID dell'utente che vuole terminare anticipatamente l'asta
+          schema:
+            type: string
+          example: "1240"
+          required: true
+      responses:
+        "200":
+          description: L'asta è stata chiusa correttamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      example: "Asta conclusa correttamente"
+        "404":
+          description: Chiusura asta anticipata fallita. L'asta non esiste.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:       
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Asta non trovata"
+        "400":
+          description: Chiusura asta anticipata fallita. L'asta non è stata creata dall'utente che sta facendo la richiesta.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:       
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Quest'asta non ti appartiene"
+                    
   /api/v1/astePreferite:
     x-summary: ''
     x-description: ''
@@ -767,77 +861,6 @@ paths:
                     message:
                       type: string
                       example: "Asta non è tra i preferiti"
-  /api/v1/utenti/:id/aste/:idAsta:
-    x-summary: ''
-    x-description: ''
-    put:
-      summary: Chiudi anticipatamente asta
-      description: Chiude in anticipo l'asta specificata.
-      operationId: chiusuraAsta
-      parameters:
-        - in: path
-          name: id
-          description: ID dell'utente che vuole chiudere l'asta anticipatamente
-          schema:
-            type: string
-          example: "38193"
-          required: true
-        - in: path
-          name: idAsta
-          description: ID dell'asta da chiudere anticipatamente
-          schema:
-            type: string
-          example: "3819dsd3ewe"
-          required: true
-        - in: header
-          name: x-access-token
-          description: Token di autenticazione dell'utente che vuole chiudere l'asta anticipatamente
-          schema:
-            type: string
-          example: "5b2g3613g"
-          required: true
-      responses:
-        "200":
-          description: L'asta è stata chiusa correttamente
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    success:
-                      type: boolean
-                      example: true
-                    message:
-                      type: string
-                      example: "Asta conclusa correttamente"
-        "404":
-          description: Chiusura asta anticipata fallita. L'asta non esiste.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:       
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: "Asta non trovata"
-        "400":
-          description: Chiusura asta anticipata fallita. L'asta non è stata creata dall'utente che sta facendo la richiesta.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:       
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: "Quest'asta non ti appartiene"  
                       
   /api/v1/utenti/:id/aste?get=vinte:
     x-summary: ''
