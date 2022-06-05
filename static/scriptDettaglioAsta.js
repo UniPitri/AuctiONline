@@ -329,6 +329,33 @@ function caricaDettagliAsta() {
                 let now = new Date().getTime();
                 if(new Date(data.inizioAsta).getTime() < now){
                     caricaDettagliAstaAttiva(data, now);
+
+                    if(data.venditoreAsta._id == sessionStorage.getItem('id')) {
+                        btnChiusura = document.createElement('button');
+                        btnChiusura.className = 'btn btn-lg btn-warning float-end me-5 text-nowrap';
+                        btnChiusura.innerHTML = 'Chiudi asta';
+                        
+                        btnChiusura.onclick = function() {
+                            fetch('../api/v1/aste/' + idAsta + '?put=fine', {
+                                method: 'PUT',
+                                headers: { 
+                                    'Content-Type': 'application/json',
+                                    'id-account': sessionStorage.getItem('id')
+                                }
+                            })
+                            .then((resp) => resp.json())
+                            .then(function (data) {
+                                document.getElementById('modalContent').className = 'modal-content bg-' + (data.success ? 'success' : 'warning');
+                                document.getElementById('modalTitle').innerHTML = (data.success ? 'Successo' : 'Errore');
+                                document.getElementById('message').innerHTML = data.message;
+                                $('#alert').modal('show');
+                            })
+                            .catch(error => console.error(error)); // If there is any error you will catch them here
+                        }
+
+                        btnChiusura.type = 'button';
+                        document.getElementById('cardBody').appendChild(btnChiusura);
+                    }
                 }
                 else{
                     caricaDettagliAstaInAttesa(data, now);

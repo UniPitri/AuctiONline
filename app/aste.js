@@ -127,42 +127,62 @@ router.put('/:id', async function(req, res) {
     if(!asta) 
         return res.status(404).json({ success: false, message: 'Asta non trovata'});
 
-    if(asta.DettagliAsta.Venditore == req.headers["id-account"]){
-        return res.status(400).json({ success: false, message: "Non puoi offrire per un'asta creata da te stesso"});
-    }
-
-    let dateTimeAttuale = new Date().getTime();
-    if(asta.DettagliAsta.Inizio > dateTimeAttuale || asta.DettagliAsta.Fine < dateTimeAttuale){
-        return res.status(400).json({ success: false, message: 'Non puoi offrire per questa asta'});
-    }
-
-    if((asta.DettagliAsta.Tipo == 1 && asta.DettagliAsta.Offerte.length != 0 && req.body.prezzo <= asta.DettagliAsta.Offerte[0]) || (asta.DettagliAsta.PrezzoMinimo && req.body.prezzo < asta.DettagliAsta.PrezzoMinimo))
-        return res.status(400).json({ success: false, message: 'Prezzo troppo basso'});
-
-    if(isNaN(req.body.prezzo) || req.body.prezzo==null){
-        return res.status(400).json({ success: false, message: 'Prezzo non valido'});
-    }
-
-    if(asta.DettagliAsta.Tipo == 0 && asta.DettagliAsta.Offerenti.indexOf(req.headers["id-account"]) > -1){
-        return res.status(400).json({ success: false, message: "L'asta è a busta chiusa ed è presente già una tua offerta"});
-    }
-
-    let pos = 0;
-    if(asta.DettagliAsta.Tipo == 0){
-        while(asta.DettagliAsta.Offerte[pos] > req.body.prezzo && pos < asta.DettagliAsta.Offerte.length){
-            pos++;
+    if(req.query.put == 'fine') {
+        if(asta.DettagliAsta.Venditore == req.headers['id-account']) {
+            asta.DettagliAsta.Fine = new Date();
+            await asta.save();
+            code = 200;
+            success = true;
+            message = 'Asta conclusa correttamente';
+        } else {
+            code = 400;
+            success = false;
+            message = 'Quest\'asta non ti appartiene';
         }
+    } else {
+        if(asta.DettagliAsta.Venditore == req.headers["id-account"])
+            return res.status(400).json({ success: false, message: "Non puoi offrire per un'asta creata da te stesso"});
+
+        let dateTimeAttuale = new Date().getTime();
+
+        if(asta.DettagliAsta.Inizio > dateTimeAttuale || asta.DettagliAsta.Fine < dateTimeAttuale)
+            return res.status(400).json({ success: false, message: 'Non puoi offrire per questa asta'});
+
+        if((asta.DettagliAsta.Tipo == 1 && asta.DettagliAsta.Offerte.length != 0 && req.body.prezzo <= asta.DettagliAsta.Offerte[0]) || (asta.DettagliAsta.PrezzoMinimo && req.body.prezzo < asta.DettagliAsta.PrezzoMinimo))
+            return res.status(400).json({ success: false, message: 'Prezzo troppo basso'});
+
+        if(isNaN(req.body.prezzo) || req.body.prezzo==null)
+            return res.status(400).json({ success: false, message: 'Prezzo non valido'});
+
+        if(asta.DettagliAsta.Tipo == 0 && asta.DettagliAsta.Offerenti.indexOf(req.headers["id-account"]) > -1)
+            return res.status(400).json({ success: false, message: "L'asta è a busta chiusa ed è presente già una tua offerta"});
+
+        let pos = 0;
+
+        if(asta.DettagliAsta.Tipo == 0)
+            while(asta.DettagliAsta.Offerte[pos] > req.body.prezzo && pos < asta.DettagliAsta.Offerte.length)
+                pos++;
+
+        await Asta.updateOne({
+            _id: req.params.id
+        }, {
+            $push: {
+                'DettagliAsta.Offerte': {
+                    $each: [parseFloat(req.body.prezzo)], $position:pos
+                },
+                'DettagliAsta.Offerenti': {
+                    $each: [req.headers["id-account"]],$position:pos
+                }
+            }
+        });
+
+        return res.status(200).json({ message: 'Nuova offerta avvenuta con successo', success: true, self: "/api/v1/aste/"+req.params.id });
     }
 
-    await Asta.updateOne({
-        _id: req.params.id
-    },
-    {
-        $push:{'DettagliAsta.Offerte':{$each:[parseFloat(req.body.prezzo)],$position:pos},
-        'DettagliAsta.Offerenti':{$each:[req.headers["id-account"]],$position:pos}}
-    })
-
-    return res.status(200).json({success: true, message: 'Nuova offerta avvenuta con successo', self: "/api/v1/aste/"+req.params.id});
+    return res.status(code).json({
+        success: success,
+        message: message
+    });
 });
 
 
