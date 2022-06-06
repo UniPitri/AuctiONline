@@ -25,10 +25,10 @@ function caricaPagina() {
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
     }
-
     caricaHeader();
     caricaAste();
     caricaPannelloLaterale();
+    caricaFiltri();
 }
 
 function caricaHeader() {
@@ -45,6 +45,17 @@ function caricaHeader() {
             item.style.display = 'block';
         });
     }
+}
+
+function caricaFiltri(){
+    document.getElementById("cbBustaChiusa").checked = true;
+    document.getElementById("cbAstaInglese").checked = true;
+    document.getElementById("cbCollezionismo").checked = true;
+    document.getElementById("cbVinile").checked = true;
+    document.getElementById("cbArte").checked = true;
+    document.getElementById("cbAntico").checked = true;
+    document.getElementById("prezzoMassimo").value = 100;
+    document.getElementById("outPrezzoMassimo").value = "100k €";
 }
 
 function logout() {
@@ -556,6 +567,8 @@ function aggiuniCard(idAsta){
         var x = setInterval(function() {
             aggiornaValoriNuovaCard(asta, timer, card);
         }, 1000);
+
+        refInterval[asta.idAsta] = x; 
         
         p2.appendChild(timer);
         div2.appendChild(h5);
