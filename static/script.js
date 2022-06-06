@@ -648,3 +648,8 @@ function newOrderBy(){
     document.getElementById("cardDeck").innerHTML="";
     caricaAste();
 }
+
+function changeCategorie(tipo){
+    document.getElementById("cardDeck").innerHTML="";
+    caricaAste();
+}
