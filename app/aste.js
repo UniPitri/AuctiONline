@@ -40,8 +40,8 @@ router.get('', async function(req, res){
     let aste;
     if(req.query.orderBy === "1"){
         if(req.query.order === "asc"){
-            aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': {$ne: []}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.Offerte.0': 'asc'}).exec();
-            let aste2 = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': [], 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.PrezzoMinimo': 'asc'}).exec();
+            aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': {$ne: []}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.Offerte.0': 'asc'}).exec();
+            let aste2 = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': [], 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.PrezzoMinimo': 'asc'}).exec();
             let j = 0;
             let i = 0;
             for(i; i < aste.length && j < aste2.length; i++){
@@ -54,11 +54,11 @@ router.get('', async function(req, res){
                 aste[i] = aste2[j];
                 i++;
             }
-            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.PrezzoMinimo': 'asc'}).exec());
+            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.PrezzoMinimo': 'asc'}).exec());
         }
         else{
-            aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': {$ne: []}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.Offerte.0': 'desc'}).exec();
-            let aste2 = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': [], 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.PrezzoMinimo': 'desc'}).exec();
+            aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': {$ne: []}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.Offerte.0': 'desc'}).exec();
+            let aste2 = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Offerte': [], 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.PrezzoMinimo': 'desc'}).exec();
             let j = 0;
             let i = 0;
             for(i; i < aste.length && j < aste2.length; i++){
@@ -71,20 +71,20 @@ router.get('', async function(req, res){
                 aste[i] = aste2[j];
                 i++;
             }
-            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.PrezzoMinimo': 'desc'}).exec());
+            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.PrezzoMinimo': 'desc'}).exec());
         }
     }
     else if(req.query.orderBy === "2"){
-        aste = (req.query.order === "asc") ? await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliProdotto.Nome': 'asc'}).exec() : await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliProdotto.Nome': 'desc'}).exec();
+        aste = (req.query.order === "asc") ? await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliProdotto.Nome': 'asc'}).exec() : await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliProdotto.Nome': 'desc'}).exec();
     }
     else{
         if(req.query.order === "asc" || req.query.order == null){
-            aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()},'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.Fine': 'asc'}).exec();
-            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.Inizio': 'asc'}).exec());
+            aste = await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()},'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.Fine': 'asc'}).exec();
+            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.Inizio': 'asc'}).exec());
         }
         else{
-            aste = await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.Inizio': 'desc'}).exec();
-            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}}).sort({'DettagliAsta.Fine': 'desc'}).exec());
+            aste = await Asta.find({'DettagliAsta.Fine':{$gt: new Date()},'DettagliAsta.Inizio':{$gt: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.Inizio': 'desc'}).exec();
+            aste = aste.concat(await Asta.find({'DettagliAsta.Fine':{$gte: new Date()},'DettagliAsta.Inizio':{$lte: new Date()}, 'DettagliAsta.Tipo': {$in: tipiRichiesti}, 'DettagliProdotto.Categorie': {$in: categorieRichieste}, $or: [{'DettagliAsta.PrezzoMinimo': {$lte: prezzoMassimo}},{'DettagliAsta.PrezzoMinimo': null}]}).sort({'DettagliAsta.Fine': 'desc'}).exec());
 
         }
     }

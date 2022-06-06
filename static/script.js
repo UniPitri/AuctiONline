@@ -6,6 +6,14 @@ var orderBy = document.getElementById("ordinamento").value;
 var order = "asc";
 var refCard = [];
 var refInterval = []
+var refIntervalCat = []
+var eBusta;
+var eInglese;
+var eCollezionismo;
+var eVinile;
+var eArte;
+var eAntico;
+var ePrezzo;
 
 function caricaPagina() {
     toastr.options = {
@@ -56,6 +64,13 @@ function caricaFiltri(){
     document.getElementById("cbAntico").checked = true;
     document.getElementById("prezzoMassimo").value = 100;
     document.getElementById("outPrezzoMassimo").value = "100k €";
+    eBusta = "";
+    eInglese = "";
+    eCollezionismo = "";
+    eVinile = "";
+    eArte = "";
+    eAntico = "";
+    ePrezzo = "";
 }
 
 function logout() {
@@ -67,8 +82,9 @@ function logout() {
 }
 
 function caricaAste() {
+    let i = 0;
     const cardDeck = document.getElementById('cardDeck');
-    fetch('../api/v1/aste?orderBy='+orderBy+'&order='+order, {
+    fetch('../api/v1/aste?orderBy='+orderBy+'&order='+order+eBusta+eInglese+eCollezionismo+eVinile+eAntico+eArte+ePrezzo, {
         method: 'GET',
     })
     .then((resp) => resp.json()) // Transform the data into json
@@ -156,6 +172,8 @@ function caricaAste() {
                 });
             }, 1000);
 
+            refIntervalCat[i] = x; 
+
             let p3 = document.createElement('p');
             p3.className = "card-text";
             p3.innerHTML = "Tipo asta: " + (asta.dettagliAsta.Tipo ? "Asta \"inglese\"" : "Busta chiusa");
@@ -190,6 +208,7 @@ function caricaAste() {
             }
             
             cardDeck.appendChild(div);
+            i++;
         })
     })
     .catch( error => console.error(error) );
@@ -640,16 +659,68 @@ function cambiaTriangolo(){
         order = "asc";
     }
     document.getElementById("cardDeck").innerHTML="";
+    for(let i = 0; i < refIntervalCat.length; i++){
+        clearInterval(refIntervalCat[i]);
+    }
     caricaAste();
 }
 
 function newOrderBy(){
     orderBy = document.getElementById("ordinamento").value;
     document.getElementById("cardDeck").innerHTML="";
+    for(let i = 0; i < refIntervalCat.length; i++){
+        clearInterval(refIntervalCat[i]);
+    }
     caricaAste();
 }
 
-function changeCategorie(tipo){
+function changeTipo(tipo){
+    if(tipo == 0){
+        eBusta = (document.getElementById("cbBustaChiusa").checked) ? "" : "&eTipi=0";
+    }
+    else{
+        eInglese = (document.getElementById("cbAstaInglese").checked) ? "" : "&eTipi=1";
+    }
     document.getElementById("cardDeck").innerHTML="";
+    for(let i = 0; i < refIntervalCat.length; i++){
+        clearInterval(refIntervalCat[i]);
+    }
+    caricaAste();
+}
+function changeCategorie(categoria){
+    if(categoria == 0){
+        eCollezionismo = (document.getElementById("cbCollezionismo").checked) ? "" : "&eCategorie=Collezionismo";
+    }
+    else if(categoria == 1){
+        eVinile = (document.getElementById("cbVinile").checked) ? "" : "&eCategorie=Vinile";
+    }
+    else if(categoria == 2){
+        eArte = (document.getElementById("cbArte").checked) ? "" : "&eCategorie=Arte";
+    }
+    else{
+        eAntico = (document.getElementById("cbAntico").checked) ? "" : "&eCategorie=Antico";
+    }
+    document.getElementById("cardDeck").innerHTML="";
+    for(let i = 0; i < refIntervalCat.length; i++){
+        clearInterval(refIntervalCat[i]);
+    }
+    caricaAste();
+}
+
+function changePrezzoMassimo(){
+    ePrezzo = "&ePrezzo="+ (document.getElementById("prezzoMassimo").value * 1000);
+    document.getElementById("cardDeck").innerHTML="";
+    for(let i = 0; i < refIntervalCat.length; i++){
+        clearInterval(refIntervalCat[i]);
+    }
+    caricaAste();
+}
+
+function resetFiltri(){
+    caricaFiltri();
+    document.getElementById("cardDeck").innerHTML="";
+    for(let i = 0; i < refIntervalCat.length; i++){
+        clearInterval(refIntervalCat[i]);
+    }
     caricaAste();
 }

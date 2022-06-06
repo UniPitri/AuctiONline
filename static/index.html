@@ -60,40 +60,49 @@
             <div>
                 Tipo asta:
                 <div class="form-check form-switch pt-2">
-                    <input class="form-check-input" type="checkbox" id="cbBustaChiusa" onchange="changeCategorie(0)">
+                    <input class="form-check-input" type="checkbox" id="cbBustaChiusa" onchange="changeTipo(0)">
                     <label class="form-check-label" for="cbBustaChiusa">Busta chiusa</label>
                 </div>
                 <div class="form-check form-switch pt-2">
-                    <input class="form-check-input" type="checkbox" id="cbAstaInglese" onchange="changeCategorie(1)">
-                    <label class="form-check-label" for="cbBustaChiusa">Asta "inglese"</label>
+                    <input class="form-check-input" type="checkbox" id="cbAstaInglese" onchange="changeTipo(1)">
+                    <label class="form-check-label" for="cbAstaInglese">Asta "inglese"</label>
                 </div>
             </div>
             <div class="pt-2">
                 Categorie:
                 <div class="form-check form-switch pt-2">
-                    <input class="form-check-input" type="checkbox" id="cbCollezionismo">
+                    <input class="form-check-input" type="checkbox" id="cbCollezionismo" onchange="changeCategorie(0)">
                     <label class="form-check-label" for="cbBustaChiusa">Collezionismo</label>
                 </div>
                 <div class="form-check form-switch pt-2">
-                    <input class="form-check-input" type="checkbox" id="cbVinile">
-                    <label class="form-check-label" for="cbBustaChiusa">Vinile</label>
+                    <input class="form-check-input" type="checkbox" id="cbVinile" onchange="changeCategorie(1)">
+                    <label class="form-check-label" for="cbCollezionismo">Vinile</label>
                 </div>
                 <div class="form-check form-switch pt-2">
-                    <input class="form-check-input" type="checkbox" id="cbArte">
-                    <label class="form-check-label" for="cbBustaChiusa">Arte</label>
+                    <input class="form-check-input" type="checkbox" id="cbArte" onchange="changeCategorie(2)">
+                    <label class="form-check-label" for="cbArte">Arte</label>
                 </div>
                 <div class="form-check form-switch pt-2">
-                    <input class="form-check-input" type="checkbox" id="cbAntico">
-                    <label class="form-check-label" for="cbBustaChiusa">Antico</label>
+                    <input class="form-check-input" type="checkbox" id="cbAntico" onchange="changeCategorie(3)">
+                    <label class="form-check-label" for="cbAntico">Antico</label>
                 </div>
             </div>
             <div class="pt-2">
                 Prezzo massimo:
-                <input type="range" value="100" class="form-range" style="width: 75%;" min="0" max="100" id="prezzoMassimo" oninput="this.nextElementSibling.value = this.value + 'k €'">
-                <output id="outPrezzoMassimo">100k €</output>
+                <div class="row">
+                    <div class="col-8 pt-1">
+                        <input type="range" value="100" class="form-range" style="width: 65%;" min="0" max="100" id="prezzoMassimo" oninput="this.nextElementSibling.value = this.value + 'k €'">
+                        <output id="outPrezzoMassimo">100k €</output>
+                    </div>
+                    <div class="col-4 pe-5" onclick="changePrezzoMassimo()">
+                        <button class="btn btn-primary" type="button">
+                            Conferma
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="pt-5" style="text-align: center;">
-                <button class="btn btn-primary" type="button" onclick="caricaFiltri()">
+                <button class="btn btn-primary" type="button" onclick="resetFiltri()">
                     Resetta filtri
                 </button>
             </div>
