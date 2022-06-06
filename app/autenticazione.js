@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Utente = require('./models/utente');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 
 router.post('', async function(req, res) {
 	// find the user
@@ -9,7 +10,7 @@ router.post('', async function(req, res) {
 		Username: req.body.username
 	}, { Salt: 0, AstePreferite: 0 }).exec();
 	
-	if (!user || user.Password != req.body.password) {
+	if (!user ||! await bcrypt.compare(req.body.password,user.Password)) {
 		return res.status(401).json({ success: false, message: 'Autenticazione fallita. Utente o password errati' });
 	} else {
 		var payload = {

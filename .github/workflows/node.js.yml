@@ -10,7 +10,7 @@ on:
 env:
   SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
   DB_URL: ${{ secrets.DB_URL }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
+  SALTING_ROUNDS: ${{ secrets.SALTING_ROUNDS }}
 
 jobs:
   build:

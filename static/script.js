@@ -7,13 +7,13 @@ var order = "asc";
 var refCard = [];
 var refInterval = []
 var refIntervalCat = []
-var eBusta;
-var eInglese;
-var eCollezionismo;
-var eVinile;
-var eArte;
-var eAntico;
-var ePrezzo;
+var eBusta = "";
+var eInglese = "";
+var eCollezionismo = "";
+var eVinile = "";
+var eArte = "";
+var eAntico = "";
+var ePrezzo = "";
 
 function caricaPagina() {
     toastr.options = {
@@ -357,13 +357,12 @@ function caricaPannelloLaterale() {
                         if(areAuctionOpen[asta.idAsta]) { // L'asta è aperta
                             distance = new Date(data.fine).getTime() - now;
                             document.getElementById('prezzo' + asta.idAsta).innerHTML = (data.offerta != '' ? data.offerta : 0);
-                            card.style.backgroundColor = "#2c5e86"
                             document.getElementById('label' + asta.idAsta).innerHTML = 'attuale';
                         } else { // L'asta non è ancora aperta
                             distance = inizioAste[asta.idAsta] - now;
                             document.getElementById('label' + asta.idAsta).innerHTML = 'minimo';
                         }
-                        
+                        card.style.backgroundColor = "#2c5e86"
                         timer.innerHTML = calcolaStringaDistanza();
                     })
                     .catch(error => console.error(error));

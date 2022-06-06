@@ -1,8 +1,9 @@
-
 const express = require('express');
 const router = express.Router();
 const Utente = require('./models/utente');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
+
 router.post('', async function(req, res) {
 
 	let presente = await Utente.findOne({
@@ -20,8 +21,9 @@ router.post('', async function(req, res) {
     if (presente2 != null){
         return res.status(409).json({ success: false, message: 'Username già in utilizzo' });
 	}
-
-    const newUser = new Utente({Mail: req.body.email, Username: req.body.username, Password: req.body.password});
+	
+	let password = await bcrypt.hash(req.body.password, parseInt(process.env.SALTING_ROUNDS));
+    const newUser = new Utente({Mail: req.body.email, Username: req.body.username, Password: password});
 
     newUser.save();
 
