@@ -173,6 +173,24 @@ paths:
             schema:
               type: string
             example: "asc"
+          - in: query
+            name: eTipi
+            description: Tipi di asta esclusi dall'utente attraverso il filtraggio. (Di default non è definito -> no filtraggio su tipi dell'asta)
+            schema:
+              type: number
+            example: 0
+          - in: query
+            name: eCategorie
+            description: Categorie di asta esclusi dall'utente attraverso il filtraggio. (Di default non è definito -> no filtraggio su categorie dell'asta)
+            schema:
+              type: string
+            example: "Vinile"
+          - in: query
+            name: ePrezzo
+            description: Valore massimo permesso al campo PrezzoMinimo dell'asta definito attraverso il filtraggio (Di default è pari a 100000)
+            schema:
+              type: number
+            example: 1000
       responses:
         "200":
           description: Catalogo delle aste disponibili è pronto.
