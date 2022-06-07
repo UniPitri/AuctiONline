@@ -93,7 +93,7 @@ function caricaAste() {
             let div = document.createElement('div');
             div.className = "card product rounded";
             //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
-            div.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
+            div.style = "background-color: #38d996; margin: 0 0 1% 0";
             let row2 = document.createElement('div');
             row2.className = "row g-0";
             let col1 = document.createElement('div');
@@ -109,6 +109,7 @@ function caricaAste() {
             h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
             h5.className = "card-title";
             h5.innerHTML = asta.dettagliProdotto.Nome;
+            h5.style = "cursor: pointer";
             let p = document.createElement('p');
             p.className = "card-text";
             p.innerHTML = "Loading...";
