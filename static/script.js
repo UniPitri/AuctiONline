@@ -333,6 +333,7 @@ function caricaPannelloLaterale() {
                 let card = document.createElement('div');
                 refCard[asta.idAsta] = card;
                 card.className = "card product rounded";
+                card.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
                 //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
                 card.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
                 let div2 = document.createElement('div');
@@ -340,7 +341,6 @@ function caricaPannelloLaterale() {
                 let h5 = document.createElement('h5');
                 h5.className = "card-title";
                 h5.innerHTML = asta.dettagliProdotto.Nome;
-                h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
                 let p = document.createElement('p');
                 p.className = "card-text";
                 p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '">'+ (asta.dettagliAsta.Tipo ? '' : 'minimo') + '</span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.dettagliAsta.PrezzoMinimo) ? asta.dettagliAsta.PrezzoMinimo : 0 ) + '</span>€';
@@ -520,6 +520,7 @@ function aggiuniCard(idAsta){
         let cardDeck = document.getElementById("card-deck");
         let card = document.createElement('div');
         refCard[asta.idAsta] = card;
+        card.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
         card.className = "card product rounded";
         //div.setAttribute('onclick', 'if(event.target.id != "input") window.location.href = "' + asta.self + '"');
         card.style = "background-color: #38d996; cursor: pointer; margin: 0 0 1% 0";
@@ -528,7 +529,6 @@ function aggiuniCard(idAsta){
         let h5 = document.createElement('h5');
         h5.className = "card-title";
         h5.innerHTML = asta.dettagliProdotto.Nome;
-        h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
         let p = document.createElement('p');
         p.className = "card-text";
         p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '">'+ (asta.tipoAsta ? '' : 'minimo') + '</span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.prezzoMinimo) ? asta.prezzoMinimo : 0 ) + '</span>€';

@@ -76,7 +76,7 @@ function caricaAsteVinte() {
                 row.className = "row";
                 let div = document.createElement('div');
                 div.className = "card rounded";
-                div.style = "background-color: #38d996; cursor: pointer; margin: 1% 0%";
+                div.style = "background-color: #38d996; margin: 1% 0%";
                 let row2 = document.createElement('div');
                 row2.className = "row no-gutters";
                 let col1 = document.createElement('div');

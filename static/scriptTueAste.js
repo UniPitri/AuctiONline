@@ -125,7 +125,7 @@ function caricaAstePreferite() {
             else{
                 colore = "#f2c43a"
             }
-            div.style = "background-color: "+colore+"; cursor: pointer; margin: 1% 0%";
+            div.style = "background-color: "+colore+"; margin: 1% 0%";
             let row2 = document.createElement('div');
             row2.className = "row no-gutters";
             let col1 = document.createElement('div');
@@ -141,6 +141,7 @@ function caricaAstePreferite() {
             h5.onclick = function () {caricaPaginaDettagli(asta.idAsta)};
             h5.className = "card-title";
             h5.innerHTML = asta.dettagliProdotto.Nome;
+            h5.style = "cursor: pointer";
             let p = document.createElement('p');
             p.className = "card-text";
             p.innerHTML = "Loading...";
@@ -203,7 +204,7 @@ function caricaAstePreferite() {
                         else{
                             colore = "#f2c43a"
                         }
-                        div.style = "background-color: "+colore+"; cursor: pointer; margin: 1% 0%";
+                        div.style = "background-color: "+colore+"; margin: 1% 0%";
                         if ((data.tipoAsta == 1 || data.venditoreAsta._id == sessionStorage.getItem("id")) && data.offerteAsta.length != 0){
                             p.innerHTML = "Prezzo attuale: " + data.offerteAsta[0] + "€";
                         }
