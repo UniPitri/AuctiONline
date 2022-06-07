@@ -229,6 +229,9 @@ function aggiornaValori(asta, timer, card) {
     if((now > inizioAste[asta.idAsta]) != areAuctionOpen[asta.idAsta]) {
         areAuctionOpen[asta.idAsta] = (now > inizioAste[asta.idAsta]);
         toastr.info('L\'asta per <b>' + asta.dettagliProdotto.Nome + '</b> è iniziata', 'Asta aperta');
+        let p2 = document.getElementById("p2"+asta.idAsta);
+        p2.innerHTML = 'Tempo rimanente: ';
+        p2.appendChild(timer);
     }
 
     if (asta.dettagliAsta.Venditore == sessionStorage.getItem("id")){
@@ -340,14 +343,15 @@ function caricaPannelloLaterale() {
                 let p = document.createElement('p');
                 p.className = "card-text";
                 p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '">'+ (asta.dettagliAsta.Tipo ? '' : 'minimo') + '</span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.dettagliAsta.PrezzoMinimo) ? asta.dettagliAsta.PrezzoMinimo : 0 ) + '</span>€';
-                let p2 = document.createElement('p');
+                let p2 = document.createElement('p'); 
+                p2.id = "p2"+asta.idAsta;
                 p2.className = "card-text";
-                p2.innerHTML = 'Tempo rimanente: ';
                 let timer = document.createElement('span');
                 now = new Date().getTime();
                 inizioAste[asta.idAsta] = new Date(asta.dettagliAsta.Inizio).getTime();
                 areAuctionOpen[asta.idAsta] = (now > inizioAste[asta.idAsta]);
-
+                p2.innerHTML = (areAuctionOpen[asta.idAsta]) ? 'Tempo rimanente: ' : "L'asta inizierà tra: ";
+                
                 if (asta.dettagliAsta.Venditore == sessionStorage.getItem("id")){
                     fetch(asta.self + '?get=valori', {
                         method: 'GET'
@@ -401,7 +405,7 @@ function caricaPannelloLaterale() {
                     aggiornaValori(asta, timer, card);
                 }, 1000);
 
-                refInterval[asta.idAsta] = x; 
+                refInterval[asta.idAsta] = x;
                 
                 p2.appendChild(timer);
                 div2.appendChild(h5);
@@ -432,6 +436,9 @@ function aggiornaValoriNuovaCard(asta, timer, card) {
     if((now > inizioAste[asta.idAsta]) != areAuctionOpen[asta.idAsta]) {
         areAuctionOpen[asta.idAsta] = (now > inizioAste[asta.idAsta]);
         toastr.info('L\'asta per <b>' + asta.dettagliProdotto.Nome + '</b> è iniziata', 'Asta aperta');
+        let p2 = document.getElementById("p2"+asta.idAsta);
+        p2.innerHTML = 'Tempo rimanente: ';
+        p2.appendChild(timer);
     }
 
     if (asta.venditoreAsta._id == sessionStorage.getItem("id")){
@@ -525,12 +532,13 @@ function aggiuniCard(idAsta){
         p.className = "card-text";
         p.innerHTML = 'Prezzo <span id="label' + asta.idAsta + '">'+ (asta.tipoAsta ? '' : 'minimo') + '</span>: <span id="prezzo' + asta.idAsta + '">' + ((asta.prezzoMinimo) ? asta.prezzoMinimo : 0 ) + '</span>€';
         let p2 = document.createElement('p');
+        p2.id = "p2"+asta.idAsta;
         p2.className = "card-text";
-        p2.innerHTML = 'Tempo rimanente: ';
         let timer = document.createElement('span');
         now = new Date().getTime();
         inizioAste[asta.idAsta] = new Date(asta.inizioAsta).getTime();
         areAuctionOpen[asta.idAsta] = (now > inizioAste[asta.idAsta]);
+        p2.innerHTML = (areAuctionOpen[asta.idAsta]) ? 'Tempo rimanente: ' : "L'asta inizierà tra: ";
 
         if (asta.venditoreAsta._id == sessionStorage.getItem("id")){
             fetch(asta.self + '?get=valori', {
